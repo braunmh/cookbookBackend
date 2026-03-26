@@ -1,0 +1,82 @@
+{
+    "@context": "https://schema.org",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.lecker.de/fruchtiger-glasnudelsalat-mit-mango-130960.html"
+    },
+    "headline": "Fruchtiger Glasnudelsalat mit Mango",
+    "description": "Unser beliebtes Rezept für Fruchtiger Glasnudelsalat mit Mango und mehr als 45.000 weitere kostenlose Rezepte auf LECKER.de",
+    "@type": "Recipe",
+    "datePublished": "2025-01-21T10:32:39.245Z",
+    "dateModified": "2025-06-23T14:56:14.040Z",
+    "isAccessibleForFree": true,
+    "publisher": {
+        "@type": "Organization",
+        "name": "LECKER",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.lecker.de/images/lecker/lecker-logo-schema-org.png"
+        }
+    },
+    "author": [{
+            "@type": "Person",
+            "name": "Lecker",
+            "url": "https://www.lecker.de/lecker"
+        }],
+    "name": "Fruchtiger Glasnudelsalat mit Mango",
+    "prepTime": "PT0M",
+    "cookTime": "PT40M",
+    "totalTime": "PT40M",
+    "recipeCategory": "Hauptgericht",
+    "keywords": "Rezepte,Salat-Rezepte,Glasnudelsalat,Thai-Rezepte",
+    "recipeYield": "4",
+    "nutrition": {
+        "@type": "NutritionInformation",
+        "servingSize": "1 Portion",
+        "calories": "434 kcal",
+        "fatContent": "17 g",
+        "carbohydrateContent": "60 g",
+        "proteinContent": "7 g"
+    },
+    "recipeIngredient": ["1 rote Chilischote", "1 Grapefruit (z. B. Pink Grapefruit) ", "75 g geröstete, gesalzene Erdnüsse", "200 g Glasnudeln", "3 Stiele Basilikum (z. B. Thai-Basilikum)", "2 Schalotten", "1 kleine  reife  Mango", "4 TL Limettensaft", "Salz", "2-3 EL geröstetes Erdnussöl"],
+    "recipeInstructions": [{
+            "@type": "HowToStep",
+            "name": "Schritt 1",
+            "text": "Chili längs einschneiden, entkernen, waschen und klein schneiden. Grapefruit so schälen, dass die weiße Haut vollständig entfernt wird. Filets zwischen den Trennhäuten herauslösen. Filets in Stücke schneiden.",
+            "url": "https://www.lecker.de/fruchtiger-glasnudelsalat-mit-mango-130960.html#instructiongroup1step1"
+        }, {
+            "@type": "HowToStep",
+            "name": "Schritt 2",
+            "text": "Erdnüsse grob hacken. Nudeln mit kochendem Wasser übergießen und ca. 10&nbsp;Minuten ziehen lassen, bis die Nudeln glasig sind. Basilikum waschen und in feine Streifen schneiden. Schalotten schälen und in sehr feine Ringe hobeln oder schneiden.",
+            "url": "https://www.lecker.de/fruchtiger-glasnudelsalat-mit-mango-130960.html#instructiongroup1step2"
+        }, {
+            "@type": "HowToStep",
+            "name": "Schritt 3",
+            "text": "Mango schälen, Fruchtfleisch zunächst vom Stein, dann in sehr dünne Streifen schneiden. Nudeln abgießen.",
+            "url": "https://www.lecker.de/fruchtiger-glasnudelsalat-mit-mango-130960.html#instructiongroup1step3"
+        }, {
+            "@type": "HowToStep",
+            "name": "Schritt 4",
+            "text": "Nudeln, Erdnüsse, Schalotten, Chili und Basilikum mischen. Limettensaft, Salz und Erdnussöl verrühren. Dressing auf dem Salat verteilen. Mango und Grapefruits zufügen und eventuell nochmals abschmecken. Glasnudel­salat in Schalen servieren.",
+            "url": "https://www.lecker.de/fruchtiger-glasnudelsalat-mit-mango-130960.html#instructiongroup1step4"
+        }],
+    "image": [{
+            "@type": "ImageObject",
+            "url": "https://images.lecker.de/fruchtiger-glasnudelsalat-mit-mango-kochen-und-geniessen022024-f5481303/1x1,id=b82b24f8,b=lecker,w=1600,h=,ca=0,5.34,100,44.66,rm=sk.jpeg",
+            "width": 1600,
+            "height": 1600,
+            "caption": "Spannend gewürzt:Anders als italienisches Basilikum verströmt ­Thai-Basilikum angenehm süße Anis-Nuancen"
+        }, {
+            "@type": "ImageObject",
+            "url": "https://images.lecker.de/fruchtiger-glasnudelsalat-mit-mango-kochen-und-geniessen022024-f5481303/9x16,id=b82b24f8,b=lecker,w=1600,h=,ca=0,0,100,69.91,rm=sk.jpeg",
+            "width": 1600,
+            "height": 2844,
+            "caption": "Spannend gewürzt:Anders als italienisches Basilikum verströmt ­Thai-Basilikum angenehm süße Anis-Nuancen"
+        }, {
+            "@type": "ImageObject",
+            "url": "https://images.lecker.de/fruchtiger-glasnudelsalat-mit-mango-kochen-und-geniessen022024-f5481303/16x9,id=b82b24f8,b=lecker,w=1600,h=,ca=0,9.28,100,31.37,rm=sk.jpeg",
+            "width": 1600,
+            "height": 900,
+            "caption": "Spannend gewürzt:Anders als italienisches Basilikum verströmt ­Thai-Basilikum angenehm süße Anis-Nuancen"
+        }]
+}

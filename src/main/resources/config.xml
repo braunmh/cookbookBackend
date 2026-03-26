@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+   <entry key="org.braun.cookbook.solr.url">http://localhost:8983/solr</entry>
+   <entry key="org.braun.cookbook.solr.collection">cookbook</entry>
+   <entry key="org.braun.cookbook.content.dir">/opt/solr/data/cookbook/content</entry>
+</properties>

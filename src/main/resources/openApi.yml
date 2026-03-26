@@ -1,0 +1,237 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: braun.h.michael@gmail.com
+    name: Michael Braun
+  description: RESTful Backend for Cookbook
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Cookbook
+  version: "1.0"
+  x-restgeninfo: {}
+servers:
+- url: http://localhost:8080/cookbook/rest
+paths:
+  /keyword/refresh:
+    get:
+      tags:
+      - keyword
+      callbacks: {}
+      operationId: refreshKeywords
+      responses:
+        "200":
+          description: Cache refreshed
+      x-accepts: application/json
+    summary: Refresh keyword-cache. All backend-changes will be propagated
+  /keyword/findAll:
+    get:
+      tags:
+      - keyword
+      callbacks: {}
+      operationId: findAllKeywords
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Keyword'
+                type: array
+          description: OK
+      x-accepts: application/json
+    summary: Find all keywords
+  /recipe/search:
+    get:
+      tags:
+      - recipe
+      callbacks: {}
+      operationId: searchByAttributes
+      parameters:
+      - description: blank separted list of words
+        explode: true
+        in: query
+        name: content
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: List of keyword ids
+        explode: true
+        in: query
+        name: keywords
+        required: false
+        schema:
+          items:
+            format: int64
+            type: integer
+          type: array
+        style: form
+      - description: rating from 1 to 5
+        explode: true
+        in: query
+        name: rating
+        required: false
+        schema:
+          type: integer
+          format: int32
+        style: form
+      - description: Directory
+        explode: true
+        in: query
+        name: directory
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Directory
+        explode: true
+        in: query
+        name: evaluated
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: date_from
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: date_to
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/RecipeShort'
+                type: array
+          description: OK
+      x-accepts: application/json
+    summary: Find recipes by attributes
+  /recipe/suggest/content:
+    get:
+      tags:
+      - recipe
+      callbacks: {}
+      operationId: suggestContent
+      parameters:
+      - description: part of word to search for
+        explode: true
+        in: query
+        name: value
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Suggestion'
+                type: array
+          description: OK
+      x-accepts: application/json
+    summary: Find suggestion for content starting with value
+  /recipe/suggest/directory:
+    get:
+      tags:
+      - recipe
+      callbacks: {}
+      operationId: suggestDirectory
+      parameters:
+      - description: part of word to search for
+        explode: true
+        in: query
+        name: value
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Suggestion'
+                type: array
+          description: OK
+      x-accepts: application/json
+    summary: Find suggestion for directories starting with value
+components:
+  callbacks: {}
+  responses: {}
+  schemas:
+    RecipeShort:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        path:
+          type: string
+        keywords:
+          items:
+            type: string
+          type: array
+        rating:
+          type: integer
+          format: int32
+        score:
+          type: number
+          format: double
+      required:
+      - id
+      - title
+      - path
+    Keyword:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        parentId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        nameUpper:
+          type: string
+        path:
+          type: string
+        synonyms:
+          type: array
+          items:
+            type: string
+      required:
+      - id
+      - name
+      - nameUpper
+      - path
+      - parentId
+    Suggestion:
+      type: object
+      properties:
+        name: 
+          type: string
+        frequency:
+          type: integer
+          format: int64
+      required:
+      - name
+      - frequency
+        
+          
+        

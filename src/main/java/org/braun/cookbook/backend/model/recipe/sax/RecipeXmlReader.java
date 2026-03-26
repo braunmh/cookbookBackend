@@ -1,7 +1,7 @@
 package org.braun.cookbook.backend.model.recipe.sax;
 
 import java.io.IOException;
-import org.braun.cookbook.backend.model.recipe.Recipe;
+import org.braun.cookbook.backend.model.Recipe;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

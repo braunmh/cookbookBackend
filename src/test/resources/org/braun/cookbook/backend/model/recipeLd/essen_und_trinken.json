@@ -1,0 +1,124 @@
+[
+    {
+        "name": "Spaghetti mit Serranoschinken: schnell & sommerlich",
+        "description": "Turbo-schnelles Pastaglück im Sommer: Spaghetti mit Melone und Serranoschinken.",
+        "image": [
+            {
+                "name": " Spaghetti mit Serranoschinken",
+                "url": "https://image.essen-und-trinken.de/14008772/t/Wg/v1/w1440/r1.7778/-/fjt202307012-spaghetti-mit-serranoschinken.jpg",
+                "width": "1440",
+                "height": "810",
+                "@type": "ImageObject"
+            },
+            {
+                "name": " Spaghetti mit Serranoschinken",
+                "url": "https://image.essen-und-trinken.de/14008772/t/1D/v1/w1440/r1/-/fjt202307012-spaghetti-mit-serranoschinken.jpg",
+                "width": "1440",
+                "height": "1440",
+                "@type": "ImageObject"
+            },
+            {
+                "name": " Spaghetti mit Serranoschinken",
+                "url": "https://image.essen-und-trinken.de/14008772/t/ZW/v1/w1440/r1.5/-/fjt202307012-spaghetti-mit-serranoschinken.jpg",
+                "width": "1440",
+                "height": "960",
+                "@type": "ImageObject"
+            }
+        ],
+        "mainEntityOfPage":
+                {
+                    "@id": "https://www.essen-und-trinken.de/rezepte/spaghetti-mit-serranoschinken-schnelles-pastagericht-14008764.html",
+                    "@type": "WebPage"
+                },
+        "datePublished": "2025-06-26T08:30:00+02:00",
+        "dateModified": "2025-06-26T08:40:24+02:00",
+        "author":
+                {
+                    "name": "Julia Luck",
+                    "url": "https://www.essen-und-trinken.de/julia-luck-11957072.html",
+                    "@type": "Person"
+                },
+        "publisher":
+                {
+                    "name": "ESSEN-UND-TRINKEN.de",
+                    "logo": {
+                        "url": "https://image.essen-und-trinken.de/13986716/t/oM/v2/w240/r0/-/eut-logo-neu-schema-org.png",
+                        "width": "240",
+                        "height": "95",
+                        "@type": "ImageObject"
+                    },
+                    "@type": "Organization"
+                },
+        "aggregateRating":
+                {
+                    "ratingCount": 1,
+                    "bestRating": 5,
+                    "worstRating": 1,
+                    "ratingValue": 5,
+                    "@type": "AggregateRating"
+                },
+        "totalTime": "PT25M",
+        "recipeYield": 4,
+        "recipeIngredient":
+                ["20 g Pinienkern",
+                    "500 g Spaghetti",
+                    "Salz",
+                    "0,5 Honigmelone",
+                    "1 Zucchini",
+                    "1 rote Peperoni",
+                    "125 g Serranoschinken",
+                    "8 Zweige Minze",
+                    "2 El Aceto balsamico bianco",
+                    "4 El Olivenöl",
+                    "schwarzer Pfeffer"],
+        "recipeInstructions":
+                ["Pinienkerne in einer Pfanne ohne Fett goldbraun anrösten. Auf einem Teller abkühlen lassen. Nudeln in reichlich kochendem Salzwasser nach Packungsanweisung bissfest garen.\n\n",
+                    "Inzwischen die Melone halbieren, entkernen, schälen und fein würfeln.",
+                    "Zucchini putzen, mit dem Sparschäler erst längs in dünne Scheiben, dann mit einem großen Messer schräg quer in feine Streifen schneiden. Peperoni längs halbieren, entkernen und ebenfalls in Streifen schneiden. Schinken in kleine Stücke zupfen, Minzblättchen abzupfen und grob hacken.",
+                    "Nudeln in ein Sieb abgießen, kurz abtropfen lassen und wieder in den Topf geben. Essig und Olivenöl mit etwas Salz und Pfeffer verquirlen, Spaghetti damit mischen, dann Pinienkerne, Melone, Zucchini, Peperoni, Schinken und Minze unterheben, anrichten und sofort servieren.\n\n"],
+        "nutrition":
+                {
+                    "calories": 728,
+                    "proteinContent": 27,
+                    "fatContent": 21,
+                    "carbohydrateContent": 102,
+                    "@type": "NutritionInformation"
+                },
+
+        "@context": "http://schema.org",
+        "@type": "Recipe"
+    },
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "position": 1,
+                "item": {
+                    "name": "essenundtrinken",
+                    "@id": "https://www.essen-und-trinken.de/",
+                    "@type": "WebPage"
+                },
+                "@type": "ListItem"
+            },
+            {
+                "position": 2,
+                "item": {
+                    "name": "Rezepte",
+                    "@id": "https://www.essen-und-trinken.de/rezepte/",
+                    "@type": "WebPage"
+                },
+                "@type": "ListItem"
+            },
+            {
+                "position": 3,
+                "item": {
+                    "name": "Spaghetti mit Serranoschinken: schnell & sommerlich",
+                    "@id": "https://www.essen-und-trinken.de/rezepte/spaghetti-mit-serranoschinken-schnelles-pastagericht-14008764.html",
+                    "@type": "WebPage"
+                },
+                "@type": "ListItem"
+            }
+        ]
+    }
+]

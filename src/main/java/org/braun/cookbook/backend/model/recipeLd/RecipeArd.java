@@ -1,5 +1,6 @@
 package org.braun.cookbook.backend.model.recipeLd;
 
+import org.braun.cookbook.backend.model.RecipeLd;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;

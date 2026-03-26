@@ -1,0 +1,155 @@
+{
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    "name": "Johannisbeerkuchen mit Baiser-Haube",
+    "description": "Johannisbeeren haben derzeit Saison. Hanna Reder backt damit einen köstlichen Kuchen. Basis ist ein einfacher Rührteig.",
+    "keywords": "Backen, Johannisbeeren, Kuchen, Baiser",
+    "recipeCategory": "Desserts, Backen, schnell, Sommergerichte",
+    "dateModified": "2025-07-25T13:47:59.779Z",
+    "datePublished": "2025-07-25T13:47:59.775Z",
+    "image": [{
+            "@type": "ImageObject",
+            "url": "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLlo-k/16x9-big/johannisbeerkuchen-102.jpg?width=1920",
+            "author": "NDR",
+            "width": 1920,
+            "height": 1080,
+            "datePublished": "2025-07-25T14:44:11.393+02:00",
+            "description": "Johannisbeerkuchen mit Baiser steht angeschnitten auf einem Teller"
+        }, {
+            "@type": "ImageObject",
+            "url": "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLotXc/1x1-big/johannisbeerkuchen-102.jpg?width=1400",
+            "author": "NDR",
+            "width": 1400,
+            "height": 1400,
+            "datePublished": "2025-07-25T14:44:11.393+02:00",
+            "description": "Johannisbeerkuchen mit Baiser steht angeschnitten auf einem Teller"
+        }, {
+            "@type": "ImageObject",
+            "url": "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLqw7o/4x3/johannisbeerkuchen-102.jpg?width=1280",
+            "author": "NDR",
+            "width": 1280,
+            "height": 960,
+            "datePublished": "2025-07-25T14:44:11.393+02:00",
+            "description": "Johannisbeerkuchen mit Baiser steht angeschnitten auf einem Teller"
+        }],
+    "publisher": {
+        "@type": "newsMediaOrganization",
+        "name": "ndr.de",
+        "url": "https://www.ndr.de",
+        "alternateName": "Norddeutscher Rundfunk",
+        "correctionsPolicy": "https://www.ndr.de/home/korrekturuebersicht100.html",
+        "diversityPolicy": "https://www.ndr.de/der_ndr/unternehmen/Charta-der-Vielfalt-im-NDR,charta107.html",
+        "sameAs": "https://www.facebook.com/NDR.de, https://twitter.com/ndr, https://www.instagram.com/ndr.de/?hl=de",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.ndr.de/favicon.svg"
+        }
+    },
+    "totalTime": "PT40M",
+    "expires": "2027-07-25T16:45:00.000Z",
+    "recipeIngredient": [{
+            "Zutaten für den Rührteig: ": "200 g Butter , 150 g Zucker , 1 Päckchen Vanillezucker, 3 Eigelb, 2 Eier  , 200 g Mehl , 1 TL Backpulver , 1 Prise Salz, 3 EL Milch , 300 g rote Johannisbeeren "
+        }, {
+            "Zutaten für das Baiser: ": "3 Eiweiß, 150 g Zucker, 1 Prise Salz"
+        }],
+    "recipeInstructions": ["Backofen auf 200 Grad (Ober-/Unterhitze) vorheizen. Butter, Zucker und Vanillezucker in eine Schüssel geben und ausgiebig mit einem Handmixer cremig rühren. Eier trennen. Das Eiweiß für die Baiser-Haube beiseitestellen. Eigelb und ganze Eier einzeln nacheinander in die Buttermasse rühren.\n\nMehl mit Backpulver und Salz vermischen. Löffelweise hinzufügen und mit dem Teig verrühren, zum Schluss die Milch dazugeben.\n\nDie Ränder einer Springform einfetten und den Boden mit Backpapier auslegen. Den Teig in die Springform geben und gleichmäßig verteilen. In die Mitte eine leichte Mulde drücken, sodass der Rand etwas höher steht. Johannisbeeren säubern und von den Stielen befreien. Großzügig auf der Teigoberfläche verteilen. 30 Minuten im Ofen vorbacken. ", "Inzwischen Eiweiß und Salz steif schlagen, den Zucker nach und nach einrieseln lassen. Ofentemperatur auf 100 Grad reduzieren, den Kuchen aus dem Ofen nehmen und eine dicke Schicht Baiser auf den vorgebackenen Boden geben. \n\nDen Kuchen bei reduzierter Hitze weitere 20 Minuten backen, bis die Haube eine schöne Farbe bekommt. Den Kuchen aus der Springform nehmen und vor dem Servieren abkühlen lassen.\n\nTipp: Andere Beeren oder Früchte sind für diesen Kuchen ebenfalls geeignet. Außerhalb der Saison kann man Tiefkühlbeeren verwenden. "],
+    "author": {
+        "@type": "Person",
+        "name": "Hanna Reder"
+    },
+    "isAccessibleForFree": "true",
+    "Video": [{
+            "@context": "https://schema.org",
+            "@type": "VideoObject",
+            "potentialAction": {
+                "@type": "SeekToAction",
+                "target": "https://www.ndr.de/fernsehen/sendungen/das/das-schmeckt-johannisbeerkuchen-mit-baiser-haube,dasx-424.html?t={seek_to_second_number}",
+                "startOffset-input": "required name=seek_to_second_number"
+            },
+            "dateModified": "2025-07-25T14:14:11.829Z",
+            "datePublished": "2025-07-25T14:14:11.820Z",
+            "isAccessibleForFree": "true",
+            "headline": "DAS! schmeckt: Johannisbeerkuchen mit Baiser-Haube",
+            "description": "Johannisbeeren haben derzeit Saison. Hanna Reder backt damit einen köstlichen Kuchen. Basis ist ein einfacher Rührteig.",
+            "keywords": ["Leute", "Baiser", "Johannisbeeren", "Backen", "Hanna Reder"],
+            "mainEntityOfPage": "https://www.ndr.de/fernsehen/sendungen/das/das-schmeckt-johannisbeerkuchen-mit-baiser-haube,dasx-424.html",
+            "author": {
+                "@type": "Organization",
+                "name": "ndr.de"
+            },
+            "publisher": {
+                "@type": "newsMediaOrganization",
+                "name": "ndr.de",
+                "url": "https://www.ndr.de",
+                "alternateName": "Norddeutscher Rundfunk",
+                "correctionsPolicy": "https://www.ndr.de/home/korrekturuebersicht100.html",
+                "diversityPolicy": "https://www.ndr.de/der_ndr/unternehmen/Charta-der-Vielfalt-im-NDR,charta107.html",
+                "sameAs": "https://www.facebook.com/NDR.de, https://twitter.com/ndr, https://www.instagram.com/ndr.de/?hl=de",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://www.ndr.de/favicon.svg"
+                }
+            },
+            "about": [{
+                    "@type": "Thing",
+                    "name": "Leute",
+                    "sameAs": "https://www.ndr.de/kultur/Promis-News-von-Stars-aus-dem-Norden,leute104.html"
+                }],
+            "image": [{
+                    "@type": "ImageObject",
+                    "url": "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLlo-k/16x9-big/johannisbeerkuchen-102.jpg?width=1920",
+                    "author": "NDR",
+                    "width": 1920,
+                    "height": 1080,
+                    "datePublished": "2025-07-25T14:44:11.393+02:00",
+                    "description": "Johannisbeerkuchen mit Baiser steht angeschnitten auf einem Teller"
+                }, {
+                    "@type": "ImageObject",
+                    "url": "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLotXc/1x1-big/johannisbeerkuchen-102.jpg?width=1400",
+                    "author": "NDR",
+                    "width": 1400,
+                    "height": 1400,
+                    "datePublished": "2025-07-25T14:44:11.393+02:00",
+                    "description": "Johannisbeerkuchen mit Baiser steht angeschnitten auf einem Teller"
+                }, {
+                    "@type": "ImageObject",
+                    "url": "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLqw7o/4x3/johannisbeerkuchen-102.jpg?width=1280",
+                    "author": "NDR",
+                    "width": 1280,
+                    "height": 960,
+                    "datePublished": "2025-07-25T14:44:11.393+02:00",
+                    "description": "Johannisbeerkuchen mit Baiser steht angeschnitten auf einem Teller"
+                }],
+            "thumbnail": [{
+                    "@type": "ImageObject",
+                    "url": "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLlo-k/16x9-big/johannisbeerkuchen-102.jpg?width=1920",
+                    "author": "NDR",
+                    "width": 1920,
+                    "height": 1080,
+                    "datePublished": "2025-07-25T14:44:11.393+02:00",
+                    "description": "Johannisbeerkuchen mit Baiser steht angeschnitten auf einem Teller"
+                }, {
+                    "@type": "ImageObject",
+                    "url": "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLotXc/1x1-big/johannisbeerkuchen-102.jpg?width=1400",
+                    "author": "NDR",
+                    "width": 1400,
+                    "height": 1400,
+                    "datePublished": "2025-07-25T14:44:11.393+02:00",
+                    "description": "Johannisbeerkuchen mit Baiser steht angeschnitten auf einem Teller"
+                }, {
+                    "@type": "ImageObject",
+                    "url": "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLqw7o/4x3/johannisbeerkuchen-102.jpg?width=1280",
+                    "author": "NDR",
+                    "width": 1280,
+                    "height": 960,
+                    "datePublished": "2025-07-25T14:44:11.393+02:00",
+                    "description": "Johannisbeerkuchen mit Baiser steht angeschnitten auf einem Teller"
+                }],
+            "name": "DAS! schmeckt: Johannisbeerkuchen mit Baiser-Haube",
+            "thumbnailUrl": ["https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLlo-k/16x9-big/johannisbeerkuchen-102.jpg?width=1920", "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLotXc/1x1-big/johannisbeerkuchen-102.jpg?width=1400", "https://images.ndr.de/image/f55767f4-623b-4449-8748-bdca6c7581e6/AAABmEGcyw8/AAABkZLqw7o/4x3/johannisbeerkuchen-102.jpg?width=1280"],
+            "uploadDate": "2025-07-25T16:14:11.829+02:00",
+            "contentUrl": "https://mediandr-a.akamaihd.net/progressive/2025/0725/TV-20250725-1002-4500.1080.mp4",
+            "duration": "PT3M39S",
+            "expires": "2027-07-25T18:45:00.000+02:00"
+        }]
+}

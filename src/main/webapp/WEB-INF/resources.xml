@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resources>
+    <!--Resource name="jdbc/digikam" auth="Container" type="javax.sql.DataSource"
+    username="mbraun" 
+    password="gesa0403" 
+    driverClassName="com.mysql.jdbc.Driver"
+    url="jdbc:mysql://192.168.0.219:3306/digikam4?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTCt"
+    maxTotal="100" maxIdle="30" maxWaitMillis="10000" /-->
+    <Resource id="jdbc/digikam" type="javax.sql.DataSource">
+        jdbcDriver=com.mysql.cj.jdbc.Driver
+        password=gesa0403
+        userName=cookbook
+        jdbcUrl=jdbc\:mysql\://192.168.0.219\:3306/cookbook?useUnicode\=true&amp;useJDBCCompliantTimezoneShift\=true&amp;useLegacyDatetimeCode\=false&amp;serverTimezone\=UTC 
+        jtaManaged = true
+        defaultAutoCommit = false
+        testOnReturn = true
+        testWhileIdle = true
+        timeBetweenEvictionRunsMillis = 60
+        initialSize = 2
+        minIdle = 2
+        validationQuery = "select 1" 
+    </Resource>
+</Resources>

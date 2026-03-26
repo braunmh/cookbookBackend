@@ -1,4 +1,4 @@
-package org.braun.cookbook.backend.model.recipe;
+package org.braun.cookbook.backend.model;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,6 +25,13 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.braun.cookbook.backend.model.recipe.Categories;
+import org.braun.cookbook.backend.model.recipe.Description;
+import org.braun.cookbook.backend.model.recipe.EmptyElement;
+import org.braun.cookbook.backend.model.recipe.Ingredients;
+import org.braun.cookbook.backend.model.recipe.Nutrients;
+import org.braun.cookbook.backend.model.recipe.Source;
+import org.braun.cookbook.backend.model.recipe.Yield;
 import org.braun.cookbook.backend.model.recipe.sax.RecipeHandler;
 import org.braun.cookbook.backend.model.recipe.sax.RecipeXmlReader;
 import org.xml.sax.ContentHandler;
@@ -58,7 +65,11 @@ public class Recipe implements EmptyElement {
 
     private String relativeName;
 
-    private long lastModified;
+    private Long modified;
+    
+    private Long created;
+    
+    private Long published;
 
     private Description description;
 
@@ -97,7 +108,7 @@ public class Recipe implements EmptyElement {
             Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
             Recipe recipe = unmarshal(new InputSource(reader));
             recipe.setRelativeName(relativeName);
-            recipe.setLastModified(file.lastModified());
+            recipe.setModified(file.lastModified());
             return recipe;
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             LOG.error("Reading file", ex);
@@ -117,7 +128,7 @@ public class Recipe implements EmptyElement {
     public void marshall(File file) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
         marshall(writer);
-        setLastModified(file.lastModified());
+        setModified(file.lastModified());
     }
 
     public void marshall(OutputStream outputStream) throws IOException {
@@ -153,18 +164,16 @@ public class Recipe implements EmptyElement {
         addAttribute(attrs, "docId", getId());
         addAttribute(attrs, "id", getId());
         addAttribute(attrs, "title", title);
-
+        addAttribute(attrs, "rating", rating);
+        addAttribute(attrs, "created", created);
+        addAttribute(attrs, "modified", modified);
+        addAttribute(attrs, "published", published);
+        
         addAttribute(attrs, "country", country);
         addAttribute(attrs, "imageUrl", imageUrl);
-        if (width != null) {
-            addAttribute(attrs, "width", String.valueOf(width));
-        }
-        if (height != null) {
-            addAttribute(attrs, "height", String.valueOf(height));
-        }
-        if (rating != null) {
-            addAttribute(attrs, "rating", String.valueOf(rating));
-        }
+        addAttribute(attrs, "width", width);
+        addAttribute(attrs, "height", height);
+        
         addAttribute(attrs, "evaluated", Boolean.toString(evaluated));
         contentHandler.startElement("", "Recipe", "Recipe", attrs);
         if (source != null) {
@@ -299,21 +308,36 @@ public class Recipe implements EmptyElement {
         return this;
     }
 
-    public long getLastModified() {
-        return lastModified;
+    public Long getModified() {
+        return modified;
     }
 
-    public void setLastModified(long lastModified) {
-        this.lastModified = lastModified;
-    }
-
-    public Recipe lastModified(long value) {
-        lastModified = value;
-        return this;
+    public void setModified(Long modified) {
+        this.modified = modified;
     }
 
     public String getCountry() {
         return country;
+    }
+
+    public void setCreated(Long created) {
+        this.created = created;
+    }
+
+    public Long getCreated() {
+        return created;
+    }
+
+    public void setPublished(Long published) {
+        this.published = published;
+    }
+
+    public Long getPublished() {
+        return published;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 
     public void setCountry(String country) {

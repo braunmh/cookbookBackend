@@ -24,6 +24,21 @@ public interface SAXStreamable {
         attrs.addAttribute("", name, name, PCDATA, value);
     }
    
+   
+   default void addAttribute(AttributesImpl attrs, String name, Integer value) throws SAXException {
+        if (value == null) {
+            return;
+        }
+        attrs.addAttribute("", name, name, PCDATA, String.valueOf(value));
+    }
+   
+   default void addAttribute(AttributesImpl attrs, String name, Long value) throws SAXException {
+        if (value == null) {
+            return;
+        }
+        attrs.addAttribute("", name, name, PCDATA, String.valueOf(value));
+    }
+   
    default void characters(ContentHandler contentHandler, String value) throws SAXException {
        if (value == null) {
            return;

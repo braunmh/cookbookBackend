@@ -1,4 +1,4 @@
-package org.braun.cookbook.backend.model.recipeLd;
+package org.braun.cookbook.backend.model;
 
 import jakarta.json.JsonObject;
 import java.util.Arrays;
@@ -12,8 +12,19 @@ import org.braun.cookbook.backend.model.recipe.Ingredients;
 import org.braun.cookbook.backend.model.recipe.Nutrient;
 import org.braun.cookbook.backend.model.recipe.Nutrients;
 import org.braun.cookbook.backend.model.recipe.Paragraph;
-import org.braun.cookbook.backend.model.recipe.Recipe;
+import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.model.recipe.Yield;
+import org.braun.cookbook.backend.model.recipeLd.DateTime;
+import org.braun.cookbook.backend.model.recipeLd.ImageObject;
+import org.braun.cookbook.backend.model.recipeLd.NutritionInformation;
+import org.braun.cookbook.backend.model.recipeLd.Parsable;
+import org.braun.cookbook.backend.model.recipeLd.Person;
+import org.braun.cookbook.backend.model.recipeLd.RecipeDuration;
+import org.braun.cookbook.backend.model.recipeLd.RecipeIngredient;
+import org.braun.cookbook.backend.model.recipeLd.RecipeIngredientSection;
+import org.braun.cookbook.backend.model.recipeLd.RecipeInstruction;
+import org.braun.cookbook.backend.model.recipeLd.Text;
+import org.braun.cookbook.backend.model.recipeLd.WebPage;
 
 /**
  *

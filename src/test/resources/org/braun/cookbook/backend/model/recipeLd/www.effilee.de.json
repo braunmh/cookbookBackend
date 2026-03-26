@@ -1,0 +1,62 @@
+[{
+        "@context": "http://schema.org",
+        "@type": "Recipe",
+        "author": {
+            "@type": "Person",
+            "name": "Stevan Paul"
+        },
+        "cookTime": "",
+        "datePublished": "2014-02-17T10:27:00+01:00",
+        "description": "Bulgogi, »Feuerfleisch«, heißt diese unkomplizierte koreanische Festtags­speise. Das mit Ingwer, Chilipaste, Knoblauch und Sojasauce marinierte Fleisch wird gegrillt oder gebraten und dann wahlweise mit Reis oder in Salatblätter gewickelt als Fingerfood serviert.",
+        "headline": "Bulgogi mit Basmati-Sesam-Reis",
+        "image": ["https://cdn.prod.www.effilee.de/images/2320abca-0005-0004-5576-3772133f95aa_w1200_r1.778_fpx55.01_fpy55.01.jpg", "https://cdn.prod.www.effilee.de/images/2320abca-0005-0004-5576-3772133f95aa_w1200_r1.33_fpx55.01_fpy55.01.jpg", "https://cdn.prod.www.effilee.de/images/2320abca-0005-0004-5576-3772133f95aa_w1200_r1_fpx55.01_fpy55.01.jpg"],
+        "keywords": "Effilee 28, Fingerfood-Ideen, Korea, Rindfleisch Rezepte, Schneller Teller, Würzig, Umami, Scharf, Comfort-Food",
+        "name": "Bulgogi mit Basmati-Sesam-Reis",
+        "nutrition": {
+            "@type": "NutritionInformation",
+            "calories": "650 kcal"
+        },
+        "prepTime": "",
+        "recipeCategory": ["hauptgang"],
+        "recipeCuisine": "fusion",
+        "recipeIngredient": ["1 Zwiebel", "20 g Ingwer", "1 Knoblauchzehe", "6 EL Sojasauce", "1 EL Zucker", "1 TL Sesamöl", "1–2 Msp. Chilipaste", "800 g Färsen-Entrecôte", "150 g Basmatireis (z. B. von Oryza)", "Salz", "4 EL Sesamsaat", "4 EL ÖL", "2 Frühlingszwiebeln"],
+        "recipeInstructions": ["Zwiebel, Ingwer und Knoblauch fein würfeln und mit Sojasauce, Zucker, Sesamöl und Chilipaste glattrühren. Das Fleisch in dünne Minischnitzel schneiden und mit der Marinade vermengen.", "Reis mit 500 ml Wasser und einer Prise Salz in einem kleinen Topf aufkochen. Zugedeckt bei milder Hitze 10 Minuten garziehen. Dann ein gefaltetes, sauberes Küchentuch zwischen Topf und Deckel legen und den Reis am Herdrand bis zum Servieren ziehen lassen.", "Sesam in einer großen beschichteten Pfanne ohne Öl goldbraun rösten. Herausnehmen und beiseitestellen. Öl in die Pfanne geben und erhitzen. Das Fleisch hineingeben und 3–5 Minuten scharf braten. Frühlingszwiebeln schräg in feine Scheiben schneiden und über das Fleisch streuen. Sesam unter den Reis rühren und zum Fleisch servieren."],
+        "recipeYield": "für 4 Personen Portionen",
+        "totalTime": ""
+    }, {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+                "@type": "ListItem",
+                "item": {
+                    "@id": "https://www.effilee.de/",
+                    "@type": "WebPage",
+                    "name": "Startseite"
+                },
+                "position": 1
+            }, {
+                "@type": "ListItem",
+                "item": {
+                    "@id": "https://www.effilee.de/rezepte/",
+                    "@type": "WebPage",
+                    "name": "Rezepte"
+                },
+                "position": 2
+            }, {
+                "@type": "ListItem",
+                "item": {
+                    "@id": "https://www.effilee.de/rezepte/zutat/fleisch/",
+                    "@type": "WebPage",
+                    "name": "Hauptzutat"
+                },
+                "position": 3
+            }, {
+                "@type": "ListItem",
+                "item": {
+                    "@id": "https://www.effilee.de/rezept/bulgogi-mit-basmati-sesam-reis-a-078b7d53-0005-0011-0000-000010131228",
+                    "image": "https://cdn.prod.www.effilee.de/images/2320abca-0005-0004-5576-3772133f95aa_w1200_r1.778_fpx55.01_fpy55.01.jpg",
+                    "name": "Bulgogi mit Basmati-Sesam-Reis"
+                },
+                "position": 4
+            }]
+    }]

@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="3.0"
+              xmlns="https://jakarta.ee/xml/ns/jakartaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd">
+    <application>
+        <locale-config>
+            <default-locale>de</default-locale>
+        </locale-config>
+        <action-listener>
+            org.primefaces.application.DialogActionListener
+        </action-listener>
+        <navigation-handler>
+            org.primefaces.application.DialogNavigationHandler
+        </navigation-handler>
+        <view-handler>
+<!--            org.primefaces.application.DialogViewHandler -->
+            org.braun.cookbook.web.CustomViewHandler
+        </view-handler>
+        <!--resource-bundle>
+            <base-name>org.braun.digikam.common.LabelResourceBundle</base-name>
+            <var>label</var>
+        </resource-bundle-->
+    </application>
+    <!--
+    <factory>
+        <exception-handler-factory>org.omnifaces.exceptionhandler.FullAjaxExceptionHandlerFactory</exception-handler-factory>
+    </factory>
+        -->
+    <component>
+        <component-type>org.braun.component.LazyLoadImage</component-type>
+        <component-class>org.braun.digikam.web.component.image.LazyLoadImage</component-class>
+    </component>
+    <component>
+        <component-type>org.braun.component.Diagram</component-type>
+        <component-class>org.braun.digikam.web.component.diagram.Diagram</component-class>
+    </component>
+</faces-config>

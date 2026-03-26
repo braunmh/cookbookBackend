@@ -1,0 +1,60 @@
+{
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    "name": "Lachs mit Knusper-Rosenkohl",
+    "description": "Ein einfaches Low-Carb-Gericht: Der Rosenkohl wird mariniert und gart im Ofen, etwas später kommt dann der Lachs dazu.",
+    "keywords": "Low Carb, Ofengericht, einfach",
+    "recipeCategory": "gesund, Fisch, Lachs, Gemüse",
+    "dateModified": "2025-07-15T12:35:12.348Z",
+    "datePublished": "2025-07-15T12:35:12.340Z",
+    "image": [{
+            "@type": "ImageObject",
+            "url": "https://images.ndr.de/image/c2af9b1b-df0b-42e9-8465-82ce049ea8ca/AAABlTOrecM/AAABkZLlo-k/16x9-big/lachs812.jpg?width=1920",
+            "author": "NDR, Claudia Timmann",
+            "width": 1920,
+            "height": 1080,
+            "datePublished": "2025-02-23T17:23:27.224+01:00",
+            "description": "Lachs und Rosenkohl liegen auf einem Teller."
+        }, {
+            "@type": "ImageObject",
+            "url": "https://images.ndr.de/image/c2af9b1b-df0b-42e9-8465-82ce049ea8ca/AAABlTOrecM/AAABkZLotXc/1x1-big/lachs812.jpg?width=1400",
+            "author": "NDR, Claudia Timmann",
+            "width": 1400,
+            "height": 1400,
+            "datePublished": "2025-02-23T17:23:27.224+01:00",
+            "description": "Lachs und Rosenkohl liegen auf einem Teller."
+        }, {
+            "@type": "ImageObject",
+            "url": "https://images.ndr.de/image/c2af9b1b-df0b-42e9-8465-82ce049ea8ca/AAABlTOrecM/AAABkZLqw7o/4x3/lachs812.jpg?width=1280",
+            "author": "NDR, Claudia Timmann",
+            "width": 1280,
+            "height": 960,
+            "datePublished": "2025-02-23T17:23:27.224+01:00",
+            "description": "Lachs und Rosenkohl liegen auf einem Teller."
+        }],
+    "publisher": {
+        "@type": "newsMediaOrganization",
+        "name": "ndr.de",
+        "url": "https://www.ndr.de",
+        "alternateName": "Norddeutscher Rundfunk",
+        "correctionsPolicy": "https://www.ndr.de/home/korrekturuebersicht100.html",
+        "diversityPolicy": "https://www.ndr.de/der_ndr/unternehmen/Charta-der-Vielfalt-im-NDR,charta107.html",
+        "sameAs": "https://www.facebook.com/NDR.de, https://twitter.com/ndr, https://www.instagram.com/ndr.de/?hl=de",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.ndr.de/favicon.svg"
+        }
+    },
+    "totalTime": "PT40M",
+    "recipeYield": 2,
+    "expires": "2027-02-24T20:00:00.000Z",
+    "recipeIngredient": [{
+            "Zutaten:": "250 g Lachsfilet, 1 Prise Salz, etwas Zitronensaft, 500 g Rosenkohl, 2 EL Olivenöl, 1 TL Honig, 1 Prise Kümmel, Pfeffer, 100 g (10% Fett) saure Sahne, 50 g Naturjoghurt, alternativ: Schmand, 40 g Tafel-Meerrettich, 0 Bund Petersilie"
+        }],
+    "recipeInstructions": ["Den Ofen auf 200 Grad Ober-/Unterhitze (Umluft 180 Grad) vorheizen. Ein Backblech mit Backpapier belegen. Lachs unter fließend Wasser säubern, trocken tupfen, salzen und mit etwas Zitrone säuern. Den Rosenkohl waschen und putzen. Große Rosenkohlröschen halbieren oder vierteln. Mit Öl, Honig, Kümmel und Pfeffer in einer Schüssel gut mischen. \n\nDen marinierten Rosenkohl auf dem Backblech verteilen, dabei etwas Platz für den Lachs frei lassen, und in den Ofen schieben. Inzwischen saure Sahne, Joghurt und Meerrettich mit etwas Salz zu einem Dip verrühren. Petersilie waschen, trocken schütteln, Blätter abzupfen und fein hacken, beiseitestellen. \n\nNach 10 Minuten den Rosenkohl auf dem Blech durchrühren und das Lachsfilet dazulegen. Etwa 10 Minuten weiter garen. Dabei den Rosenkohl eventuell nochmals etwas drehen und aufpassen, dass der Lachs nicht zu trocken wird. Zum Servieren die Filets auf vorgewärmte Teller setzen, daneben den Rosenkohl und Dip platzieren und mit der Petersilie bestreuen. "],
+    "author": {
+        "@type": "Organization",
+        "name": "ndr.de"
+    },
+    "isAccessibleForFree": "true"
+}

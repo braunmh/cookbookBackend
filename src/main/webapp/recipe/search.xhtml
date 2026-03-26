@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../common.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:comp="jakarta.faces.composite/comp"
+                xmlns:h="jakarta.faces.html">
+    <ui:define name="css">
+        <style>
+        thead {display:none;}
+        </style>
+    </ui:define>
+
+    <ui:define name="navigation">
+        <comp:navigation/>
+    </ui:define>
+
+    <ui:define name="content">
+        <script type="text/javascript">
+            function addStyleToAutoCompleteMultiple(widgetVar, styleClass) {
+                var widget = PF(widgetVar);
+                if (widget) {
+                    widget.jq[0].classList.add(styleClass);
+                }
+            }
+            function removeStyleToAutoCompleteMultiple(widgetVar, styleClass) {
+                var widget = PF(widgetVar);
+                if (widget) {
+                    widget.jq[0].classList.remove(styleClass);
+                }
+            }
+        </script>
+        <div class="ui-fluid formgrid grid">
+            <comp:inputElement>
+                <p:autoComplete id="content" var="content" dropdown="false" widgetVar="contentWidget"
+                                multiple="true" value="#{recipeSearchBean.parameter.content}"
+                                completeMethod="#{recipeSearchBean.getSuggestionContent}"
+                                itemLabel="#{content.name}" itemValue="#{content}"
+                                scrollHeight="250"
+                                onfocus="addStyleToAutoCompleteMultiple('contentWidget', 'ui-inputwrapper-focus')"
+                                onblur="removeStyleToAutoCompleteMultiple('contentWidget', 'ui-inputwrapper-focus')"
+                                styleClass="#{recipeSearchBean.parameter.content.isEmpty() ? '' : 'ui-inputwrapper-filled'}">
+                    <f:converter converterId="suggestionConverter"/>
+                    <p:ajax event="itemSelect" update="content"/>
+                    <p:ajax event="itemUnselect" update="content"/>
+                    <p:column>
+                        <h:outputText value="#{content.name} (#{content.frequency})"/>
+                    </p:column>
+                </p:autoComplete>
+                <p:outputLabel for="content" value="Suchbegriff" />
+                <p:message id="contentMsg" for="content" display="tooltip"/>
+            </comp:inputElement>
+             <comp:inputElement>
+                <p:autoComplete id="keywords" var="keyword" dropdown="true" widgetVar="keywordWidget"
+                                value="#{recipeSearchBean.parameter.keywords}" multiple="true"
+                                completeMethod="#{recipeSearchBean.getSuggestionKeyword}"
+                                itemValue="#{keyword}" itemLabel="#{keyword.name}"
+                                scrollHeight="250">
+                                onfocus="addStyleToAutoCompleteMultiple('keywordWidget', 'ui-inputwrapper-focus')"
+                                onblur="removeStyleToAutoCompleteMultiple('keywordWidget', 'ui-inputwrapper-focus')"
+                                styleClass="#{recipeSearchBean.parameter.keywords.isEmpty() ? '' : 'ui-inputwrapper-filled'}">
+                    <f:converter converterId="keywordConverter"/>
+                    <p:ajax event="itemSelect" update="keywords"/>
+                    <p:ajax event="itemUnselect" update="keywords"/>
+                </p:autoComplete>
+                <p:outputLabel for="keywords" value="Stichworte" />
+                <p:message id="keywordsMsg" for="keywords" display="tooltip"/>
+             </comp:inputElement>
+           <comp:inputElement>
+                    <p:selectOneMenu id="rating"
+                                     value="#{recipeSearchBean.parameter.rating}">
+                        <f:selectItems value="#{recipeSearchBean.ratingValues}" 
+                                       var="rating" itemLabel="#{rating.name}" itemValue="#{rating}"/>
+                        <f:converter converterId="ratingConverter"/>
+                    </p:selectOneMenu>
+                <p:outputLabel for="rating" value="Bewertung" />
+            </comp:inputElement>
+            <comp:inputElement>
+                <p:selectBooleanCheckbox value="#{recipeSearchBean.parameter.evaluated}" itemLabel="ausprobiert"/>               
+            </comp:inputElement>
+            <comp:inputElement>
+                <p:autoComplete id="pathParent" var="pathParent" dropdown="false" 
+                                multiple="false" value="#{recipeSearchBean.parameter.directory}"
+                                completeMethod="#{recipeSearchBean.getSuggestionPathParent}"
+                                itemLabel="#{pathParent.name}" itemValue="#{pathParent}"
+                                scrollHeight="250"
+                    >
+                    <f:converter converterId="suggestionConverter"/>
+                    <p:column>
+                        <h:outputText value="#{pathParent.name} (#{pathParent.frequency})"/>
+                    </p:column>
+                </p:autoComplete>
+                <p:outputLabel for="pathParent" value="Ordner" />
+                <p:message id="pathParentMsg" for="pathParent" display="tooltip"/>
+            </comp:inputElement>
+        </div>
+        <div class="ui-fluid formgrid grid">
+            <comp:inputElement>
+                <div style="flex-flow: row; text-align: right;">
+                    <p:commandButton styleClass="di-button" style="width: auto" id="reset" 
+                        value="zurücksetzen" action="#{recipeSearchBean.reset()}" immediate="true" update="@form"/>
+                    <p:commandButton styleClass="di-button" style="width: auto" id="execute" 
+                        value="Suchen" action="#{recipeSearchBean.execute()}" update="@form"/>
+                </div>
+            </comp:inputElement>
+        </div>
+        <p:dataTable id="result" var="row" value="#{recipeSearchBean.result}" 
+                     paginator="true" rows="10" rendered="#{not empty recipeSearchBean.result}"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}"
+                     rowsPerPageTemplate="10,20,40">
+            <p:column id="col-title" >
+                <h:outputText value="#{row.title}"/> <h:outputText value=" "/> <h:outputText value="#{row.rating}"/><br/>
+                <h:outputText value="#{row.keywords}"/>
+            </p:column>
+        </p:dataTable>
+    </ui:define>
+
+</ui:composition>

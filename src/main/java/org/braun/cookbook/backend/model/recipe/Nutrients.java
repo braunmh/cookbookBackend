@@ -169,7 +169,7 @@ public class Nutrients implements EmptyElement {
         return nutrients;
     }
 
-    public Nutrients add(Nutrient value) {
+    public final Nutrients add(Nutrient value) {
         getNutrients().add(value);
         return this;
     }

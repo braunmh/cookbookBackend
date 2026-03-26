@@ -13,7 +13,7 @@ import org.braun.cookbook.backend.model.recipe.Nutrient;
 import org.braun.cookbook.backend.model.recipe.Nutrients;
 import org.braun.cookbook.backend.model.recipe.OrderedList;
 import org.braun.cookbook.backend.model.recipe.Paragraph;
-import org.braun.cookbook.backend.model.recipe.Recipe;
+import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.model.recipe.Source;
 import org.braun.cookbook.backend.model.recipe.UnorderedList;
 import org.braun.cookbook.backend.model.recipe.Yield;

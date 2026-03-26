@@ -1,0 +1,58 @@
+{
+  "@context" : "https://schema.org",
+  "@type" : "Recipe",
+  "name" : "Feld- und Senfsalat mit Süßkartoffeln und Frischkäse",
+  "description" : "Die Süßkartoffeln garen mit Knoblauch und Thymian im Ofen. Das Dressing wird mit Apfelstücken und Schnittlauch verfeinert.",
+  "keywords" : "Wintersalat, gesund",
+  "recipeCategory" : "Salate, gesund, vegetarisch, Gemüse",
+  "dateModified" : "2025-02-14T17:10:16.492Z",
+  "datePublished" : "2025-02-11T12:25:47.886Z",
+  "image" : [ {
+    "@type" : "ImageObject",
+    "url" : "https://images.ndr.de/image/b8ee4ca4-bafb-4ac6-aa52-e53f702bc7c7/AAABlPCeM6c/AAABmyZE0EA/16x9-big/senfsalat100.jpg?width=1920",
+    "author" : "NDR",
+    "width" : 1920,
+    "height" : 1080,
+    "datePublished" : "2025-02-10T17:06:00.377+01:00",
+    "description" : "Ein Teller mit Feld- und Senfsalat mit Süßkartoffeln und Frischkäse"
+  }, {
+    "@type" : "ImageObject",
+    "url" : "https://images.ndr.de/image/b8ee4ca4-bafb-4ac6-aa52-e53f702bc7c7/AAABlPCeM6c/AAABmyZFBBo/1x1-big/senfsalat100.jpg?width=1400",
+    "author" : "NDR",
+    "width" : 1400,
+    "height" : 1400,
+    "datePublished" : "2025-02-10T17:06:00.377+01:00",
+    "description" : "Ein Teller mit Feld- und Senfsalat mit Süßkartoffeln und Frischkäse"
+  }, {
+    "@type" : "ImageObject",
+    "url" : "https://images.ndr.de/image/b8ee4ca4-bafb-4ac6-aa52-e53f702bc7c7/AAABlPCeM6c/AAABmyZFGb8/4x3/senfsalat100.jpg?width=1280",
+    "author" : "NDR",
+    "width" : 1280,
+    "height" : 960,
+    "datePublished" : "2025-02-10T17:06:00.377+01:00",
+    "description" : "Ein Teller mit Feld- und Senfsalat mit Süßkartoffeln und Frischkäse"
+  } ],
+  "publisher" : {
+    "@type" : "newsMediaOrganization",
+    "name" : "ndr.de",
+    "url" : "https://www.ndr.de",
+    "alternateName" : "Norddeutscher Rundfunk",
+    "correctionsPolicy" : "https://www.ndr.de/home/korrekturuebersicht100.html",
+    "diversityPolicy" : "https://www.ndr.de/der_ndr/unternehmen/Charta-der-Vielfalt-im-NDR,charta107.html",
+    "sameAs" : "https://www.facebook.com/NDR.de, https://twitter.com/ndr, https://www.instagram.com/ndr.de/?hl=de",
+    "logo" : {
+      "@type" : "ImageObject",
+      "url" : "https://www.ndr.de/favicon.svg"
+    }
+  },
+  "totalTime" : "PT30M",
+  "recipeYield" : 2,
+  "expires" : "2027-02-11T19:15:00.000Z",
+  "recipeIngredient" : [ "200 g Feldsalat", "100 g Senfsalat (Mizuna)", "300 g Süßkartoffeln", "1 Zehe Knoblauch", "0.5 Bund Thymian", "Salz", "Pfeffer", "125 g Frischkäse", "1 Apfel", "0.5 Bund Schnittlauch", "1 EL Senf", "70 ml Olivenöl", "2 EL Apfelessig", "100 ml Granatapfelsaft", "Salz", "Pfeffer" ],
+  "recipeInstructions" : [ "Süßkartoffeln gründlich waschen oder schälen und in gleich dicke Scheiben schneiden. Ein Backblech mit Backpapier auslegen und die Süßkartoffelscheiben darauf verteilen. Knoblauch schälen, ebenfalls in Scheiben schneiden und auf die Süßkartoffeln geben. Die Thymianblättchen von den Stielen zupfen und über den Süßkartoffelscheiben verteilen, die Stiele ebenfalls auf das Blech geben.\n\nAlles mit Olivenöl beträufeln und mit Pfeffer und Salz würzen. 20 Minuten bei 180 Grad Umluft im Ofen backen. In der Zwischenzeit den Feld- und Senfsalat gründlich waschen und abtropfen lassen. \n\nSüßkartoffeln aus dem Ofen holen und abkühlen lassen, bis sie lauwarm sind.", "Apfel putzen und klein würfeln, Schnittlauch in Röllchen schneiden. Beides in ein Schraubglas geben. Senf, Apfelessig, Olivenöl und Granatapfelsaft dazugeben, das Glas gut verschrauben und schütteln. Zum Schluss das Dressing mit Salz und Pfeffer abschmecken." ],
+  "author" : {
+    "@type" : "Person",
+    "name" : "Thomas Sampl"
+  },
+  "isAccessibleForFree" : "true"
+}
