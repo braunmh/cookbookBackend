@@ -4,9 +4,9 @@
                 xmlns:ui="jakarta.faces.facelets"
                 template="./../common.xhtml"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:comp="jakarta.faces.composite/comp"
-                xmlns:h="jakarta.faces.html">
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core">
     <ui:define name="css">
         <style>
         thead {display:none;}
@@ -112,7 +112,10 @@
                      currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}"
                      rowsPerPageTemplate="10,20,40">
             <p:column id="col-title" >
-                <h:outputText value="#{row.title}"/> <h:outputText value=" "/> <h:outputText value="#{row.rating}"/><br/>
+                <h:link outcome="/recipe/display" target="_blank">
+                    <f:param name="path" value="#{row.path}"/>
+                    <h:outputText value="#{row.title}"/> <h:outputText value=" "/>
+                </h:link><h:outputText value="#{row.rating}"/><br/>
                 <h:outputText value="#{row.keywords}"/>
             </p:column>
         </p:dataTable>

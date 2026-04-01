@@ -283,6 +283,9 @@ public class Recipe implements EmptyElement {
     }
 
     public int getRating() {
+        if (rating == null) {
+            return 0;
+        }
         return rating;
     }
 
@@ -413,6 +416,10 @@ public class Recipe implements EmptyElement {
         return this;
     }
 
+    public Ingredients getLastIngredients() {
+        return getIngredients().getLast();
+    }
+    
     @Override
     public String getTagName() {
         return "Recipe";

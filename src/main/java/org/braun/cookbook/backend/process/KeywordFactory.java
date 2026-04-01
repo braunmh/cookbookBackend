@@ -70,6 +70,18 @@ public class KeywordFactory {
         }
         return keywordsById.get(id);
     }
+    
+    public Keyword getById(String id) {
+        if (id == null) {
+            return null;
+        }
+        try {
+            return keywordsById.get(Long.valueOf(id));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    
     public List<Keyword> getListByName(String name) {
         List<Keyword> result = new ArrayList<>();
         try {

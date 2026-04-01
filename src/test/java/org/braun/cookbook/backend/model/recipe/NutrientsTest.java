@@ -1,5 +1,6 @@
 package org.braun.cookbook.backend.model.recipe;
 
+import org.braun.cookbook.backend.model.recipeLd.NutritionInformation;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -10,9 +11,7 @@ public class NutrientsTest {
     
     @Test
     public void test() {
-        Nutrients ns = new Nutrients("Pro Portion: 660 kcal/ 2750 kJ / 46 g Kohlenhydrate, 21 g Eiweiß, 43 g Fett");
-        for (Nutrient n : ns.getNutrients()) {
-            System.out.println(n);
-        }
+        NutritionInformation ni = NutritionInformation.parse("Pro Portion: 460 kcal/ 1920 kJ, 48 g Kohlenhydrate, 18 g Eiweiß, 22 g Fett");
+        System.out.println(ni.getCalories());
     }
 }

@@ -1,7 +1,9 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:ui="jakarta.faces.facelets"
+              xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core">
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -14,49 +16,52 @@
     </h:head>
 
     <h:body onload="retrieveWidthHeight()">
-        <h:outputScript>
-        function retrieveWidthHeight() {
-            var innerWidth =  "" + window.innerWidth;
-            var innerHeight = "" + window.innerHeight;
-            setWidthHeight([{name: "innerHeight", value: innerHeight}, {name: "innerWidth", value: innerWidth}]);
-        }
-        </h:outputScript>
-        <header id="top" class="top">
-        <h:form id="menu">
-            <p:remoteCommand name="setWidthHeight"  action="#{sessionUserBean.setWidthHeight}" />
-            <ui:insert name="navigation">Navigation</ui:insert>
-        </h:form>
-        </header>
-
-        <main id="content">
-            <h:form id="mainForm" style="display: flex">
-                <p:growl id="growl"/>
-                <aside class='aside-menu'>
-                    <ui:insert name="aside"/>
-                </aside>
-                <section style="flex-grow: 1">
-                    <h:panelGroup id="content">
-                        <ui:insert name="content">Content</ui:insert>
-                    </h:panelGroup>
-                </section>
-            </h:form>
-        </main>
-
-        <script>
-            //<![CDATA[
-        const asideBtn = document.querySelector('.aside-btn');
-        const asideMenu = document.querySelector('.aside-menu');
-        if (asideBtn === null) {
-            asideMenu.style.display = "none";
-        } else {
-            asideMenu.classList.toggle('show');
-            asideBtn.addEventListener('click', () => {
-                asideMenu.classList.toggle('show');
+        <f:view id="view">
+            <ui:define name="metadata"/>
+            <h:outputScript>
+                function retrieveWidthHeight() {
+                var innerWidth =  "" + window.innerWidth;
+                var innerHeight = "" + window.innerHeight;
+                setWidthHeight([{name: "innerHeight", value: innerHeight}, {name: "innerWidth", value: innerWidth}]);
                 }
-            );
-        }
-            //]]>
-        </script>
-        <footer id="footer"></footer>
+            </h:outputScript>
+            <header id="top" class="top">
+                <h:form id="menu">
+                    <p:remoteCommand name="setWidthHeight"  action="#{sessionUserBean.setWidthHeight}" />
+                    <ui:insert name="navigation">Navigation</ui:insert>
+                </h:form>
+            </header>
+
+            <main id="content">
+                <h:form id="mainForm" style="display: flex">
+                    <p:growl id="growl"/>
+                    <aside class='aside-menu'>
+                        <ui:insert name="aside"/>
+                    </aside>
+                    <section style="flex-grow: 1">
+                        <h:panelGroup id="content">
+                            <ui:insert name="content">Content</ui:insert>
+                        </h:panelGroup>
+                    </section>
+                </h:form>
+            </main>
+
+            <script>
+                //<![CDATA[
+                const asideBtn = document.querySelector('.aside-btn');
+                const asideMenu = document.querySelector('.aside-menu');
+                if (asideBtn === null) {
+                    asideMenu.style.display = "none";
+                } else {
+                    asideMenu.classList.toggle('show');
+                    asideBtn.addEventListener('click', () => {
+                        asideMenu.classList.toggle('show');
+                    }
+                    );
+                }
+                //]]>
+            </script>
+            <footer id="footer"></footer>
+        </f:view>
     </h:body>
 </ui:composition>

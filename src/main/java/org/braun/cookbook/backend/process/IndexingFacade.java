@@ -89,6 +89,7 @@ public class IndexingFacade {
                     LOG.info("Number of entries indexed: {}", indexed);
                 }
             }
+            client.commit(getSolrCollection());
         } catch (IOException | SolrServerException e) {
             LOG.error("Indexing finished with error.", e);
         } catch (Exception e) {

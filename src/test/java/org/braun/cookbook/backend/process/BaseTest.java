@@ -117,6 +117,7 @@ public class BaseTest {
     public RecipeFacade getRecipeFacade() {
         if (recipeFacade == null) {
             recipeFacade = new RecipeFacade();
+            recipeFacade.setSequenceGenerator(getSequenceGenerator());
         }
         return recipeFacade;
     }

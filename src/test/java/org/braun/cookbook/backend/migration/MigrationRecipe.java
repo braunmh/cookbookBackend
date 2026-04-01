@@ -75,6 +75,7 @@ public class MigrationRecipe extends BaseTest {
             }
         }
     }
+
     @Test
     public void indexing() {
         init();

@@ -84,4 +84,24 @@ public class Nutrient implements EmptyElement {
         return unit == null || unit.isBlank() || count == null || count.isBlank();
     }
 
+    public String toText() {
+        StringBuilder sb = new StringBuilder();
+        if (count != null && count.length() > 0) {
+            sb.append(count);
+        }
+        if (unit != null && unit.length() > 0) {
+            if (sb.length() > 0) {
+                sb.append(' ');
+            }
+            sb.append(unit);
+        }
+        if (content != null && content.length() > 0) {
+            if (sb.length() > 0) {
+                sb.append(' ');
+            }
+            sb.append(content);
+        }
+        return sb.toString();
+    }
+
 }

@@ -1,0 +1,54 @@
+/* 
+    Created on : 27.03.2026, 18:12:36
+    Author     : mbraun
+*/
+@media (min-width: 600px) {
+   div.r_image {float: right; margin: 0px 0px 3px 3px; }
+}
+
+div.r_keyword {
+    font-weight: bold; 
+    font-size: 1.2em; 
+    color: #222222;
+}
+div.r_yield {
+    font-weight: bold; 
+    font-size: 1.1em; 
+    color: #222222;
+}
+
+/* Styles for Ingredients */
+div.r_ing {margin: 0; padding: 0;}
+div.r_ing span.r_ing_count {
+    display: block;
+    float: left;
+    text-align: right;
+    width: 4em;
+}
+div.r_ing ul {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+div.r_ing li.r_ing_title {
+    font-weight: bold;
+}
+div.r_ing span.r_ing_unit {
+    display: block;
+    float: left;
+    margin-left: 5px;
+    width: 3.5em;
+}
+div.r_ing span.r_ing_content {
+    display: block;
+    margin-left: 8em;
+    padding-right: 20px;
+}
+
+div.ing li.r_ing_title {
+    font-weight: bold; 
+}
+
+div.r_source, div.r_nut {
+    margin-top: 0.3em;
+}

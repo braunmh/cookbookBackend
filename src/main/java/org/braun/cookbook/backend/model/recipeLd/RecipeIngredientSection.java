@@ -37,6 +37,11 @@ public class RecipeIngredientSection extends Parsable<RecipeIngredientSection> {
         return ingredients;
     }
     
+    public RecipeIngredientSection addIngredient(String value) {
+        ingredients.add(value);
+        return this;
+    }
+    
     public RecipeIngredientSection addIngredients(String value) {
         if (value != null) {
             ingredients.addAll(Arrays.asList(value.split(", ")));

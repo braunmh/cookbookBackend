@@ -1,0 +1,14 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:ui="jakarta.faces.facelets"
+              xmlns:h="jakarta.faces.html"
+              xmlns:p="primefaces">
+    <cc:interface>
+        <cc:attribute name="rating" required="false" />
+    </cc:interface>
+    <cc:implementation>
+        <h:graphicImage rendered="#{cc.attrs.rating > '0'}" alt="Rating #{cc.attrs.rating}"
+                        library="image" name="rating#{cc.attrs.rating}.gif"
+                        style="margin-left: 3px;"/>
+    </cc:implementation>
+</ui:composition>>

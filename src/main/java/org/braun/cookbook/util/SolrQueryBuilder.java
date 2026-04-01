@@ -122,6 +122,7 @@ public class SolrQueryBuilder {
             return this;
         }
         addOperator();
+        value = escapeSpecialCharacters(value);
         query.append(fieldName).append(":")
             .append(value);
         return this;
@@ -132,6 +133,7 @@ public class SolrQueryBuilder {
             return this;
         }
         addOperator();
+        value = escapeSpecialCharacters(value);
         String [] words = value.split(" ");
         StringBuilder tmp = new StringBuilder(words[0]);
         for (int i = 1; i < words.length; i++) {
@@ -255,5 +257,22 @@ public class SolrQueryBuilder {
         if (query.length() > 0) {
             query.append(" AND ");
         }
+    }
+    
+    /**
+     * Escape these list + - && || ! ( ) { } [ ] ^ " ~ * ? : \ / of characters
+     * @param value to escape
+     * @return the escaped value
+     */
+    private String escapeSpecialCharacters(String value) {
+        int outLength = 0;
+        char[] out = new char[value.length() * 2];
+        for (char c : value.toCharArray()) {
+            if ("+-!(){}[]^\"~*?:\\/".indexOf(c) > -1) {
+                out[outLength++] = '\\';
+            }
+            out[outLength++] = c;
+        }
+        return new String(out, 0, outLength);
     }
 }

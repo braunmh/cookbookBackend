@@ -169,6 +169,61 @@ paths:
           description: OK
       x-accepts: application/json
     summary: Find suggestion for directories starting with value
+  /recipe/rating:
+    get:
+      tags:
+      - recipe
+      callbacks: {}
+      operationId: rateRecipe
+      parameters:
+      - description: Id of the Recipe to change
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+        style: form
+      - description: Value to set for rating msut be between 0 and 5
+        explode: true
+        in: query
+        name: rating
+        required: true
+        schema:
+          type: integer
+          format: int32
+        style: form
+      responses:
+        "200":
+          description: Update recipe successful
+      x-accepts: application/json
+    summary: change the rating of an recipe
+  /recipe/image:
+    get:
+      tags:
+      - recipe
+      callbacks: {}
+      operationId: getRecipeImage
+      parameters:
+      - description: part of word to search for
+        explode: true
+        in: query
+        name: imagePath
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            image/jpeg:
+              schema:
+                format: byte
+                type: string
+          description: OK
+      x-accepts: application/json
+    summary: Return image kgiven by imagePath
 components:
   callbacks: {}
   responses: {}

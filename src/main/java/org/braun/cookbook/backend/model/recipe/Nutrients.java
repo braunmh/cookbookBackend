@@ -1,6 +1,7 @@
 package org.braun.cookbook.backend.model.recipe;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -173,4 +174,28 @@ public class Nutrients implements EmptyElement {
         getNutrients().add(value);
         return this;
     }
+
+    public String toText() {
+        if (nutrients == null || nutrients.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder value = new StringBuilder("Nährwerte");
+        if (getUnit() != null) {
+            value.append(" / ").append(unit);
+        }
+        value.append(": ");
+        Iterator<Nutrient> iter = nutrients.iterator();
+        int i = 0;
+        while (iter.hasNext()) {
+            if (i > 0) {
+                value.append(", ");
+            }
+            value.append(iter.next().toText());
+            i++;
+        }
+
+        return value.toString();
+    }
+
 }

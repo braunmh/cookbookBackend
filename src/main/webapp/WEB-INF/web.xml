@@ -36,6 +36,9 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>/recipe/search.xhtml</welcome-file>
+    </welcome-file-list>
     <resource-ref>
         <description>DB Connection</description>
         <res-ref-name>jdbc/cookbook</res-ref-name>

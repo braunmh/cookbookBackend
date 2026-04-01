@@ -101,7 +101,7 @@ public class NutritionInformation extends Parsable<NutritionInformation> {
             } else {
                 switch (getNutrientType(nutrient.getContent())) {
                     case protein:
-                        out.setCalories(nutrient.getCount());
+                        out.setProteinContent(nutrient.getCount());
                         break;
                     case fat:
                         out.setFatContent(nutrient.getCount());
@@ -145,9 +145,9 @@ public class NutritionInformation extends Parsable<NutritionInformation> {
     
     static final EnumMap<NutrientType, List<String>> trans = new EnumMap<>(NutrientType.class);
     static {
-        trans.put(NutrientType.protein, Arrays.asList("eiweiß, e"));
+        trans.put(NutrientType.protein, Arrays.asList("eiweiß", "e"));
         trans.put(NutrientType.fat, Arrays.asList("fett"));
-        trans.put(NutrientType.carbohydrate, Arrays.asList("kh", "kohlehydrate"));
+        trans.put(NutrientType.carbohydrate, Arrays.asList("kh", "kohlehydrate", "kohlenhydrate"));
         trans.put(NutrientType.unsaturatedFat, Arrays.asList("ungesättigte fettsäuren"));
         trans.put(NutrientType.transFat, Arrays.asList("transfettsäuren", "trans-fettsäuren"));
         trans.put(NutrientType.sugar, Arrays.asList("zucker"));

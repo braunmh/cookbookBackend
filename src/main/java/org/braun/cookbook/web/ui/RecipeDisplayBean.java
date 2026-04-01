@@ -5,10 +5,13 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.braun.cookbook.backend.model.Keyword;
 import org.braun.cookbook.backend.model.Recipe;
+import org.braun.cookbook.backend.process.KeywordFactory;
 import org.braun.cookbook.backend.process.RecipeFacade;
 import org.braun.cookbook.util.Configuration;
 import org.omnifaces.cdi.ViewScoped;
@@ -32,17 +35,19 @@ public class RecipeDisplayBean implements Serializable {
     private Recipe content;
     
     public void onload() {
-        if (StringUtils.isNotBlank(path)) {
-            try {
-                content = Recipe.unmarshal(Configuration.getInstance().getContentDirectory(), path);
-            } catch (SAXException e) {
-                LOG.error("Reading Recipe {}", path);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Fehler beim Lesen von Rezept " + path));
+        if (content == null) {
+            if (StringUtils.isNotBlank(path)) {
+                try {
+                    content = Recipe.unmarshal(Configuration.getInstance().getContentDirectory(), path);
+                } catch (SAXException e) {
+                    LOG.error("Reading Recipe {}", path);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Fehler beim Lesen von Rezept " + path));
+                    content = new Recipe();
+                }
+            } else {
                 content = new Recipe();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Variable path not set!"));
             }
-        } else {
-            content = new Recipe();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Variable path not set!"));
         }
     }
 
@@ -62,4 +67,11 @@ public class RecipeDisplayBean implements Serializable {
         this.content = content;
     }
 
+    public String getKeywords() {
+        if (content.getCategories().isEmpty()) {
+            return null;
+        }
+        Stream<Keyword> ks = content.getCategories().getCategories().stream().map(c -> KeywordFactory.getInstance().getById(c.getName()));
+        return String.join(", ", ks.filter(k -> k != null).map(k -> k.getName()).toList());
+    }
 }

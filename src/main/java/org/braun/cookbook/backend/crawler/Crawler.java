@@ -1,0 +1,93 @@
+package org.braun.cookbook.backend.crawler;
+
+import jakarta.inject.Inject;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.braun.cookbook.backend.importer.ImageUtil;
+import org.braun.cookbook.backend.model.Keyword;
+import org.braun.cookbook.backend.model.Recipe;
+import org.braun.cookbook.backend.model.recipe.Category;
+import org.braun.cookbook.backend.process.KeywordFactory;
+import org.braun.cookbook.backend.process.RecipeFacade;
+
+/**
+ *
+ * @author mbraun
+ */
+public abstract class Crawler {
+    
+    protected static final Logger LOG = LogManager.getLogger();
+    @Inject
+    RecipeFacade recipeFacade;
+
+    public int execute() throws IOException {
+        String pathParent = getPathParent();
+        int cnt = 0;
+        for (String url : getNewRecipes()) {
+            if (recipeFacade.findByUrl(url) != null) {
+                continue;
+            }
+            Recipe recipe = getRecipe(url);
+            if (recipe != null) {
+                if (recipe.getSource().isEmpty()) {
+                    recipe.getSource().setValue(pathParent);
+                }
+                recipe.getSource().setUrl(url);
+                List<Category> converted = new ArrayList<>(recipe.getCategories().getCategories().size());
+                for (Category c : recipe.getCategories().getCategories()) {
+                    Keyword k = KeywordFactory.getInstance().getByName(c.getName());
+                    if (k != null) {
+                        converted.add(new Category().name(String.valueOf(k.getId())));
+                    } else {
+                        LOG.info("Keyword {} not found", c.getName().toUpperCase());
+                        System.out.println("Keyword " + c.getName().toUpperCase() + " not found.");
+                    }
+                }
+                recipe.getCategories().getCategories().clear();
+                recipe.getCategories().getCategories().addAll(converted);
+                byte[] image = getImage(recipe.getImageUrl());
+                recipe.setId(null);
+                recipeFacade.insert(recipe, pathParent, image);
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    protected abstract Recipe getRecipe(String url);
+
+    protected byte[] getImage(String url) {
+        if (StringUtils.isBlank(url)) {
+            return null;
+        }
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+        HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body()) {
+            ImageUtil.resizeToWidth(inputStream, baos, 400);
+            return baos.toByteArray();
+        } catch (IOException | InterruptedException e) {
+            LOG.error("Reading image from " + url, e);
+            return null;
+        }
+    }
+
+    protected abstract String getPathParent();
+
+    protected abstract List<String> getNewRecipes();
+
+    public void setRecipeFacade(RecipeFacade recipeFacade) {
+        this.recipeFacade = recipeFacade;
+    }
+    
+}

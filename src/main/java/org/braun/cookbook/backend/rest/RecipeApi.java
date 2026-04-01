@@ -3,23 +3,33 @@ package org.braun.cookbook.backend.rest;
 
 import io.swagger.annotations.ApiParam;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.braun.cookbook.backend.model.RecipeShort;
 import org.braun.cookbook.backend.model.RecipeSolr;
 import org.braun.cookbook.backend.model.Suggestion;
 import org.braun.cookbook.backend.process.ConditionParseException;
 import org.braun.cookbook.backend.process.RecipeFacade;
+import org.braun.cookbook.util.Configuration;
 
 @Path("/recipe")
 @io.swagger.annotations.Api("the recipe API")
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2026-03-13T15:23:31.280172027+01:00[Europe/Berlin]", comments = "Generator version: 7.7.0")
 public class RecipeApi  {
 
+    private static final Logger LOG = LogManager.getLogger();
+    
     @Inject
     private RecipeFacade recipeFacade;
     
@@ -64,5 +74,40 @@ public class RecipeApi  {
     throws NotFoundException {
         List<Suggestion> result = recipeFacade.getSuggestion(RecipeSolr.FIELD_PATH_PARENT, value);
         return Response.ok().entity(result).build();
+    }
+    @jakarta.ws.rs.GET
+    @Path("/image")
+    @Produces({ "image/jpeg" })
+    @io.swagger.annotations.ApiOperation(value = "", notes = "", response = byte[].class, tags={ "recipe", })
+    @io.swagger.annotations.ApiResponses(value = {
+        @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = byte[].class)
+    })
+    public Response getRecipeImage(@ApiParam(value = "part of word to search for", required = true) @QueryParam("imagePath") @NotNull  String imagePath,@Context SecurityContext securityContext)
+    throws NotFoundException {
+        try (InputStream inputStream = new FileInputStream(Configuration.getInstance().getContentDirectory() + "/" + imagePath);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
+            byte[] buffer = new byte[2048];
+            int length;
+            while ((length = inputStream.read(buffer)) > -1) {
+                baos.write(buffer, 0, length);
+            }
+            return Response.ok().entity(baos.toByteArray()).build();
+        } catch (IOException e) {
+            LOG.error("Reading image {}", imagePath);
+        }
+        return Response.ok().build();
+    }
+    
+    @jakarta.ws.rs.GET
+    @Path("/rating")
+    @io.swagger.annotations.ApiOperation(value = "", notes = "", response = Void.class, tags={ "recipe", })
+    @io.swagger.annotations.ApiResponses(value = {
+        @io.swagger.annotations.ApiResponse(code = 200, message = "Update recipe successful", response = Void.class)
+    })
+    public Response rateRecipe(
+            @ApiParam(value = "Id of the Recipe to change", required = true) @QueryParam("id") @NotNull  Long id,
+            @ApiParam(value = "Value to set for rating msut be between 0 and 5", required = true) @QueryParam("rating") @NotNull  Integer rating,@Context SecurityContext securityContext)
+    throws NotFoundException {
+        return Response.ok().build();
     }
 }

@@ -147,7 +147,7 @@ public class RecipeSolr extends AbstractSolr {
     
     private Date from(Long value) {
         if (value == null) {
-            return null;
+            return new Date();
         }
         return new Date(value);
     }

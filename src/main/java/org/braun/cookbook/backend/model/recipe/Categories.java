@@ -44,4 +44,5 @@ public class Categories implements EmptyElement {
         categories.add(value);
         return this;
     }
+
 }

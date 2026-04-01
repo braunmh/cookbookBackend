@@ -1,8 +1,8 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:cc="jakarta.faces.composite">
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:ui="jakarta.faces.facelets"
+              xmlns:h="jakarta.faces.html"
+              xmlns:p="primefaces">
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -21,7 +21,7 @@
         </div>
         <p:menu overlay="true" trigger="mainmenu-btn" my="left top" at="left bottom" toggleable="true">
             <p:submenu label="Suchen">
-                <p:menuitem value="Rezepte suchen" url="#" icon="pi pi-fw pi-search" partialSubmit="true"/>
+                <p:menuitem value="Rezepte suchen" url="/recipe/search.xhtml" icon="pi pi-fw pi-search" partialSubmit="true"/>
                 <p:menuitem value="News" url="#" icon="pi pi-fw pi-search" partialSubmit="true" />
             </p:submenu>
             <p:submenu label="Administration">

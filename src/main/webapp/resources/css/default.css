@@ -1,7 +1,7 @@
 /*--====== Global Variables ======--*/
 :root {
     --bg-color: #fff;
-    --bg-color-element: #3f51b5;
+    --bg-color-element: #2196f3;
     --text-color: #000;
 }
 
@@ -16,10 +16,10 @@
 body, html {
     width: 100%;
 }
-
+/*
 @media (min-width: 993px) {
     html {
-        font-size: 20px;
+        font-size: 1em;
     }
 }
 
@@ -34,7 +34,7 @@ body, html {
         font-size: 16px;
     }
 }
-
+*/
 body {
     background-color: #ffffff;
     font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
@@ -63,16 +63,17 @@ h3 {
     font-size: 1.3rem;
 }
 a:link, a:visited {
-  color: #495057;
+  color: #222222;
   font-weight : normal;
   text-decoration: none;
 }
 
 a:link:hover, a:visited:hover  {
-  color: #495057;
-  font-weight : bold;
-  text-decoration: none;
+  color: #222222;
+  font-weight : normal;
+  text-decoration : underline;
 }
+
 
 div.command {
     text-align: right;

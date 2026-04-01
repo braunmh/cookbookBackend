@@ -1,26 +1,64 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="jakarta.faces.facelets"
-      xmlns:comp="jakarta.faces.composite/comp">
+<ui:composition template="./../common.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:comp="jakarta.faces.composite/comp"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="path" value="#{recipeDisplayBean.path}"/>
+            <f:viewAction action="#{recipeDisplayBean.onload()}"/>
+        </f:metadata>
+    </ui:define>
+    <ui:define name="css">
+        <h:outputStylesheet library="css" name="image.css"/>
+    </ui:define>
 
-    <body>
+    <ui:define name="navigation">
+        <comp:navigation/>
+    </ui:define>
 
-        <ui:composition template="./../common.xhtml">
+    <ui:define name="content">
+        <h1><h:outputText value="#{recipeDisplayBean.content.title}"/>
+            <h:graphicImage rendered="#{recipeDisplayBean.content.rating gt '0'}" alt="Rating #{recipeDisplayBean.content.rating}"
+                            library="image" name="rating#{recipeDisplayBean.content.rating}.gif"
+                            style="margin-left: 3px;"/>
+        </h1>
+        <h:panelGroup layout="block" styleClass="r_image" rendered="#{not empty recipeDisplayBean.content.imageUrl}">
+            <h:graphicImage value="#{externalContext.contextName}/rest/recipe/image?imagePath=#{recipeDisplayBean.content.imageUrl}"/>
+        </h:panelGroup>
+        <h:panelGroup layout="block" styleClass="r_keyword" rendered="#{not recipeDisplayBean.content.categories.isEmpty()}">
+            <h:outputText value="#{recipeDisplayBean.keywords}"/>
+        </h:panelGroup>
+        <h:panelGroup layout="block" styleClass="r_yield" rendered="#{not recipeDisplayBean.content.yield.isEmpty()}">
+            <h:outputText value="#{recipeDisplayBean.content.yield.unit} #{recipeDisplayBean.content.yield.value}"/>
+        </h:panelGroup>
+        <div class="r_ing">
+            <ui:repeat var="section" value="#{recipeDisplayBean.content.ingredients}">
+                <ul>
+                    <li class="r_ing_title"><h:outputText value="#{section.title}"/></li>
+                    <ui:repeat var="ing" value="#{section.ingredients}">
+                        <li>
+                            <span class="r_ing_count"><h:outputText value="#{ing.count}"/></span>
+                            <span class="r_ing_unit"><h:outputText value="#{ing.unit}" converter="unitConverter"/></span>
+                            <span class="r_ing_content"><h:outputText value="#{ing.value}"/></span>
+                        </li>
+                    </ui:repeat>
+                </ul>    
+            </ui:repeat>
+        </div>
+        <h:outputText value="#{recipeDisplayBean.content.description}" escape="false" converter="descriptionConverter"/>
+        <h:panelGroup layout="block" styleClass="r_nut" rendered="#{not recipeDisplayBean.content.nutrients.isEmpty()}">
+            <h:outputText value="#{recipeDisplayBean.content.nutrients.toText()}"/>
+        </h:panelGroup>
+        <h:panelGroup layout="block" styleClass="r_source" rendered="#{not empty recipeDisplayBean.content.source.url}">
+            <h:outputLink value="#{recipeDisplayBean.content.source.url}">
+                <h:outputText value="#{recipeDisplayBean.content.source.value}"/>
+            </h:outputLink>
+        </h:panelGroup>
+        <h:panelGroup layout="block" styleClass="r_source" rendered="#{not empty recipeDisplayBean.content.source and empty recipeDisplayBean.content.source.url}">
+            <h:outputText value="#{recipeDisplayBean.content.source.value}"/>
+        </h:panelGroup>
+    </ui:define>
 
-            <ui:define name="css">
-                css
-            </ui:define>
-
-            <ui:define name="navigation">
-                <comp:navigation/>
-            </ui:define>
-
-            <ui:define name="content">
-                content
-            </ui:define>
-
-        </ui:composition>
-
-    </body>
-</html>
+</ui:composition>

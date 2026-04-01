@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.braun.cookbook.util.Constants;
 import org.ccil.cowan.tagsoup.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -54,6 +57,10 @@ public class RecipeArd {
         private CharArrayWriter characters;
         
         private StringBuilder ingredient;
+        
+        private List<String> ingredients;
+        
+        private String ingredientTitle = "";
 
         @Override
         public void startDocument() throws SAXException {
@@ -62,6 +69,7 @@ public class RecipeArd {
             step = ParseType.other;
             characters = new CharArrayWriter();
             image = new Image();
+            ingredients = new ArrayList<>();
         }
 
         @Override
@@ -75,115 +83,110 @@ public class RecipeArd {
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
             stack++;
             switch (step) {
-                case other:
+                case other -> {
                     if ("meta".equals(localName)) {
                         if (atts.getValue("itemprop") != null) {
                             String name = atts.getValue("itemprop");
                             switch (name) {
-                                case "description":
-                                    recipe.setDescription(new Text().add(atts.getValue("content")));
-                                    break;
-                                case "datePublished":
-                                    recipe.setDatePublished(DateTime.parse(atts.getValue("content")));
-                                    break;
-                                case "dateModified":
-                                    recipe.setDatePublished(DateTime.parse(atts.getValue("content")));
-                                    break;
-                                case "totalTime":
-                                    recipe.setTotalTime(RecipeDuration.parse(atts.getValue("content")));
-                                    break;
-                                case "cookTime":
-                                    recipe.setTotalTime(RecipeDuration.parse(atts.getValue("content")));
-                                    break;
-                                case "recipeCategory":
+                                case "description" -> recipe.setDescription(new Text().add(atts.getValue("content")));
+                                case "datePublished" -> recipe.setDatePublished(DateTime.parse(atts.getValue("content")));
+                                case "dateModified" -> recipe.setDatePublished(DateTime.parse(atts.getValue("content")));
+                                case "totalTime" -> recipe.setTotalTime(RecipeDuration.parse(atts.getValue("content")));
+                                case "cookTime" -> recipe.setTotalTime(RecipeDuration.parse(atts.getValue("content")));
+                                case "recipeCategory" -> {
                                     String content = atts.getValue("content");
                                     if (content != null) {
-                                        recipe.setRecipeCategory(new Text().addAll(Arrays.asList(content.split(" ,"))));
+                                        Text text = new Text();
+                                        for (String k : content.split(Constants.Strings.KEYWORD_SPLIT)) {
+                                            text.add(k.trim());
+                                        }
+                                        recipe.setRecipeCategory(text);
                                     }
-                                    break;
-                                case "recipeInstructions":
-                                    content = atts.getValue("content");
+                                }
+                                case "recipeInstructions" -> {
+                                    String content = atts.getValue("content");
                                     if (content != null) {
                                         recipe.setRecipeInstructions(new RecipeInstruction());
-                                        recipe.getRecipeInstructions().addAll(Arrays.asList(content.split(" ,")));
+                                        recipe.getRecipeInstructions().addAll(Arrays.asList(content.split("( ,)|(\\.,)")));
                                     }
-                                    break;
+                                }
 
                             }
                         } else if (atts.getValue("property") != null) {
                             switch (atts.getValue("property")) {
-                                case "og:url":
-                                    recipe.setMainEntityOfPage(new WebPage().id(atts.getValue("content")));
-                                    break;
-                                case "og:title":
-                                    recipe.setName(new Text().add(atts.getValue("content")));
-                                    break;
-                                case "og:image":
-                                    if (image.isFilled()) {
-                                        recipe.getImage().add(image.toImageObject());
-                                    }
-                                    image.setUrl(atts.getValue("content"));
-                                    break;
-                                case "og:image:width":
-                                    image.setWidth(atts.getValue("content"));
-                                    break;
-                                case "og:image:height":
-                                    image.setHeight(atts.getValue("content"));
-                                    break;
+                                case "og:url" -> recipe.setMainEntityOfPage(new WebPage().id(atts.getValue("content")));
+                                case "og:title" -> recipe.setName(new Text().add(atts.getValue("content")));
+//                                case "og:image" -> {
+//                                    if (image.isFilled()) {
+//                                        recipe.getImage().add(image.toImageObject());
+//                                    }
+//                                    image.setUrl(atts.getValue("content"));
+//                                }
+//                                case "og:image:width" -> image.setWidth(atts.getValue("content"));
+//                                case "og:image:height" -> image.setHeight(atts.getValue("content"));
                             }
                         }
                     } else if ("span".equals(localName) && atts.getValue("itemprop") != null) {
                         switch (atts.getValue("itemprop")) {
-                            case "image":
+                            case "image" -> {
                                 initStack();
-                                imageUrl = null;
-                                width = -1;
-                                height = -1;
+                                if (image.isFilled()) {
+                                    recipe.getImage().add(image.toImageObject());
+                                }
+                                image.reset();
                                 step = ParseType.image;
-                                break;
-                            case "publisher":
+                            }
+                            case "publisher" -> {
                                 initStack();
                                 step = ParseType.publisher;
-                                break;
-                            case "author":
+                            }
+                            case "author" -> {
                                 initStack();
                                 step = ParseType.author;
-                                break;
+                            }
                         }
                         // image, publisher, author
                     } else if ("dd".equals(localName) && atts.getValue("itemprop") != null) {
                         switch (atts.getValue("itemprop")) {
-                            case "recipeYield":
+                            case "recipeYield" -> {
                                 initStack();
                                 step = ParseType.recipeYield;
-                                break;
-                            case "nutrition":
+                            }
+                            case "nutrition" -> {
                                 initStack();
                                 step = ParseType.nutrition;
-                                break;
+                            }
                         }
 
                     } else if ("div".equals(localName) && "recipe-ingredients".equals(atts.getValue("class"))) {
                         initStack();
                         step = ParseType.recipeIngredient;
                     }
-                    break;
-                case publisher:
-                    parsePublisher(uri, localName, qName, atts);
-                    break;
-                case author:
-                    parseAuthor(uri, localName, qName, atts);
-                    break;
-                case recipeYield:
-                    parseRecipeYield(uri, localName, qName, atts);
-                    break;
-                case recipeIngredient:
-                    parseRecipeIngredient(uri, localName, qName, atts);
-                    break;
-                case nutrition:
-                    parseNutrition(uri, localName, qName, atts);
-                    break;
-                default:
+                }
+                case publisher -> parsePublisher(uri, localName, qName, atts);
+                case author -> parseAuthor(uri, localName, qName, atts);
+                case recipeYield -> parseRecipeYield(uri, localName, qName, atts);
+                case recipeIngredient -> parseRecipeIngredient(uri, localName, qName, atts);
+                case nutrition -> parseNutrition(uri, localName, qName, atts);
+                case image -> {
+                    if ("link".equals(localName) && "url contentUrl".equals(atts.getValue("itemprop"))) {
+                        image.setUrl(atts.getValue("href"));
+                    } else if ("meta".equals(localName)) {
+                        String itemprop = atts.getValue("itemprop");
+                        switch (itemprop) {
+                            case null -> {}
+                            case "height" -> {
+                                image.setHeight(atts.getValue("content"));
+                            }
+                            case "width" -> {
+                                image.setWidth(atts.getValue("content"));
+                            }
+                            default -> {}
+                        }
+                    }
+                }
+                default -> {
+                }
             }
         }
 
@@ -191,60 +194,61 @@ public class RecipeArd {
         public void endElement(String uri, String localName, String qName) throws SAXException {
             stack--;
             switch (step) {
-                case recipeYield:
+                case recipeYield -> {
                     if ("dd".equals(localName)) {
                         step = ParseType.other;
                         recipe.setRecipeYield(new Text().add(characters.toString().trim()));
                     }
-                    break;
-                case nutrition:
+                }
+                case nutrition -> {
                     if ("dd".equals(localName)) {
                         step = ParseType.other;
                         recipe.setNutrition(NutritionInformation.parse(characters.toString().trim()));
                     }
-                    break;
-                case recipeIngredient:
+                }
+                case recipeIngredient -> {
                     switch (localName) {
-                        case "li":
+                        case "li" -> {
                             if (ingredient != null && !ingredient.isEmpty()) {
-                                recipe.getRecipeIngredient().getSections().get(0)
-                                    .addIngredients(ingredient.toString().trim());
+                                ingredients.add(ingredient.toString());
                             }
-                            break;
-                        case "span":
+                        }
+                        case "span" -> {
                             ingredient.append(" ").append(characters.toString().trim());
                             characters.reset();
-                            break;
-                        case "div":
+                        }
+                        case "div" -> {
                             if (stack == ptStack) {
                                 step = ParseType.other;
                             }
-                            break;
+                        }
+                        case "ul" -> {
+                            recipe.getRecipeIngredient().getSections().getLast()
+                                        .addIngredients(ingredients);
+                            ingredients.clear();
+                        }
+                        case "h3" -> {
+                            ingredientTitle = characters.toString();
+                            characters.reset();
+                        }
                     }
-                    break;
-                case image:
-                case publisher:
-                case author:
+                }
+                case image, publisher, author -> {
                     if (stack == ptStack) {
                         step = ParseType.other;
                     }
-                    break;
-                case other:
-                    super.endElement(uri, localName, qName);
-                    break;
-                default:
+                }
+                case other -> super.endElement(uri, localName, qName);
+                default -> {
                     System.out.println(localName + " not found " + step);
                     super.endElement(uri, localName, qName);
+                }
             }
         }
 
         private int stack;
 
         private int ptStack;
-
-        String imageUrl;
-        int width;
-        int height;
 
         private void initStack() {
             ptStack = stack;
@@ -264,9 +268,16 @@ public class RecipeArd {
         }
 
         private void parseRecipeIngredient(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            if (localName.equals("li")) {
-                recipe.getRecipeIngredient().addSection(new RecipeIngredientSection());
-                ingredient = new StringBuilder();
+            switch (localName) {
+                case "ul" -> {
+                    recipe.getRecipeIngredient().addSection(new RecipeIngredientSection());
+                    if (StringUtils.isNotBlank(ingredientTitle)) {
+                        recipe.getRecipeIngredient().getSections().getLast().setTitle(ingredientTitle);
+                        ingredientTitle = "";
+                    }
+                }
+                case "li" -> ingredient = new StringBuilder();
+                case "h3" -> characters.reset();
             }
         }
 

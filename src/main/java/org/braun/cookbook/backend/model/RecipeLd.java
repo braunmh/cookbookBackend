@@ -1,10 +1,22 @@
 package org.braun.cookbook.backend.model;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonString;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.braun.cookbook.backend.crawler.EndOfProcessing;
 import org.braun.cookbook.backend.model.recipe.Category;
 import org.braun.cookbook.backend.model.recipe.ImageSorter;
 import org.braun.cookbook.backend.model.recipe.Ingredient;
@@ -25,6 +37,11 @@ import org.braun.cookbook.backend.model.recipeLd.RecipeIngredientSection;
 import org.braun.cookbook.backend.model.recipeLd.RecipeInstruction;
 import org.braun.cookbook.backend.model.recipeLd.Text;
 import org.braun.cookbook.backend.model.recipeLd.WebPage;
+import org.ccil.cowan.tagsoup.Parser;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  *
@@ -43,26 +60,26 @@ public class RecipeLd extends Parsable<RecipeLd> {
     private Text cookingMethod;
 
     private Text recipeCategory;
-    
+
     private Text recipeYield;
 
     private Text recipeCuisine;
-    
+
     private List<ImageObject> image;
-    
+
     private WebPage mainEntityOfPage;
-    
+
     private DateTime datePublished;
-    
+
     private DateTime dateModified;
-    
+
     private RecipeDuration prepTime;
     private RecipeDuration cookTime;
     private RecipeDuration totalTime;
     private NutritionInformation nutrition;
     private Person author;
     private Person publisher;
-    
+
     @Override
     public String toJson() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -83,7 +100,7 @@ public class RecipeLd extends Parsable<RecipeLd> {
         setNutrients(recipe);
         return recipe;
     }
-    
+
     private void setNutrients(Recipe recipe) {
         if (isFilled(nutrition)) {
             if (nutrition.getServingSize() != null) {
@@ -92,7 +109,7 @@ public class RecipeLd extends Parsable<RecipeLd> {
             } else {
                 recipe.getNutrients().setUnit("Portion");
             }
-            setNutrient(recipe.getNutrients(), nutrition.getCalories(),"Kalorien","kcal");
+            setNutrient(recipe.getNutrients(), nutrition.getCalories(), "Kalorien", "kcal");
             setNutrient(recipe.getNutrients(), nutrition.getCarbohydrateContent(), "KH", "g");
             setNutrient(recipe.getNutrients(), nutrition.getCholesterolContent(), "Cholesterin", "mg");
             setNutrient(recipe.getNutrients(), nutrition.getFatContent(), "Fett", "g");
@@ -104,15 +121,15 @@ public class RecipeLd extends Parsable<RecipeLd> {
             setNutrient(recipe.getNutrients(), nutrition.getSugarContent(), "Zucker", "g");
             setNutrient(recipe.getNutrients(), nutrition.getTransFatContent(), "Trans-Fettsäuren", "g");
         }
-    } 
-    
+    }
+
     private void setNutrient(Nutrients nutrients, String value, String name, String unit) {
         if (value != null) {
             String[] p = value.split(" ");
             nutrients.add(new Nutrient().unit(unit).count(p[0]).content(name));
         }
     }
-    
+
     private void setIngredients(Recipe recipe) {
         if (isFilled(recipeIngredient)) {
             for (RecipeIngredientSection section : recipeIngredient.getSections()) {
@@ -124,7 +141,7 @@ public class RecipeLd extends Parsable<RecipeLd> {
             }
         }
     }
-    
+
     private void setDescription(Recipe recipe) {
         String times = getTimes();
         if (!times.isBlank()) {
@@ -151,7 +168,7 @@ public class RecipeLd extends Parsable<RecipeLd> {
             recipeCuisine.getValue().stream().forEach(c -> recipe.getCategories().add(new Category().name(c)));
         }
     }
-    
+
     private void setSource(Recipe recipe) {
         if (isFilled(mainEntityOfPage)) {
             recipe.getSource().setUrl(mainEntityOfPage.getId());
@@ -170,12 +187,12 @@ public class RecipeLd extends Parsable<RecipeLd> {
             recipe.getSource().setValue(temp.toString().trim());
         }
     }
-    
+
     private void setYield(Recipe recipe) {
         if (isFilled(recipeYield)) {
             String[] v = recipeYield.getValue().get(0).split(" ");
             switch (v.length) {
-                case 2: 
+                case 2:
                     recipe.setYield(Yield.parse(v[0], v[1]));
                     break;
                 case 1:
@@ -186,14 +203,14 @@ public class RecipeLd extends Parsable<RecipeLd> {
                     if (unit.isPresent()) {
                         recipe.setYield(Yield.parse(unit.get(), "Portionen"));
                     }
-            } 
+            }
         }
     }
-    
+
     private boolean isFilled(Parsable value) {
         return value != null && value.isFilled();
     }
-    
+
     private boolean isNumber(String value) {
         for (char c : value.toCharArray()) {
             if (c < '0' || c > '9') {
@@ -202,12 +219,13 @@ public class RecipeLd extends Parsable<RecipeLd> {
         }
         return true;
     }
+
     private void setTitle(Recipe recipe) {
         if (isFilled(name)) {
             recipe.setTitle(name.getValue().get(0));
         }
     }
-    
+
     private String getTimes() {
         StringBuilder temp = new StringBuilder();
         if (isFilled(totalTime)) {
@@ -221,14 +239,97 @@ public class RecipeLd extends Parsable<RecipeLd> {
         }
         return temp.toString().trim();
     }
-    
+
     private String format(RecipeDuration duration) {
         long HH = duration.getValue().toHours();
         long MM = duration.getValue().toMinutesPart();
         long SS = duration.getValue().toSecondsPart();
         return String.format("%02d:%02d:%02d", HH, MM, SS);
     }
-    
+
+    public static RecipeLd parse(InputStream inputStream) throws IOException, SAXException {
+        Parser parser = new Parser();
+        parser.setFeature(Parser.namespacePrefixesFeature, false);
+        InputSource inputSource = new InputSource(inputStream);
+        JsonFilter filter = new JsonFilter();
+        try {
+            filter.setParent(parser);
+            filter.parse(inputSource);
+        } catch (EndOfProcessing e) {
+            StringReader input = new StringReader(filter.getJson());
+            JsonReader reader = Json.createReader(input);
+            JsonStructure structure = reader.read();
+            RecipeLd recipe = null;
+            if (structure.getValueType() == JsonValue.ValueType.OBJECT) {
+                recipe = RecipeLd.parse(structure.asJsonObject());
+            } else {
+                JsonArray array = structure.asJsonArray();
+                for (int i = 0; i < array.size(); i++) {
+                    JsonValue jsonValue = array.get(i);
+                    if (JsonValue.ValueType.OBJECT == jsonValue.getValueType()) {
+                        JsonObject jsonObject = array.getJsonObject(i);
+                        if (jsonObject.containsKey("@type") && "Recipe".equals(jsonObject.getString("@type"))) {
+                            recipe = RecipeLd.parse(jsonObject);
+                            break;
+                        }
+                    }
+                }
+            }
+            return recipe;
+        }
+        return null;
+    }
+
+    static class JsonFilter extends XMLFilterImpl {
+
+        String json;
+
+        CharArrayWriter writer = new CharArrayWriter();
+        boolean write = false;
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+            if ("script".equals(localName) && "application/ld+json".equals(atts.getValue("type"))) {
+                write = true;
+            }
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+            if (write && "script".equals(localName)) {
+                write = false;
+                StringReader reader = new StringReader(writer.toString());
+                JsonReader jsonReader = Json.createReader(reader);
+                JsonStructure structure = jsonReader.read();
+                if (structure.getValueType() == JsonValue.ValueType.OBJECT) {
+                    JsonObject object = structure.asJsonObject();
+                    if (object.keySet().contains("@type")) {
+                        JsonString type = object.getJsonString("@type");
+                        if (type.getValueType() != JsonValue.ValueType.NULL) {
+                            if ("Recipe".equals(type.getString())) {
+                                json = writer.toString();
+                                throw new EndOfProcessing();
+                            }
+                        }
+                    }
+                }
+                writer.reset();
+            }
+        }
+
+        @Override
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            if (write) {
+                writer.write(ch, start, length);
+            }
+        }
+
+        public String getJson() {
+            return json;
+        }
+
+    }
+
     public static RecipeLd parse(JsonObject jsonObject) {
         RecipeLd res = new RecipeLd();
         if (jsonObject != null) {
@@ -236,9 +337,9 @@ public class RecipeLd extends Parsable<RecipeLd> {
             res.setDescription(Text.parse(jsonObject.get("description")));
             res.setRecipeIngredient(RecipeIngredient.parse(jsonObject.get("recipeIngredient")));
             res.setRecipeInstructions(RecipeInstruction.parse(jsonObject.get("recipeInstructions")));
-            res.setCookingMethod(Text.parse(jsonObject.get("cookingMethod")));
-            res.setRecipeCategory(Text.parse(jsonObject.get("recipeCategory")));
-            res.setRecipeCuisine(Text.parse(jsonObject.get("recipeCuisine")));
+            res.setCookingMethod(Text.parseKeywords(jsonObject.get("cookingMethod")));
+            res.setRecipeCategory(Text.parseKeywords(jsonObject.get("recipeCategory")));
+            res.setRecipeCuisine(Text.parseKeywords(jsonObject.get("recipeCuisine")));
             res.setImage(ImageObject.parse(jsonObject.get("image")));
             res.setMainEntityOfPage(WebPage.parse(jsonObject.get("mainEntityOfPage")));
             res.setDatePublished(DateTime.parse(jsonObject.get("datePublished")));
