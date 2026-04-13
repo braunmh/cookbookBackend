@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,7 @@ import org.braun.cookbook.backend.model.RecipeShort;
 import org.braun.cookbook.backend.model.RecipeSolr;
 import org.braun.cookbook.backend.model.Suggestion;
 import org.braun.cookbook.util.Configuration;
+import org.braun.cookbook.util.DateWrapper;
 import org.braun.cookbook.util.SolrQueryBuilder;
 import org.xml.sax.SAXException;
 
@@ -78,6 +80,7 @@ public class RecipeFacade {
                     .addField("keywordIds")
                     .addField("title")
                     .addField("path")
+                    .addField("pathParent")
                     .addField("rating")
                     .addField("height")
                     .addQuery("rating", ratingFrom, ratingTo)
@@ -100,6 +103,63 @@ public class RecipeFacade {
         }
     }
 
+    public List<RecipeShort> findNews(Integer days)  throws ConditionParseException {
+        if (days == null || days == 0) {
+            days = 14;
+        }
+        try (SolrClient solrClient = getSolrClient()) {
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.DATE, 1);
+            String dateTo = String.format("%4d%02d%02d", now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DATE));
+            now.add(Calendar.DATE, -(days +1));
+            String dateFrom = String.format("%4d%02d%02d", now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DATE));
+            SolrQueryBuilder builder = new SolrQueryBuilder()
+                    .addField("id")
+                    .addField("score")
+                    .addField("evaluated")
+                    .addField("keywordIds")
+                    .addField("title")
+                    .addField("path")
+                    .addField("pathParent")
+                    .addField("rating")
+                    .addField("height")
+                    .setRows(50)
+                    .addQuery("modified", new DateWrapper(dateFrom), new DateWrapper(dateTo));
+            SolrQuery query = builder.build();
+            query.setSort("modified", SolrQuery.ORDER.desc);
+            QueryResponse response = solrClient.query(Configuration.getInstance().getSolrCollection(), query);
+            LOG.info("Number of Documents found: " + response.getResults().getNumFound());
+            List<RecipeSolr> res = response.getBeans(RecipeSolr.class);
+            List<RecipeShort> result = new ArrayList<>(res.size());
+            for (RecipeSolr in : res) {
+                result.add(in.toRecipeShort());
+            }
+            return result;
+        } catch (IOException | SolrServerException e) {
+            LOG.error("findNews failed", e);
+            throw new ConditionParseException("findNews failed: " + e.getMessage());
+        }
+    }
+    
+    public void rateRecipe(String path, int rating) throws ConditionParseException {
+        if (StringUtils.isBlank(path)) {
+            return;
+        }
+        try {
+            Recipe recipe = Recipe.unmarshal(Configuration.getInstance().getContentDirectory(), path);
+            if (recipe == null) {
+                LOG.info("Recipe with id {} do not exist");
+                return;
+            }
+            recipe.setRating(rating);
+            update(recipe);
+            
+        } catch (SAXException | IOException e) {
+            LOG.error("rateRecipe failed for " + path, e);
+            throw new ConditionParseException("rateRecipe failed: " + e.getMessage());
+        }
+    }
+    
     public List<Suggestion> getSuggestion(String fieldName, String value) {
         if (StringUtils.isBlank(value)) {
             return Collections.emptyList();
@@ -125,14 +185,31 @@ public class RecipeFacade {
         return Collections.emptyList();
     }
 
+    public Recipe update(Recipe recipe) throws IOException {
+        File recipeFile = new File(getContentDirectory() + "/" + recipe.getRelativeName());
+        try (FileOutputStream fos = new FileOutputStream(recipeFile)) {
+            recipe.marshall(fos);
+        }
+        try (SolrClient client = getSolrClient()) {
+            recipe.setModified(recipeFile.lastModified());
+            recipe.setCreated(recipeFile.lastModified());
+            RecipeSolr recipeSolr = new RecipeSolr(recipe);
+            client.addBean(Configuration.getInstance().getSolrCollection(), recipeSolr);
+            client.commit(Configuration.getInstance().getSolrCollection());
+        } catch (SolrServerException e) {
+            LOG.error("Adding recipe " + recipe.getRelativeName(), e);
+            throw new IOException("Adding recipe " + recipe.getRelativeName());
+        }
+        return recipe;
+    }
+    
     public Recipe insert(Recipe recipe, String pathParent, byte[] image) throws IOException {
         RecipeShort recipeShort = findByUrl(recipe.getSource().getUrl());
-        String contentDirectory = Configuration.getInstance().getContentDirectory();
         try {
             if (recipeShort != null) {
-                return Recipe.unmarshal(contentDirectory, recipeShort.getPath());
+                return Recipe.unmarshal(getContentDirectory(), recipeShort.getPath());
             }
-            File directory = new File(contentDirectory + "/" + pathParent);
+            File directory = new File(getContentDirectory() + "/" + pathParent);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
@@ -140,13 +217,13 @@ public class RecipeFacade {
             if (image != null) {
                 String name = pathParent + "/" + recipe.getId() + ".jpg";
                 recipe.setImageUrl(name);
-                File imageFile = new File(contentDirectory + "/" + name);
+                File imageFile = new File(getContentDirectory() + "/" + name);
                 try (FileOutputStream fos = new FileOutputStream(imageFile)) {
                     fos.write(image);
                 }
             }
             recipe.setRelativeName(pathParent + "/" + recipe.getId() + ".xml");
-            File recipeFile = new File(contentDirectory + "/" + recipe.getRelativeName());
+            File recipeFile = new File(getContentDirectory() + "/" + recipe.getRelativeName());
             try (FileOutputStream fos = new FileOutputStream(recipeFile)) {
                 recipe.marshall(fos);
             }
@@ -166,11 +243,6 @@ public class RecipeFacade {
             throw new IOException("");
         }
         return recipe;
-    }
-
-    private RecipeShort exists(String url) throws IOException {
-
-        return findByUrl(url);
     }
 
     public RecipeShort findByUrl(String url) throws IOException {
@@ -204,6 +276,29 @@ public class RecipeFacade {
 
     private SolrClient getSolrClient() {
         return new Http2SolrClient.Builder(Configuration.getInstance().getSolrUrl()).build();
+    }
+
+    private RecipeSolr getRecipe(String path) {
+        File file = new File(getContentDirectory() + "/" + path);
+        if (file.exists()) {
+            try {
+                Recipe recipe = Recipe.unmarshal(getContentDirectory(), path);
+                return new RecipeSolr(recipe);
+            } catch (SAXException e) {
+                LOG.error("unmarshal Recipe: {}", file.getPath());
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    private String contentDirectory;
+    private String getContentDirectory() {
+        if (contentDirectory == null) {
+            contentDirectory = Configuration.getInstance().getContentDirectory();
+        }
+        return contentDirectory;
     }
 
     public void setSequenceGenerator(SequenceGenerator sequenceGenerator) {

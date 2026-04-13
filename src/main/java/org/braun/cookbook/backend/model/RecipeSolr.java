@@ -96,7 +96,8 @@ public class RecipeSolr extends AbstractSolr {
     }
     
     public RecipeShort toRecipeShort() {
-        RecipeShort out = new RecipeShort().id(getId()).rating(getRating()).title(getTitle()).path(getPath()).score(getScore());
+        RecipeShort out = new RecipeShort().id(getId()).rating(getRating())
+                .title(getTitle()).path(getPath()).pathParent(getPathParent()).score(getScore());
         if (getKeywordIds() != null) {
             for (Long keywordId : getKeywordIds()) {
                 Keyword k = KeywordFactory.getInstance().getById(keywordId);

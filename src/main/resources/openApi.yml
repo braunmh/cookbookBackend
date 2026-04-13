@@ -176,14 +176,13 @@ paths:
       callbacks: {}
       operationId: rateRecipe
       parameters:
-      - description: Id of the Recipe to change
+      - description: path of the Recipe to change (relative name)
         explode: true
         in: query
-        name: id
+        name: path
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
         style: form
       - description: Value to set for rating msut be between 0 and 5
         explode: true
@@ -237,6 +236,8 @@ components:
           type: string
         path:
           type: string
+        pathParent:
+          type: string
         keywords:
           items:
             type: string
@@ -251,6 +252,7 @@ components:
       - id
       - title
       - path
+      - pathParent
     Keyword:
       type: object
       properties:

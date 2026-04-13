@@ -2,6 +2,7 @@ package org.braun.cookbook.web.ui;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -27,12 +28,12 @@ public class RecipeDisplayBean implements Serializable {
     
     private static final Logger LOG = LogManager.getLogger();
     
-    @Inject
-    private RecipeFacade recipeFacade;
-
     private String path;
     
     private Recipe content;
+    
+    @Inject
+    private SessionUserBean sessionUserBean;
     
     public void onload() {
         if (content == null) {
@@ -49,6 +50,10 @@ public class RecipeDisplayBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Variable path not set!"));
             }
         }
+    }
+    
+    public void openRatingDialog(ActionEvent event) {
+        RecipeRatingBean.openDialog(content.getRelativeName(), content.getRating(), sessionUserBean.getInnerWidth());
     }
 
     public String getPath() {

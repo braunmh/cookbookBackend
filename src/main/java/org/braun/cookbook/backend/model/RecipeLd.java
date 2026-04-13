@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.braun.cookbook.backend.crawler.EndOfProcessing;
+import org.braun.cookbook.common.EndOfProcessing;
 import org.braun.cookbook.backend.model.recipe.Category;
 import org.braun.cookbook.backend.model.recipe.ImageSorter;
 import org.braun.cookbook.backend.model.recipe.Ingredient;
@@ -247,19 +247,91 @@ public class RecipeLd extends Parsable<RecipeLd> {
         return String.format("%02d:%02d:%02d", HH, MM, SS);
     }
 
+    public static RecipeLd parseNdr(InputStream inputStream) throws IOException, SAXException {
+        Parser parser = new Parser();
+        parser.setFeature(Parser.namespacePrefixesFeature, false);
+        InputSource inputSource = new InputSource(inputStream);
+        
+        JsonFilter jsonFilter = new JsonFilter();
+        jsonFilter.setParent(parser);
+        
+        NdrNutrientFilter ndrNutrientFilter = new NdrNutrientFilter();
+        ndrNutrientFilter.setParent(jsonFilter);
+        
+        ndrNutrientFilter.parse(inputSource);
+        RecipeLd recipe = getRecipeFromJson(jsonFilter.getJson());
+        
+        if (ndrNutrientFilter.getNutrient() != null) {
+            recipe.setNutrition(NutritionInformation.parse(ndrNutrientFilter.getNutrient()));
+        }
+        return recipe;
+    }
+
     public static RecipeLd parse(InputStream inputStream) throws IOException, SAXException {
         Parser parser = new Parser();
         parser.setFeature(Parser.namespacePrefixesFeature, false);
         InputSource inputSource = new InputSource(inputStream);
-        JsonFilter filter = new JsonFilter();
-        try {
-            filter.setParent(parser);
-            filter.parse(inputSource);
-        } catch (EndOfProcessing e) {
-            StringReader input = new StringReader(filter.getJson());
+        JsonFilter jsonFilter = new JsonFilter();
+        jsonFilter.setParent(parser);
+        jsonFilter.parse(inputSource);
+            
+        return getRecipeFromJson(jsonFilter.getJson());
+    }
+    
+    static class NdrNutrientFilter extends XMLFilterImpl {
+    
+        enum Step {other, nutrient, content, finish};
+        
+        private Step step = Step.other;
+        private CharArrayWriter writer = new CharArrayWriter();
+        private String nutrient;
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+            switch (step) {
+                case other -> {
+                    if ("h2".equals(localName) && "Naehrwerte-pro-Portion".equals(atts.getValue("id"))) {
+                        step = Step.nutrient;
+                    }
+                }
+                case nutrient -> {
+                    if ("p".equals(localName)) {
+                        step = Step.content;
+                    }
+                }
+            }
+            super.startElement(uri, localName, qName, atts);
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+            if (step == Step.content && "p".equals(localName)) {
+                step = step.finish;
+                nutrient = "Nährwerte / Portion: " + writer.toString();
+            }
+            super.endElement(uri, localName, qName);
+        }
+
+        @Override
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            if (step == Step.content) {
+                writer.write(ch, start, length);
+            }
+            super.characters(ch, start, length);
+        }
+
+        public String getNutrient() {
+            return nutrient;
+        }
+        
+    }
+    
+    public static RecipeLd getRecipeFromJson(String json) {
+        RecipeLd recipe = null;
+        if (json != null) {
+            StringReader input = new StringReader(json);
             JsonReader reader = Json.createReader(input);
             JsonStructure structure = reader.read();
-            RecipeLd recipe = null;
             if (structure.getValueType() == JsonValue.ValueType.OBJECT) {
                 recipe = RecipeLd.parse(structure.asJsonObject());
             } else {
@@ -275,61 +347,10 @@ public class RecipeLd extends Parsable<RecipeLd> {
                     }
                 }
             }
-            return recipe;
         }
-        return null;
+        return recipe;
     }
-
-    static class JsonFilter extends XMLFilterImpl {
-
-        String json;
-
-        CharArrayWriter writer = new CharArrayWriter();
-        boolean write = false;
-
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            if ("script".equals(localName) && "application/ld+json".equals(atts.getValue("type"))) {
-                write = true;
-            }
-        }
-
-        @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (write && "script".equals(localName)) {
-                write = false;
-                StringReader reader = new StringReader(writer.toString());
-                JsonReader jsonReader = Json.createReader(reader);
-                JsonStructure structure = jsonReader.read();
-                if (structure.getValueType() == JsonValue.ValueType.OBJECT) {
-                    JsonObject object = structure.asJsonObject();
-                    if (object.keySet().contains("@type")) {
-                        JsonString type = object.getJsonString("@type");
-                        if (type.getValueType() != JsonValue.ValueType.NULL) {
-                            if ("Recipe".equals(type.getString())) {
-                                json = writer.toString();
-                                throw new EndOfProcessing();
-                            }
-                        }
-                    }
-                }
-                writer.reset();
-            }
-        }
-
-        @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            if (write) {
-                writer.write(ch, start, length);
-            }
-        }
-
-        public String getJson() {
-            return json;
-        }
-
-    }
-
+    
     public static RecipeLd parse(JsonObject jsonObject) {
         RecipeLd res = new RecipeLd();
         if (jsonObject != null) {

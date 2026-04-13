@@ -1,6 +1,9 @@
 package org.braun.cookbook.backend.crawler;
 
+import org.braun.cookbook.common.EndOfProcessing;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
 import jakarta.inject.Named;
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -14,6 +17,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.braun.cookbook.backend.model.BackgroundJobType;
 import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.model.RecipeLd;
 import org.ccil.cowan.tagsoup.Parser;
@@ -28,6 +32,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
  */
 @Named
 @Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
 public class ArdNdrCrawler extends Crawler {
     
     @Override
@@ -40,8 +45,8 @@ public class ArdNdrCrawler extends Crawler {
                 .GET()
                 .build();
         try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
-            RecipeLd recipeLd = RecipeLd.parse(inputStream);
-            return recipeLd.toRecipe();
+            RecipeLd recipeLd = RecipeLd.parseNdr(inputStream);
+            return (recipeLd == null) ? null : recipeLd.toRecipe();
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
         }
@@ -60,7 +65,7 @@ public class ArdNdrCrawler extends Crawler {
         String prefix = "https://www.ndr.de";
         OverviewFilter filter = new OverviewFilter(prefix);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(prefix + "/ratgeber/kochen"))
+                .uri(URI.create(prefix + getSite()))
                 .GET()
                 .build();
         HttpClient client = HttpClient.newBuilder()
@@ -74,7 +79,7 @@ public class ArdNdrCrawler extends Crawler {
             filter.setParent(reader);
             filter.parse(inputSource);
         } catch (EndOfProcessing e) {
-            // ignore
+            // Just ignore
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
         }
@@ -84,6 +89,15 @@ public class ArdNdrCrawler extends Crawler {
         return filter.getUrls();
     }
 
+    @Override
+    public BackgroundJobType getTaskName() {
+        return BackgroundJobType.ArdNdrCrawler;
+    }
+
+    protected String getSite() {
+        return "/ratgeber/kochen";
+    }
+    
     class OverviewFilter  extends XMLFilterImpl {
 
         enum ParseType  {

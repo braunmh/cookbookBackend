@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
+import org.braun.cookbook.backend.dao.JobDao;
 import org.braun.cookbook.backend.dao.KeywordDao;
 import org.braun.cookbook.backend.dao.SequenceDao;
 import org.braun.cookbook.util.Configuration;
@@ -66,6 +67,23 @@ public class BaseTest {
             }
         }
         return em;
+    }
+    
+    private JobFacade jobFacade;
+    public JobFacade getJobFacade() {
+        if (jobFacade == null) {
+            jobFacade = new JobFacade();
+            jobFacade.setJobDao(getJobDao());
+        }
+        return jobFacade;
+    }
+    
+    private JobDao jobDao;
+    private JobDao getJobDao() {
+        if (jobDao == null) {
+            jobDao = new JobDao(getEntityManager());
+        }
+        return jobDao;
     }
     
     private IndexingFacade houseKeepingFacade;

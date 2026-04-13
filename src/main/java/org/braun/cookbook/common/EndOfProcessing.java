@@ -1,4 +1,4 @@
-package org.braun.cookbook.backend.crawler;
+package org.braun.cookbook.common;
 
 import org.xml.sax.SAXException;
 

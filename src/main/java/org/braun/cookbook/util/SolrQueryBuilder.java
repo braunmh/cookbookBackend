@@ -100,9 +100,9 @@ public class SolrQueryBuilder {
         }
         addOperator();
         query.append(fieldName).append(":[")
-            .append(from.getLowerBoundZdtFormatted())
+            .append(escapeSpecialCharacters(from.getLowerBoundZdtFormatted()))
             .append(" TO ")
-            .append(to.getUpperBoundZdtFormatted())
+            .append(escapeSpecialCharacters(to.getUpperBoundZdtFormatted()))
             .append("]");
         return this;
     }

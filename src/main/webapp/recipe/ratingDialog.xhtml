@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:comp="http://xmlns.jcp.org/jsf/composite/comp">
+    <h:head>
+        <title>Rating ändern</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="default.css" library="css"/>
+        <h:outputStylesheet name="primeflex3.css" library="css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <f:view id="view">
+            <f:metadata>
+                <f:viewParam name="path" value="#{recipeRatingBean.path}"/>
+                <f:viewParam name="rating" value="#{recipeRatingBean.rating}"/>
+                <f:viewAction action="#{recipeRatingBean.onload()}"/>
+            </f:metadata>
+            <h:form id="form" style="height: 15em;">
+                <div class="ui-fluid formgrid grid" style="padding-top: 0.3rem">
+                    <comp:inputElement>
+                        <p:autoComplete id="rating" dropdown="true"
+                                        value="#{recipeRatingBean.model.rating}"
+                                        completeMethod="#{recipeRatingBean.completeRating}"
+                                        var="rating" itemLabel="#{rating.name}" itemValue="#{rating}"
+                                        scrollHeight="200"
+                                        >
+                            <f:converter converterId="ratingConverter"/>
+                        </p:autoComplete>
+                        <p:outputLabel for="@previous" value="Rating" />
+                    </comp:inputElement>
+                </div>
+                <div class="command">
+                    <p:commandButton styleClass="di-button" id="close" value="Schliessen" action="#{recipeRatingBean.close()}" immediate="true" />
+                    <p:commandButton styleClass="di-button" id="save" value="Sichern" action="#{recipeRatingBean.save()}"/>
+                </div>
+            </h:form>
+        </f:view>
+    </h:body>
+</html>

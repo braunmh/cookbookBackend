@@ -62,7 +62,7 @@ public class RecipeTest {
         String value = "ard_ndr_recipe_json.html";
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(DIRECTORY + value)) {
             if (inputStream != null) {
-                RecipeLd recipe = RecipeLd.parse(inputStream);
+                RecipeLd recipe = RecipeLd.parseNdr(inputStream);
                 if (recipe != null) {
                     StringWriter writer = new StringWriter();
                     recipe.toRecipe().marshall(writer);

@@ -1,7 +1,5 @@
 package org.braun.cookbook.backend.process;
 
-import jakarta.ejb.AsyncResult;
-import jakarta.ejb.Asynchronous;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionManagement;
 import jakarta.ejb.TransactionManagementType;
@@ -9,12 +7,15 @@ import jakarta.inject.Named;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.concurrent.Future;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
+import org.braun.cookbook.backend.model.BackgroundJobType;
+import org.braun.cookbook.backend.model.Job;
+import org.braun.cookbook.backend.model.JobResult;
+import org.braun.cookbook.backend.model.JobStatus;
 import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.model.RecipeSolr;
 import org.braun.cookbook.util.Configuration;
@@ -27,7 +28,7 @@ import org.xml.sax.SAXException;
 @Named
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)
-public class IndexingFacade {
+public class IndexingFacade extends BackgroundTask {
 
     private String solrUrl;
 
@@ -58,15 +59,18 @@ public class IndexingFacade {
         return contentDirectory;
     }
 
-    @Asynchronous
-    public Future<Integer> index() {
-        return new AsyncResult<>(indexIntern());
+    @Override
+    public BackgroundJobType getTaskName() {
+        return BackgroundJobType.Indexer;
     }
     
-    public Integer indexIntern() {
+    @Override
+    public JobResult doExecute() {
+        JobResult result = new JobResult().type(getTaskName()).status(JobStatus.successful);
         int indexed = 0;
         if (!StatusFactory.getInstance().aquireIndexStatusBussy()) {
-            return indexed;
+            result.message("Job is busy");
+            return result;
         }
         try (
             DirectoryComparer dc = new DirectoryComparer(getContentDirectory(), new XmlFilter());
@@ -92,11 +96,16 @@ public class IndexingFacade {
             client.commit(getSolrCollection());
         } catch (IOException | SolrServerException e) {
             LOG.error("Indexing finished with error.", e);
+            result.status(JobStatus.error).message("Indexing finished with error. "  + e.getMessage());
         } catch (Exception e) {
             LOG.error("Fatal error", e);
+            result.status(JobStatus.error).message("Indexing finished with fatal error. "  + e.getMessage());
         }
         StatusFactory.getInstance().aquireStatusStatusDone();
-        return indexed;
+        if (result.getStatus() == JobStatus.successful) {
+            result.message("Number of Entries indexed " + indexed);
+        }
+        return result;
     }
 
     public String getId(String relativeName) {

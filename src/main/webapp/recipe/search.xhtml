@@ -57,7 +57,7 @@
                                 value="#{recipeSearchBean.parameter.keywords}" multiple="true"
                                 completeMethod="#{recipeSearchBean.getSuggestionKeyword}"
                                 itemValue="#{keyword}" itemLabel="#{keyword.name}"
-                                scrollHeight="250">
+                                scrollHeight="250"
                                 onfocus="addStyleToAutoCompleteMultiple('keywordWidget', 'ui-inputwrapper-focus')"
                                 onblur="removeStyleToAutoCompleteMultiple('keywordWidget', 'ui-inputwrapper-focus')"
                                 styleClass="#{recipeSearchBean.parameter.keywords.isEmpty() ? '' : 'ui-inputwrapper-filled'}">
@@ -114,8 +114,10 @@
             <p:column id="col-title" >
                 <h:link outcome="/recipe/display" target="_blank">
                     <f:param name="path" value="#{row.path}"/>
-                    <h:outputText value="#{row.title}"/> <h:outputText value=" "/>
-                </h:link><h:outputText value="#{row.rating}"/><br/>
+                    <h:outputText value="#{row.title}"/>
+                </h:link>
+                <h:outputText value=" (#{row.pathParent}) "/>
+                <h:graphicImage library="image" name="rating#{row.rating}.gif" rendered="#{row.rating gt '0'}"/><br/>
                 <h:outputText value="#{row.keywords}"/>
             </p:column>
         </p:dataTable>

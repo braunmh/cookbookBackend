@@ -3,7 +3,8 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:comp="jakarta.faces.composite/comp"
                 xmlns:f="jakarta.faces.core"
-                xmlns:h="jakarta.faces.html">
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="primefaces">
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="path" value="#{recipeDisplayBean.path}"/>
@@ -15,7 +16,13 @@
     </ui:define>
 
     <ui:define name="navigation">
-        <comp:navigation/>
+        <comp:navigation hasAside="true">
+            <p:menu overlay="true" trigger="aside-btn" my="right top" at="right bottom" toggleable="true">
+                <p:menuitem value="Bewerten" icon="pi-fw pi pi-search" actionListener="#{recipeDisplayBean.openRatingDialog}"/>
+                <p:menuitem value="Stichwörter" icon="pi-fw pi pi-database" url="#"/>
+                <p:menuitem value="Suchindex aktualisieren"  url="#" icon="pi-fw pi pi-database"/>
+            </p:menu>
+        </comp:navigation>
     </ui:define>
 
     <ui:define name="content">

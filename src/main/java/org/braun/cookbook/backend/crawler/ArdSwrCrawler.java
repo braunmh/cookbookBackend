@@ -1,5 +1,10 @@
 package org.braun.cookbook.backend.crawler;
 
+import org.braun.cookbook.common.EndOfProcessing;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
+import jakarta.inject.Named;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,11 +14,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import static org.braun.cookbook.backend.crawler.Crawler.LOG;
+import org.braun.cookbook.backend.model.BackgroundJobType;
 import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.model.RecipeLd;
 import org.braun.cookbook.backend.model.recipeLd.RecipeArd;
@@ -27,8 +32,10 @@ import org.xml.sax.helpers.XMLFilterImpl;
  *
  * @author mbraun
  */
+@Named
+@Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
 public class ArdSwrCrawler extends Crawler {
-
     
     @Override
     protected Recipe getRecipe(String url) {
@@ -43,11 +50,16 @@ public class ArdSwrCrawler extends Crawler {
 
         try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             RecipeLd recipeLd = RecipeArd.parse(inputStream);
-            return recipeLd.toRecipe();
+            return (recipeLd == null) ? null : recipeLd.toRecipe();
         } catch (IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
         }
         return null;
+    }
+
+    @Override
+    public BackgroundJobType getTaskName() {
+        return BackgroundJobType.ArdSwrCrawler;
     }
 
     @Override

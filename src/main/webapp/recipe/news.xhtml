@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../common.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:comp="jakarta.faces.composite/comp"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core">
+    <ui:define name="css">
+        <style>
+        thead {display:none;}
+        </style>
+    </ui:define>
+
+    <ui:define name="navigation">
+        <comp:navigation/>
+    </ui:define>
+
+    <ui:define name="content">
+        <p:dataTable id="result" var="row" value="#{newsBean.result}" 
+                     paginator="true" rows="10" rendered="#{not empty newsBean.result}"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}"
+                     rowsPerPageTemplate="10,20,40">
+            <p:column id="col-title" >
+                <h:link outcome="/recipe/display" target="_blank">
+                    <f:param name="path" value="#{row.path}"/>
+                    <h:outputText value="#{row.title}"/>
+                </h:link>
+                <h:outputText value=" (#{row.pathParent}) "/>
+                <h:graphicImage library="image" name="rating#{row.rating}.gif" rendered="#{row.rating gt '0'}"/><br/>
+                <h:outputText value="#{row.keywords}"/>
+            </p:column>
+        </p:dataTable>
+    </ui:define>
+
+</ui:composition>

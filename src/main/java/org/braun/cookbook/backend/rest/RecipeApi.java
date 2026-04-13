@@ -105,9 +105,14 @@ public class RecipeApi  {
         @io.swagger.annotations.ApiResponse(code = 200, message = "Update recipe successful", response = Void.class)
     })
     public Response rateRecipe(
-            @ApiParam(value = "Id of the Recipe to change", required = true) @QueryParam("id") @NotNull  Long id,
+            @ApiParam(value = "Path of the Recipe to change", required = true) @QueryParam("path") @NotNull  String path,
             @ApiParam(value = "Value to set for rating msut be between 0 and 5", required = true) @QueryParam("rating") @NotNull  Integer rating,@Context SecurityContext securityContext)
     throws NotFoundException {
+        try {
+            recipeFacade.rateRecipe(path, rating);
+        } catch (ConditionParseException e) {
+            LOG.error("rating Recipe {}, {}", path, rating);
+        }
         return Response.ok().build();
     }
 }

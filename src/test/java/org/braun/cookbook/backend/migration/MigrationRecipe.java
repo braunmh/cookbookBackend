@@ -13,6 +13,10 @@ import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import org.braun.cookbook.backend.model.BackgroundJobType;
+import org.braun.cookbook.backend.model.Job;
+import org.braun.cookbook.backend.model.JobResult;
+import org.braun.cookbook.backend.model.JobStatus;
 import org.braun.cookbook.backend.model.Keyword;
 import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.model.RecipeSolr;
@@ -24,6 +28,7 @@ import org.braun.cookbook.backend.process.KeywordFacade;
 import org.braun.cookbook.backend.process.KeywordFactory;
 import org.braun.cookbook.backend.process.RecipeFacade;
 import org.braun.cookbook.backend.process.SequenceGenerator;
+import org.braun.cookbook.common.CookBookException;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -80,8 +85,17 @@ public class MigrationRecipe extends BaseTest {
     public void indexing() {
         init();
         IndexingFacade houseKeepingFacade = getHouseKeepingFacade();
-        int indexed = houseKeepingFacade.indexIntern();
-        System.out.println("Number of Recipes indexed: " + indexed);
+        houseKeepingFacade.setEntityManager(getEntityManager());
+        houseKeepingFacade.setJobFacade(getJobFacade());
+        JobResult result;
+        try {
+            getJobFacade().begin(BackgroundJobType.Indexer);
+            result = houseKeepingFacade.doExecute();
+        } catch (CookBookException e) {
+            result = new JobResult().status(JobStatus.error).type(BackgroundJobType.Indexer).message(e.getMessage());
+        }
+        getJobFacade().end(result);
+        System.out.println(result.getMessage());
     }
     
     public void migrateRecipes() {

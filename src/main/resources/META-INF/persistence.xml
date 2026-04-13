@@ -5,6 +5,7 @@
     <class>org.braun.cookbook.backend.entity.KeywordEntity</class>
     <class>org.braun.cookbook.backend.entity.SynonymEntity</class>
     <class>org.braun.cookbook.backend.entity.SequenceEntity</class>
+    <class>org.braun.cookbook.backend.entity.JobEntity</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
   </persistence-unit>

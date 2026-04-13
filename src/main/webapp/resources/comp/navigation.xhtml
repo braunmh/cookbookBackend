@@ -12,22 +12,28 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <div class="main-nav">
-            <div style="width: 100%">
-                <p:commandButton id="mainmenu-btn" value="" type="button" icon="pi pi-bars"/>
-            </div>
-            <h:panelGroup id="aside-btn" layout="block" rendered="#{cc.attrs.hasAside}" styleClass="aside-btn">
-                <span></span>
-            </h:panelGroup>
+            <table style="width: 100%">
+                <tr>
+                    <td >
+                        <p:commandButton id="mainmenu-btn" value="" type="button" style="width: 2em;" icon="pi pi-bars"/>
+                    </td>
+                    <td ></td>
+                    <td style="text-align: right">
+                        <p:commandButton id="aside-btn" value="" type="button" style="width: 2em;"
+                            icon="pi pi-ellipsis-v" rendered="#{cc.attrs.hasAside}"/>
+                        <cc:insertChildren/>
+                    </td>
+                </tr>
+            </table>
         </div>
         <p:menu overlay="true" trigger="mainmenu-btn" my="left top" at="left bottom" toggleable="true">
             <p:submenu label="Suchen">
-                <p:menuitem value="Rezepte suchen" url="/recipe/search.xhtml" icon="pi pi-fw pi-search" partialSubmit="true"/>
-                <p:menuitem value="News" url="#" icon="pi pi-fw pi-search" partialSubmit="true" />
+                <p:menuitem value="Rezepte suchen" outcome="/recipe/search.xhtml" icon="pi pi-fw pi-search" partialSubmit="true"/>
+                <p:menuitem value="News" outcome="/recipe/news.xhtml" icon="pi pi-fw pi-search" partialSubmit="true" />
             </p:submenu>
             <p:submenu label="Administration">
-                <p:menuitem value="Import" icon="pi-fw pi pi-search" url="#"/>
+                <p:menuitem value="Job" icon="pi-fw pi pi-database" outcome="/admin/jobs"/>
                 <p:menuitem value="Stichwörter" icon="pi-fw pi pi-database" url="#"/>
-                <p:menuitem value="Suchindex aktualisieren"  url="#" icon="pi-fw pi pi-database"/>
             </p:submenu>
         </p:menu>
     </cc:implementation>

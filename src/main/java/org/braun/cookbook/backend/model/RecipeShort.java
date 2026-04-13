@@ -28,11 +28,12 @@ import jakarta.validation.constraints.*;
   RecipeShort.JSON_PROPERTY_ID,
   RecipeShort.JSON_PROPERTY_TITLE,
   RecipeShort.JSON_PROPERTY_PATH,
+  RecipeShort.JSON_PROPERTY_PATH_PARENT,
   RecipeShort.JSON_PROPERTY_KEYWORDS,
   RecipeShort.JSON_PROPERTY_RATING,
   RecipeShort.JSON_PROPERTY_SCORE
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2026-03-20T15:54:59.576974925+01:00[Europe/Berlin]", comments = "Generator version: 7.7.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2026-04-01T20:26:43.544512344+02:00[Europe/Berlin]", comments = "Generator version: 7.7.0")
 public class RecipeShort   {
   public static final String JSON_PROPERTY_ID = "id";
   @JsonProperty(JSON_PROPERTY_ID)
@@ -45,6 +46,10 @@ public class RecipeShort   {
   public static final String JSON_PROPERTY_PATH = "path";
   @JsonProperty(JSON_PROPERTY_PATH)
   private String path;
+
+  public static final String JSON_PROPERTY_PATH_PARENT = "pathParent";
+  @JsonProperty(JSON_PROPERTY_PATH_PARENT)
+  private String pathParent;
 
   public static final String JSON_PROPERTY_KEYWORDS = "keywords";
   @JsonProperty(JSON_PROPERTY_KEYWORDS)
@@ -116,6 +121,26 @@ public class RecipeShort   {
 
   public void setPath(String path) {
     this.path = path;
+  }
+
+  public RecipeShort pathParent(String pathParent) {
+    this.pathParent = pathParent;
+    return this;
+  }
+
+  /**
+   * Get pathParent
+   * @return pathParent
+   **/
+  @JsonProperty(value = "pathParent")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull 
+  public String getPathParent() {
+    return pathParent;
+  }
+
+  public void setPathParent(String pathParent) {
+    this.pathParent = pathParent;
   }
 
   public RecipeShort keywords(List<String> keywords) {
@@ -199,6 +224,7 @@ public class RecipeShort   {
     return Objects.equals(this.id, recipeShort.id) &&
         Objects.equals(this.title, recipeShort.title) &&
         Objects.equals(this.path, recipeShort.path) &&
+        Objects.equals(this.pathParent, recipeShort.pathParent) &&
         Objects.equals(this.keywords, recipeShort.keywords) &&
         Objects.equals(this.rating, recipeShort.rating) &&
         Objects.equals(this.score, recipeShort.score);
@@ -206,7 +232,7 @@ public class RecipeShort   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, title, path, keywords, rating, score);
+    return Objects.hash(id, title, path, pathParent, keywords, rating, score);
   }
 
   @Override
@@ -217,6 +243,7 @@ public class RecipeShort   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    path: ").append(toIndentedString(path)).append("\n");
+    sb.append("    pathParent: ").append(toIndentedString(pathParent)).append("\n");
     sb.append("    keywords: ").append(toIndentedString(keywords)).append("\n");
     sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
     sb.append("    score: ").append(toIndentedString(score)).append("\n");
