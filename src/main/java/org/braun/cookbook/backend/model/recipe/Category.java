@@ -1,5 +1,6 @@
 package org.braun.cookbook.backend.model.recipe;
 
+import java.util.Objects;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -42,5 +43,27 @@ public class Category implements EmptyElement {
     public Category name(String value) {
         name = value;
         return this;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Category other = (Category) obj;
+        return Objects.equals(this.name, other.name);
     }
 }

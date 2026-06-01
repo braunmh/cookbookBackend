@@ -20,6 +20,12 @@ public class RecipeTest {
     Set<String> categories = new HashSet<>();
     
     @Test
+    public void t1() {
+        String[] values = new String[] {"effille/2026/1234.xml", "ard/swr/2026/1234.xml"};
+        for (String v : values) {
+            System.out.println(getPathParentHierachy(v));
+        }
+    }
     public void categories() {
         File recipeBase = new File(baseDir);
         traverseDir(recipeBase);
@@ -52,4 +58,24 @@ public class RecipeTest {
             return Collections.emptyList();
         }
     }
+    private List<String> getPathParentHierachy(String path) {
+        if (path == null) {
+            return Collections.emptyList();
+        }
+        List<String> res = new ArrayList<>();
+        String[] values = path.split("/");
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (int i = 0; i < values.length - 1; i++) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                builder.append("/");
+            }
+            builder.append(values[i]);
+            res.add(builder.toString());
+        }
+        return res;
+    }
+    
 }

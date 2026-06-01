@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import org.braun.cookbook.backend.model.Keyword;
 import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.process.KeywordFactory;
-import org.braun.cookbook.backend.process.RecipeFacade;
 import org.braun.cookbook.util.Configuration;
 import org.omnifaces.cdi.ViewScoped;
 import org.xml.sax.SAXException;
@@ -54,6 +53,10 @@ public class RecipeDisplayBean implements Serializable {
     
     public void openRatingDialog(ActionEvent event) {
         RecipeRatingBean.openDialog(content.getRelativeName(), content.getRating(), sessionUserBean.getInnerWidth());
+    }
+
+    public void openEditDialog(ActionEvent event) {
+        RecipeEditBean.openDialog(content.getRelativeName(), sessionUserBean.getInnerWidth());
     }
 
     public String getPath() {

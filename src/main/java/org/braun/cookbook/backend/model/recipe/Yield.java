@@ -48,60 +48,41 @@ public class Yield extends ContentElement<Yield> {
         return "Yield";
     }
 
-   public static Yield parse(String unit, String content) {
-       Yield yield = new Yield();
-      if (isNumber(unit)) {
-         yield.setUnit(unit);
-         if (content.startsWith("Person"))
-            yield.setValue("Portionen");
-         else {
-            yield.setValue("Portionen");
-            if (unit != null) {
-                switch (unit){
-                    case "eine":
-                    case "ein":
-                        yield.setUnit("1");
-                        break;
-                    case "zwei":
-                        yield.setUnit("2");
-                        break;
-                    case "drei":
-                        yield.setUnit("3");
-                        break;
-                    case "vier":
-                        yield.setUnit("4");
-                        break;
-                    case "fünf":
-                        yield.setUnit("5");
-                        break;
-                    case "sechs":
-                        yield.setUnit("6");
-                        break;
-                    case "sieben":
-                        yield.setUnit("7");
-                        break;
-                    case "acht":
-                        yield.setUnit("8");
-                        break;
-                    case "neun":
-                        yield.setUnit("9");
-                        break;
-                    case "zehn":
-                        yield.setUnit("10");
-                        break;
+    public static Yield parse(String unit, String content) {
+        Yield yield = new Yield();
+        if (isNumber(unit)) {
+            yield.setUnit(unit);
+            if (content.startsWith("Person")) {
+                yield.setValue("Portionen");
+            } else {
+                yield.setValue("Portionen");
+                if (unit != null) {
+                    switch (unit) {
+                        case "eine", "ein" -> yield.setUnit("1");
+                        case "zwei" -> yield.setUnit("2");
+                        case "drei" -> yield.setUnit("3");
+                        case "vier" -> yield.setUnit("4");
+                        case "fünf" -> yield.setUnit("5");
+                        case "sechs" -> yield.setUnit("6");
+                        case "sieben" -> yield.setUnit("7");
+                        case "acht" -> yield.setUnit("8");
+                        case "neun" -> yield.setUnit("9");
+                        case "zehn" -> yield.setUnit("10");
+                    }
                 }
             }
-         }
-      }
-      return yield;
-   }
-   
-   private static boolean isNumber(String value) {
-       if (null==value) return false;
-      try {
-         return Integer.parseInt(value) > 0;
-      } catch (NumberFormatException e) {
-         return false;
-      }
-   }
+        }
+        return yield;
+    }
+
+    private static boolean isNumber(String value) {
+        if (null == value) {
+            return false;
+        }
+        try {
+            return Integer.parseInt(value) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }

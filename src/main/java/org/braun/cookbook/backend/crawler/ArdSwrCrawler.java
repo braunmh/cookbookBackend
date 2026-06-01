@@ -50,7 +50,15 @@ public class ArdSwrCrawler extends Crawler {
 
         try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             RecipeLd recipeLd = RecipeArd.parse(inputStream);
-            return (recipeLd == null) ? null : recipeLd.toRecipe();
+            if (recipeLd != null) {
+                Recipe recipe = recipeLd.toRecipe();
+                if (recipe.getTitle() != null && recipe.getTitle().startsWith("Rezept:")) {
+                    recipe.setTitle(recipe.getTitle().substring(8));
+                }
+                return recipe;
+            }
+            return null;
+            
         } catch (IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
         }
@@ -95,12 +103,8 @@ public class ArdSwrCrawler extends Crawler {
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
         }
-        for (String url : overviewCommonfilter.getUrls()) {
-            System.out.println(url);
-        }
         Set<String> result = new HashSet<>(overviewCommonfilter.getUrls());
         
-        System.out.println("Ard-Buffet");
         request = HttpRequest.newBuilder()
                 .uri(URI.create(prefix + "/leben/rezepte/rezepte-archiv-102.html"))
                 .GET()
@@ -119,9 +123,6 @@ public class ArdSwrCrawler extends Crawler {
             // ignore
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
-        }
-        for (String url : overviewBuffetFilter.getUrls()) {
-            System.out.println(url);
         }
         result.addAll(overviewBuffetFilter.getUrls());
         List<String> res = new ArrayList<>(result);

@@ -276,21 +276,4 @@ public class DecimalFraction extends Number implements Comparable<DecimalFractio
       return doubleformat.format(d);
    }
 
-   public static void main(String[] args) {
-      try {
-         System.out.println(DecimalFraction.toString(DecimalFraction.parseDecimalFraction("1 1/4")));
-         System.out.println(DecimalFraction.toString(DecimalFraction.parseDecimalFraction("1/4")));
-         System.out.println(DecimalFraction.toString(DecimalFraction.parseDecimalFraction("0 5/8")));
-         System.out.println(DecimalFraction.toString(DecimalFraction.parseDecimalFraction("1/3")));
-
-         System.out.println(new DecimalFraction("1 5/7"));
-         System.out.println(DecimalFraction.toString(1.25));
-         System.out.println(DecimalFraction.toString(1.5));
-         System.out.println(DecimalFraction.toString(2.62511));
-         System.out.println(DecimalFraction.toString(1.0));
-         System.out.println(DecimalFraction.toString(11.4));
-      } catch (Exception e) {
-         e.printStackTrace(System.out);
-      }
-   }
 }

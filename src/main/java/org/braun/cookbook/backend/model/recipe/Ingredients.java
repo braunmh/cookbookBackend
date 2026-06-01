@@ -41,6 +41,9 @@ public class Ingredients implements EmptyElement {
         }
         contentHandler.startElement("", "Ingredients", "Ingredients", attrs);
         for (Ingredient ing : ingredients) {
+            if (ing == null) {
+                continue;
+            }
             ing.toSaxStream(contentHandler);
         }
         contentHandler.endElement("", "Ingredients", "Ingredients");

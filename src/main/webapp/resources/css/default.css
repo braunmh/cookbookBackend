@@ -10,11 +10,24 @@
 *::before,
 *::after {
     margin: 0;
-    padding: 0;
+/*    padding: 0; */
     box-sizing: border-box;
 }
-body, html {
+html {
     width: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+main {
+    flex: 1;
+}
+footer {
+    flex-shrink: 0;
+    text-align: center;
 }
 /*
 @media (min-width: 993px) {
@@ -200,5 +213,5 @@ div.menu-logo {
     text-align: right;
 }
 p {
-    padding: 0.1rem;
+    padding: 0.2rem;
 }

@@ -1,5 +1,7 @@
 package org.braun.cookbook.backend.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.apache.solr.client.solrj.beans.Field;
@@ -39,7 +41,7 @@ public class RecipeSolr extends AbstractSolr {
     @Field
     private String path;
     @Field
-    private String pathParent;
+    private List<String> pathParent;
     @Field 
     private String contentSuggest;
     @Field
@@ -65,14 +67,13 @@ public class RecipeSolr extends AbstractSolr {
         evaluated = in.isEvaluated();
         id = in.getId();
         path = in.getRelativeName();
-        int i = path.lastIndexOf('/');
-        pathParent = (i > 0) ? path.substring(0, i) : "";
+        pathParent = getPathParentHierachy(path);
         rating = in.getRating();
         title = replacePointByBlank(in.getTitle());
         url = in.getSource().getUrl();
         source = replacePointByBlank(in.getSource().getValue());
         keywordIds = in.getCategories().getCategories().stream().map(c -> from(c.getName())).toList();
-        StringBuilder sb = new StringBuilder(title);
+        StringBuilder sb = new StringBuilder((title == null) ? "MissingTitle" : title);
         addText(in.getDescription().getContent(), sb);
         sb.append(" ").append(source);
         for (Long k : keywordIds) {
@@ -86,6 +87,9 @@ public class RecipeSolr extends AbstractSolr {
         for (Ingredients is : in.getIngredients()) {
             sb.append(" ").append(is.getTitle());
             for (Ingredient ig : is.getIngredients()) {
+                if (ig == null) {
+                    continue;
+                }
                 sb.append(" ").append(ig.getValue());
             }
         }
@@ -97,7 +101,7 @@ public class RecipeSolr extends AbstractSolr {
     
     public RecipeShort toRecipeShort() {
         RecipeShort out = new RecipeShort().id(getId()).rating(getRating())
-                .title(getTitle()).path(getPath()).pathParent(getPathParent()).score(getScore());
+                .title(getTitle()).path(getPath()).pathParent(getRealPathParent()).score(getScore());
         if (getKeywordIds() != null) {
             for (Long keywordId : getKeywordIds()) {
                 Keyword k = KeywordFactory.getInstance().getById(keywordId);
@@ -107,6 +111,34 @@ public class RecipeSolr extends AbstractSolr {
             }
         }
         return out;
+    }
+    
+    private List<String> getPathParentHierachy(String path) {
+        if (path == null) {
+            return Collections.emptyList();
+        }
+        List<String> res = new ArrayList<>();
+        String[] values = path.split("/");
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (int i = 0; i < values.length - 1; i++) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                builder.append("/");
+            }
+            builder.append(values[i]);
+            res.add(builder.toString());
+        }
+        return res;
+    }
+    
+    private String getRealPathParent() {
+        if (getPathParent() != null) {
+            return getPathParent().get(getPathParent().size() -1);
+        } else {
+            return "";
+        }
     }
     
     private String replacePointByBlank(String value) {
@@ -281,11 +313,11 @@ public class RecipeSolr extends AbstractSolr {
         this.contentSuggest = value;
     }
 
-    public String getPathParent() {
+    public List<String> getPathParent() {
         return pathParent;
     }
 
-    public void setPathParent(String pathParent) {
+    public void setPathParent(List<String> pathParent) {
         this.pathParent = pathParent;
     }
     

@@ -411,12 +411,22 @@ public class Recipe implements EmptyElement {
         return ingredients;
     }
 
+    public void setIngredients(List<Ingredients> value) {
+        ingredients.clear();
+        if (value != null) {
+            ingredients.addAll(value);
+        }
+    }
+    
     public Recipe addIngredients(Ingredients value) {
         ingredients.add(value);
         return this;
     }
 
     public Ingredients getLastIngredients() {
+        if (getIngredients().isEmpty()) {
+            return null;
+        }
         return getIngredients().getLast();
     }
     

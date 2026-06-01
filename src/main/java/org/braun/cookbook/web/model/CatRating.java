@@ -18,11 +18,11 @@ public class CatRating extends Catalogue<Integer> {
     public static final List<CatRating> values =
         Arrays.asList(
             new CatRating().id(0).value(null).name(""),
-            new CatRating().id(5).value(5).name("*"),
-            new CatRating().id(4).value(4).name("**"),
-            new CatRating().id(3).value(3).name("***"),
+            new CatRating().id(1).value(1).name("*****"),
             new CatRating().id(2).value(2).name("****"),
-            new CatRating().id(1).value(1).name("*****")
+            new CatRating().id(3).value(3).name("***"),
+            new CatRating().id(4).value(4).name("**"),
+            new CatRating().id(5).value(5).name("*")
         );
 
     @XmlAttribute

@@ -4,19 +4,17 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
-import jakarta.json.JsonString;
 import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import org.braun.cookbook.common.EndOfProcessing;
+import java.util.Set;
 import org.braun.cookbook.backend.model.recipe.Category;
 import org.braun.cookbook.backend.model.recipe.ImageSorter;
 import org.braun.cookbook.backend.model.recipe.Ingredient;
@@ -24,7 +22,6 @@ import org.braun.cookbook.backend.model.recipe.Ingredients;
 import org.braun.cookbook.backend.model.recipe.Nutrient;
 import org.braun.cookbook.backend.model.recipe.Nutrients;
 import org.braun.cookbook.backend.model.recipe.Paragraph;
-import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.model.recipe.Yield;
 import org.braun.cookbook.backend.model.recipeLd.DateTime;
 import org.braun.cookbook.backend.model.recipeLd.ImageObject;
@@ -38,10 +35,8 @@ import org.braun.cookbook.backend.model.recipeLd.RecipeInstruction;
 import org.braun.cookbook.backend.model.recipeLd.Text;
 import org.braun.cookbook.backend.model.recipeLd.WebPage;
 import org.ccil.cowan.tagsoup.Parser;
-import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  *
@@ -247,26 +242,6 @@ public class RecipeLd extends Parsable<RecipeLd> {
         return String.format("%02d:%02d:%02d", HH, MM, SS);
     }
 
-    public static RecipeLd parseNdr(InputStream inputStream) throws IOException, SAXException {
-        Parser parser = new Parser();
-        parser.setFeature(Parser.namespacePrefixesFeature, false);
-        InputSource inputSource = new InputSource(inputStream);
-        
-        JsonFilter jsonFilter = new JsonFilter();
-        jsonFilter.setParent(parser);
-        
-        NdrNutrientFilter ndrNutrientFilter = new NdrNutrientFilter();
-        ndrNutrientFilter.setParent(jsonFilter);
-        
-        ndrNutrientFilter.parse(inputSource);
-        RecipeLd recipe = getRecipeFromJson(jsonFilter.getJson());
-        
-        if (ndrNutrientFilter.getNutrient() != null) {
-            recipe.setNutrition(NutritionInformation.parse(ndrNutrientFilter.getNutrient()));
-        }
-        return recipe;
-    }
-
     public static RecipeLd parse(InputStream inputStream) throws IOException, SAXException {
         Parser parser = new Parser();
         parser.setFeature(Parser.namespacePrefixesFeature, false);
@@ -276,54 +251,6 @@ public class RecipeLd extends Parsable<RecipeLd> {
         jsonFilter.parse(inputSource);
             
         return getRecipeFromJson(jsonFilter.getJson());
-    }
-    
-    static class NdrNutrientFilter extends XMLFilterImpl {
-    
-        enum Step {other, nutrient, content, finish};
-        
-        private Step step = Step.other;
-        private CharArrayWriter writer = new CharArrayWriter();
-        private String nutrient;
-
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            switch (step) {
-                case other -> {
-                    if ("h2".equals(localName) && "Naehrwerte-pro-Portion".equals(atts.getValue("id"))) {
-                        step = Step.nutrient;
-                    }
-                }
-                case nutrient -> {
-                    if ("p".equals(localName)) {
-                        step = Step.content;
-                    }
-                }
-            }
-            super.startElement(uri, localName, qName, atts);
-        }
-
-        @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (step == Step.content && "p".equals(localName)) {
-                step = step.finish;
-                nutrient = "Nährwerte / Portion: " + writer.toString();
-            }
-            super.endElement(uri, localName, qName);
-        }
-
-        @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            if (step == Step.content) {
-                writer.write(ch, start, length);
-            }
-            super.characters(ch, start, length);
-        }
-
-        public String getNutrient() {
-            return nutrient;
-        }
-        
     }
     
     public static RecipeLd getRecipeFromJson(String json) {
@@ -360,6 +287,19 @@ public class RecipeLd extends Parsable<RecipeLd> {
             res.setRecipeInstructions(RecipeInstruction.parse(jsonObject.get("recipeInstructions")));
             res.setCookingMethod(Text.parseKeywords(jsonObject.get("cookingMethod")));
             res.setRecipeCategory(Text.parseKeywords(jsonObject.get("recipeCategory")));
+            Text keywords = Text.parseKeywords(jsonObject.get("keywords"));
+            if (keywords.isFilled()) {
+                Set<String> ks = new HashSet<>();
+                ks.addAll(res.getRecipeCategory().getValue());
+                for (String k : keywords.getValue()) {
+                    String[] ka = k.split(",");
+                    for (String s : ka) {
+                        ks.add(s.trim());
+                    }
+                }
+                res.getRecipeCategory().getValue().clear();
+                res.getRecipeCategory().getValue().addAll(ks);
+            }
             res.setRecipeCuisine(Text.parseKeywords(jsonObject.get("recipeCuisine")));
             res.setImage(ImageObject.parse(jsonObject.get("image")));
             res.setMainEntityOfPage(WebPage.parse(jsonObject.get("mainEntityOfPage")));

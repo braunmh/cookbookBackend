@@ -18,6 +18,22 @@
     </ui:define>
 
     <ui:define name="content">
+        <div class="ui-fluid formgrid grid">
+            <comp:inputElement>
+                <p:autoComplete id="pathParent" var="pathParent" dropdown="false" 
+                                multiple="false" value="#{newsBean.pathParent}"
+                                completeMethod="#{newsBean.getSuggestionPathParent}"
+                                itemLabel="#{pathParent}" itemValue="#{pathParent}"
+                                scrollHeight="250"
+                    >
+                </p:autoComplete>
+                <p:outputLabel for="pathParent" value="Ordner" />
+                <p:message id="pathParentMsg" for="pathParent" display="tooltip"/>
+            </comp:inputElement>
+            <comp:inputElement>
+                <p:commandButton action="#{newsBean.refresh()}" value="Refresh" update="@form" style="width: auto;"/>
+            </comp:inputElement>
+        </div>
         <p:dataTable id="result" var="row" value="#{newsBean.result}" 
                      paginator="true" rows="10" rendered="#{not empty newsBean.result}"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -27,10 +43,10 @@
                 <h:link outcome="/recipe/display" target="_blank">
                     <f:param name="path" value="#{row.path}"/>
                     <h:outputText value="#{row.title}"/>
+                    <h:outputText value=" (#{row.pathParent}) "/>
+                    <h:graphicImage library="image" name="rating#{row.rating}.gif" rendered="#{row.rating gt '0'}"/><br/>
+                    <h:outputText value="#{row.keywords}"/>
                 </h:link>
-                <h:outputText value=" (#{row.pathParent}) "/>
-                <h:graphicImage library="image" name="rating#{row.rating}.gif" rendered="#{row.rating gt '0'}"/><br/>
-                <h:outputText value="#{row.keywords}"/>
             </p:column>
         </p:dataTable>
     </ui:define>

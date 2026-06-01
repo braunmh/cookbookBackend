@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="jakarta.faces.composite"
-      >
+          
+      xmlns:h="jakarta.faces.html">
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -11,10 +12,10 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <div class="#{cc.attrs.styleClass}">
+        <h:panelGroup layout="block" styleClass="#{cc.attrs.styleClass}">
             <div class="ui-outputpanel ui-widget ui-float-label">
                 <cc:insertChildren/>
             </div>
-        </div>
+        </h:panelGroup>
     </cc:implementation>
 </html>

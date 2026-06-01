@@ -12,7 +12,7 @@ import org.braun.cookbook.backend.model.recipe.IImage;
  * @author mbraun
  */
 public class ImageObject extends Parsable<ImageObject> implements IImage {
-    
+
     private String name;
     
     private String url;
@@ -30,27 +30,31 @@ public class ImageObject extends Parsable<ImageObject> implements IImage {
         List<ImageObject> res = new ArrayList<>();
         if (in != null) {
             switch (in.getValueType()) {
-                case ARRAY:
+                case ARRAY -> {
                     JsonArray array = in.asJsonArray();
                     for (int i = 0; i < array.size(); i++) {
                         ImageObject io = parseObject(array.get(i));
                         if (!io.isEmpty()) {
                             res.add(io);
+                            if (io.getWidth() == 0 && i < Dimension.DEFAULTS.size()) {
+                                io.setHeight(Dimension.DEFAULTS.get(i).getHeight());
+                                io.setWidth(Dimension.DEFAULTS.get(i).getWidth());
+                            }
                         }
                     }
-                    break;
-                case STRING:
+                }
+                case STRING -> {
                     ImageObject io = parseObject(in);
                     if (!io.isEmpty()) {
                         res.add(io);
                     }
-                    break;
-                case OBJECT:
-                    io = parseObject(in);
+                }
+                case OBJECT -> {
+                    ImageObject io = parseObject(in);
                     if (!io.isEmpty()) {
                         res.add(io);
                     }
-                    break;
+                }
             }
         }
         return res;
@@ -131,5 +135,6 @@ public class ImageObject extends Parsable<ImageObject> implements IImage {
         height = value;
         return this;
     }
+
     
 }

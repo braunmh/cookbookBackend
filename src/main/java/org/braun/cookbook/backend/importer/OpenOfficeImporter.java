@@ -16,7 +16,6 @@ import org.apache.logging.log4j.LogManager;
 import org.braun.cookbook.backend.model.Keyword;
 import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.model.recipe.Category;
-import org.braun.cookbook.backend.model.recipe.DecimalFraction;
 import org.braun.cookbook.backend.model.recipe.Ingredient;
 import org.braun.cookbook.backend.model.recipe.Ingredients;
 import org.braun.cookbook.backend.model.recipe.Nutrients;
@@ -193,15 +192,6 @@ public class OpenOfficeImporter extends Importer {
         }
     }
 
-    String getCount(String value) {
-        try {
-            double d = DecimalFraction.parseDecimalFraction(value);
-            return Double.toString(d);
-        } catch (NumberFormatException e) {
-            return value;
-        }
-    }
-
     void parseSource(Element element) throws SAXException {
         String value = getValue(element);
         if (value == null) {
@@ -285,7 +275,7 @@ public class OpenOfficeImporter extends Importer {
         }
         if (("text:p".equals(e.getNodeName()))) {
             String styleName = e.getAttribute("text:style-name");
-            if ("P1".equals(styleName) || "Recipe".equals(styleName)) {
+            if ("P1".equals(styleName) || "Recipe".equals(styleName) || (styleName != null && styleName.startsWith("Heading"))) {
                 return true;
             }
         }

@@ -52,3 +52,16 @@ div.ing li.r_ing_title {
 div.r_source, div.r_nut {
     margin-top: 0.3em;
 }
+
+div.r_description {
+    margin: 0;
+    padding: 0;
+}
+
+div.r_description ol {
+    margin-left: 1em;
+    padding-left: 1em;
+}
+div.r_description ol li {
+    margin-top: 0.15em;
+}

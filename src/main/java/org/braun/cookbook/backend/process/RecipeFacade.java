@@ -42,6 +42,20 @@ public class RecipeFacade {
     @Inject
     private SequenceGenerator sequenceGenerator;
     
+    public void delete(Recipe recipe) {
+        delete(recipe.getId());
+        File recipeFile = new File(getContentDirectory() + "/" + recipe.getRelativeName());
+        if (recipeFile.exists()) {
+            recipeFile.delete();
+        }
+        if (StringUtils.isNotBlank(recipe.getImageUrl())) {
+            File imageFile = new File(getContentDirectory() + "/" + recipe.getImageUrl());
+            if (imageFile.exists()) {
+                imageFile.delete();
+            }
+        }
+    }
+    
     public void delete(String id) {
         try (SolrClient client = getSolrClient()) {
             client.deleteById(Configuration.getInstance().getSolrCollection(), id);
@@ -90,7 +104,7 @@ public class RecipeFacade {
                     .addQueryLong("keywordIds", keywords);
             SolrQuery query = builder.build();
             QueryResponse response = solrClient.query(Configuration.getInstance().getSolrCollection(), query);
-            LOG.info("Number of Documents found: " + response.getResults().getNumFound());
+            LOG.trace("Number of Documents found: " + response.getResults().getNumFound());
             List<RecipeSolr> res = response.getBeans(RecipeSolr.class);
             List<RecipeShort> result = new ArrayList<>(res.size());
             for (RecipeSolr in : res) {
@@ -103,7 +117,7 @@ public class RecipeFacade {
         }
     }
 
-    public List<RecipeShort> findNews(Integer days)  throws ConditionParseException {
+    public List<RecipeShort> findNews(Integer days, String pathParent)  throws ConditionParseException {
         if (days == null || days == 0) {
             days = 14;
         }
@@ -123,12 +137,13 @@ public class RecipeFacade {
                     .addField("pathParent")
                     .addField("rating")
                     .addField("height")
-                    .setRows(50)
-                    .addQuery("modified", new DateWrapper(dateFrom), new DateWrapper(dateTo));
+                    .setRows(200)
+                    .addQuery("modified", new DateWrapper(dateFrom), new DateWrapper(dateTo))
+                    .addQueryString("pathParent", pathParent);
             SolrQuery query = builder.build();
             query.setSort("modified", SolrQuery.ORDER.desc);
             QueryResponse response = solrClient.query(Configuration.getInstance().getSolrCollection(), query);
-            LOG.info("Number of Documents found: " + response.getResults().getNumFound());
+            LOG.trace("Number of Documents found: " + response.getResults().getNumFound());
             List<RecipeSolr> res = response.getBeans(RecipeSolr.class);
             List<RecipeShort> result = new ArrayList<>(res.size());
             for (RecipeSolr in : res) {
@@ -152,6 +167,7 @@ public class RecipeFacade {
                 return;
             }
             recipe.setRating(rating);
+            recipe.setEvaluated(true);
             update(recipe);
             
         } catch (SAXException | IOException e) {
@@ -262,7 +278,7 @@ public class RecipeFacade {
                     .addQueryString("url", url);
             SolrQuery query = builder.build();
             QueryResponse response = solrClient.query(Configuration.getInstance().getSolrCollection(), query);
-            LOG.info("Number of Documents found: " + response.getResults().getNumFound());
+            LOG.trace("Number of Documents found: " + response.getResults().getNumFound());
             List<RecipeSolr> res = response.getBeans(RecipeSolr.class);
             if (res.isEmpty()) {
                 return null;
@@ -278,12 +294,12 @@ public class RecipeFacade {
         return new Http2SolrClient.Builder(Configuration.getInstance().getSolrUrl()).build();
     }
 
-    private RecipeSolr getRecipe(String path) {
+    public Recipe findByPath(String path) {
         File file = new File(getContentDirectory() + "/" + path);
         if (file.exists()) {
             try {
                 Recipe recipe = Recipe.unmarshal(getContentDirectory(), path);
-                return new RecipeSolr(recipe);
+                return recipe;
             } catch (SAXException e) {
                 LOG.error("unmarshal Recipe: {}", file.getPath());
                 return null;

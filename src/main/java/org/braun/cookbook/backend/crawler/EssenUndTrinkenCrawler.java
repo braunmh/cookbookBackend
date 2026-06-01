@@ -13,7 +13,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import static org.braun.cookbook.backend.crawler.Crawler.LOG;
 import org.braun.cookbook.backend.model.BackgroundJobType;
@@ -98,9 +97,6 @@ public class EssenUndTrinkenCrawler extends Crawler {
             // Just ignore
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
-        }
-        for (String url : overviewFilter.getUrls()) {
-            System.out.println(url);
         }
         return overviewFilter.getUrls();
     }

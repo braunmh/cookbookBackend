@@ -115,10 +115,10 @@
                 <h:link outcome="/recipe/display" target="_blank">
                     <f:param name="path" value="#{row.path}"/>
                     <h:outputText value="#{row.title}"/>
+                    <h:outputText value=" (#{row.pathParent}) "/>
+                    <h:graphicImage library="image" name="rating#{row.rating}.gif" rendered="#{row.rating gt '0'}"/><br/>
+                    <h:outputText value="#{row.keywords}"/>
                 </h:link>
-                <h:outputText value=" (#{row.pathParent}) "/>
-                <h:graphicImage library="image" name="rating#{row.rating}.gif" rendered="#{row.rating gt '0'}"/><br/>
-                <h:outputText value="#{row.keywords}"/>
             </p:column>
         </p:dataTable>
     </ui:define>

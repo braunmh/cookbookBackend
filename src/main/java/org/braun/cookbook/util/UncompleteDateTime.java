@@ -168,13 +168,4 @@ public final class UncompleteDateTime {
         }
     }
     
-    public static void main(String... args) {
-        String tst = "20131230153054";
-        try {
-            UncompleteDateTime u = new UncompleteDateTime("20131230153054");
-            System.out.println(u.getYear());
-        } catch (Exception e) {
-            e.printStackTrace(System.out);
-        }
-    }
 }

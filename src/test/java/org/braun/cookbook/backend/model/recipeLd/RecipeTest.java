@@ -57,26 +57,7 @@ public class RecipeTest {
         }
     }
     
-    @Test
-    public void parseHtmlJsonTest() {
-        String value = "ard_ndr_recipe_json.html";
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(DIRECTORY + value)) {
-            if (inputStream != null) {
-                RecipeLd recipe = RecipeLd.parseNdr(inputStream);
-                if (recipe != null) {
-                    StringWriter writer = new StringWriter();
-                    recipe.toRecipe().marshall(writer);
-                    System.out.println(writer.toString());
-                }
-            }
-           
-        } catch (Exception e) {
-            System.out.println("Error parsing " + value);
-            e.printStackTrace(System.out);
-        }
-    }
-
-    public void spliTest() {
+    public void splitTest() {
         String desc = "1. Den Backofen auf 180 Grad (Umluft: 160 Grad, Gas Stufe 3) vorheizen. ,2. Die Kartoffeln gut waschen, mit der Schale auf ein Backblech geben und im vorgeheizten Backofen ca. 1 Stunde weich garen. ,3. In einer Pfanne ohne Fett die Haselnüsse rösten. Dann aus der Pfanne nehmen und abkühlen lassen.,4. Den Strunk und die äußeren Blätter vom Wirsing entfernen. Wirsing waschen, vierteln, den Strunk entfernen und die Wirsingviertel in feine Streifen schneiden. ,5. Zwiebel schälen und fein hacken. ,6. Majoran abbrausen, trocken schütteln und die Blättchen abzupfen. ,7. In einem großen flachen Topf Butterschmalz erhitzen, die Zwiebel darin anschwitzen, Wirsing dazugeben und bei kleiner Hitze langsam dämpfen. Mit Sahne ablöschen. Den Wirsing darin weich kochen. Mit Salz und Pfeffer würzen. ,8. Die gerösteten Haselnüsse fein hacken. Den Käse fein reiben.,9. Die noch sehr warmen weich gegarten Kartoffeln durchschneiden, das Kartoffelinneres herauskratzen und durch eine Kartoffelpresse drücken. ,10. Die Eier trennen. ,11. Das Püree mit Salz und Muskatnuss würzen. Eigelb und Kartoffelstärke darunter mischen. ,12. Diesen Kartoffelteig mit dem Nudelholz etwa 1 cm dünn ausrollen (das Nudelholz sollte immer mit Kartoffelstärke bestäubt sein, damit der Teig nicht klebt). Aus der Teigplatte lange Dreiecke ausschneiden. Majoran, gehackte Nüsse und Käse darauf streuen und von der breiten Seite her aufrollen. Die Enden zu einem Croissant umbiegen.,13. Die Kartoffelcroissants auf ein mit Backpapier ausgelegtes Backblech legen und mit Eiweiß bestreichen. Im vorgeheizten Ofen ca. 7 Minuten backen. ,14. Kartoffelcroissants und Rahmwirsing auf Teller verteilen und servieren. ";
         String[] vs = desc.split("( ,)|(\\.,)");
         for (String v : vs) {

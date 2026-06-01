@@ -1,7 +1,5 @@
 package org.braun.cookbook.web.converter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import org.braun.cookbook.backend.model.recipe.Description;
 import org.braun.cookbook.backend.model.recipe.Paragraph;
 import org.junit.jupiter.api.Test;

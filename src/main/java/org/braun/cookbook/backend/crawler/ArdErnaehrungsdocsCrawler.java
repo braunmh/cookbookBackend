@@ -10,10 +10,10 @@ import org.braun.cookbook.backend.model.BackgroundJobType;
  *
  * @author mbraun
  */
-@Named
+@Named("ArdErnaehrungsdocsCrawler")
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)
-public class ArdErnaehrungsdocsCrawler extends ArdNdrCrawler {
+public class ArdErnaehrungsdocsCrawler extends AbstractArdNdrCrawler {
 
     @Override
     protected String getPathParent() {

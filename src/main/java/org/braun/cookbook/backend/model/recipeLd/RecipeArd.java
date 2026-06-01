@@ -107,7 +107,11 @@ public class RecipeArd {
                                     String content = atts.getValue("content");
                                     if (content != null) {
                                         recipe.setRecipeInstructions(new RecipeInstruction());
-                                        recipe.getRecipeInstructions().addAll(Arrays.asList(content.split("( ,)|(\\.,)")));
+                                        for (String c : content.split("( ,)|(\\.,)")) {
+                                            c = c.replaceAll("<strong>", "");
+                                            c = c.replaceAll("</strong>", "");
+                                            recipe.getRecipeInstructions().add(c);
+                                        }
                                     }
                                 }
 
@@ -240,7 +244,7 @@ public class RecipeArd {
                 }
                 case other -> super.endElement(uri, localName, qName);
                 default -> {
-                    System.out.println(localName + " not found " + step);
+                    LOG.info("{} not found {}", localName, step);
                     super.endElement(uri, localName, qName);
                 }
             }

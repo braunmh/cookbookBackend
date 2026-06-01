@@ -18,9 +18,8 @@
     <ui:define name="navigation">
         <comp:navigation hasAside="true">
             <p:menu overlay="true" trigger="aside-btn" my="right top" at="right bottom" toggleable="true">
-                <p:menuitem value="Bewerten" icon="pi-fw pi pi-search" actionListener="#{recipeDisplayBean.openRatingDialog}"/>
-                <p:menuitem value="Stichwörter" icon="pi-fw pi pi-database" url="#"/>
-                <p:menuitem value="Suchindex aktualisieren"  url="#" icon="pi-fw pi pi-database"/>
+                <p:menuitem value="Bewerten" icon="pi-fw pi pi-database" actionListener="#{recipeDisplayBean.openRatingDialog}"/>
+                <p:menuitem value="Bearbeiten" icon="pi-fw pi pi-database" actionListener="#{recipeDisplayBean.openEditDialog}"/>
             </p:menu>
         </comp:navigation>
     </ui:define>
@@ -54,12 +53,14 @@
                 </ul>    
             </ui:repeat>
         </div>
-        <h:outputText value="#{recipeDisplayBean.content.description}" escape="false" converter="descriptionConverter"/>
+        <div class ="r_description">
+            <h:outputText value="#{recipeDisplayBean.content.description}" escape="false" converter="descriptionConverter"/>
+        </div>
         <h:panelGroup layout="block" styleClass="r_nut" rendered="#{not recipeDisplayBean.content.nutrients.isEmpty()}">
             <h:outputText value="#{recipeDisplayBean.content.nutrients.toText()}"/>
         </h:panelGroup>
         <h:panelGroup layout="block" styleClass="r_source" rendered="#{not empty recipeDisplayBean.content.source.url}">
-            <h:outputLink value="#{recipeDisplayBean.content.source.url}">
+            <h:outputLink value="#{recipeDisplayBean.content.source.url}" target="blank">
                 <h:outputText value="#{recipeDisplayBean.content.source.value}"/>
             </h:outputLink>
         </h:panelGroup>

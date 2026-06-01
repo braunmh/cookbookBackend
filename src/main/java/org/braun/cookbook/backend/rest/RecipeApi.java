@@ -22,6 +22,7 @@ import org.braun.cookbook.backend.model.Suggestion;
 import org.braun.cookbook.backend.process.ConditionParseException;
 import org.braun.cookbook.backend.process.RecipeFacade;
 import org.braun.cookbook.util.Configuration;
+import org.braun.cookbook.web.ui.ImageBean;
 
 @Path("/recipe")
 @io.swagger.annotations.Api("the recipe API")
@@ -29,6 +30,9 @@ import org.braun.cookbook.util.Configuration;
 public class RecipeApi  {
 
     private static final Logger LOG = LogManager.getLogger();
+    
+    @Inject
+    private ImageBean imageBean;
     
     @Inject
     private RecipeFacade recipeFacade;
@@ -84,6 +88,10 @@ public class RecipeApi  {
     })
     public Response getRecipeImage(@ApiParam(value = "part of word to search for", required = true) @QueryParam("imagePath") @NotNull  String imagePath,@Context SecurityContext securityContext)
     throws NotFoundException {
+        if (imagePath.startsWith(ImageBean.PREFIX)) {
+            byte[] image = imageBean.getImage(imagePath.substring(ImageBean.PREFIX.length()));
+            return Response.ok().entity(image).build();
+        }
         try (InputStream inputStream = new FileInputStream(Configuration.getInstance().getContentDirectory() + "/" + imagePath);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
             byte[] buffer = new byte[2048];

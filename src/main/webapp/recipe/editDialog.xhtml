@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:comp="jakarta.faces.composite/comp"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core">
+    <h:head>
+        <title>Rezept ändern</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="default.css" library="css"/>
+        <h:outputStylesheet name="primeflex3.css" library="css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <script type="text/javascript">
+            function addStyleToAutoCompleteMultiple(widgetVar, styleClass) {
+                var widget = PF(widgetVar);
+                if (widget) {
+                    widget.jq[0].classList.add(styleClass);
+                }
+            }
+            function removeStyleToAutoCompleteMultiple(widgetVar, styleClass) {
+                var widget = PF(widgetVar);
+                if (widget) {
+                    widget.jq[0].classList.remove(styleClass);
+                }
+            }
+        </script>
+    </h:head>
+    <h:body>
+        <f:view id="view">
+            <f:metadata>
+                <f:viewParam name="path" value="#{recipeEditBean.path}"/>
+                <f:viewAction action="#{recipeEditBean.onload()}"/>
+            </f:metadata>
+            <h:form id="form" enctype="multipart/form-data">
+                <p:tabView id="tabview">
+                    <p:tab title="Allgemeine Angabe" id="common">
+                        <div class="ui-fluid formgrid grid" style="padding-top: 0.3rem">
+                            <comp:inputElement styleClass="field md:col-12 col-12">
+                                <p:inputText id="title" value="#{recipeEditBean.model.title}"/>
+                                <p:outputLabel for="@previous" value="Titel" />
+                            </comp:inputElement>
+                            <comp:inputElement styleClass="field md:col-12 col-12">
+                                <p:autoComplete id="keywords" var="keyword" dropdown="true" widgetVar="keywordWidget"
+                                                multiple="true" value="#{recipeEditBean.model.keywords}"
+                                                completeMethod="#{recipeEditBean.getSuggestionKeyword}"
+                                                itemLabel="#{keyword.name}" itemValue="#{keyword}"
+                                                scrollHeight="250"
+                                                onfocus="addStyleToAutoCompleteMultiple('keywordWidget', 'ui-inputwrapper-focus')"
+                                                onblur="removeStyleToAutoCompleteMultiple('keywordWidget', 'ui-inputwrapper-focus')"
+                                                styleClass="#{imageSearchBean.searchParameter.keywords.isEmpty() ? '' : 'ui-inputwrapper-filled'}">
+                                    <f:converter converterId="keywordConverter"/>
+                                    <p:ajax event="itemSelect" update="keywords"/>
+                                    <p:ajax event="itemUnselect" update="keywords"/>
+                                    <p:outputLabel for="@previous" value="Titel" />
+                                </p:autoComplete>
+                            </comp:inputElement>
+                            <comp:inputElement>
+                                <p:inputText id="yield_count" value="#{recipeEditBean.model.yield.unit}"/>
+                                <p:outputLabel for="@previous" value="Anzahl" />
+                            </comp:inputElement>
+                            <comp:inputElement>
+                                <p:inputText id="yield_unit" value="#{recipeEditBean.model.yield.value}"/>
+                                <p:outputLabel for="@previous" value="Einheit" />
+                            </comp:inputElement>
+                            <comp:inputElement>
+                                <p:selectBooleanCheckbox id="evaluated" value="#{recipeEditBean.model.evaluated}" itemLabel="ausprobiert"/>
+                            </comp:inputElement>
+                            <comp:inputElement>
+                                <p:selectOneMenu id="rating"
+                                                 value="#{recipeEditBean.model.rating}">
+                                    <f:selectItems value="#{recipeEditBean.ratingValues}" 
+                                                   var="rating" itemLabel="#{rating.name}" itemValue="#{rating}"/>
+                                    <f:converter converterId="ratingConverter"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="@previous" value="Bewertung" />
+                            </comp:inputElement>
+                            <comp:inputElement styleClass="field md:col-12 col-12">
+                                <p:inputText id="source" value="#{recipeEditBean.model.nutrients}" />
+                                <p:outputLabel for="@previous" value="Nährwerte" />
+                            </comp:inputElement>
+                            <comp:inputElement styleClass="field md:col-12 col-12">
+                                <p:inputText id="source" value="#{recipeEditBean.model.source}" />
+                                <p:outputLabel for="@previous" value="Urheber" />
+                            </comp:inputElement>
+                            <comp:inputElement styleClass="field md:col-12 col-12">
+                                <p:inputText id="url" value="#{recipeEditBean.model.url}" />
+                                <p:outputLabel for="@previous" value="Url" />
+                            </comp:inputElement>
+                            <comp:inputElement id="upload">
+                                <p:fileUpload mode="advanced" 
+                                              multiple="false" update="@form"
+                                              listener="#{recipeEditBean.handleUploadEvent}">
+                                    <p:validateFile 
+                                        allowTypes="/(\.|\/)(jpeg|jpg)$/"/>
+                                </p:fileUpload>
+                                <!-- image -->
+                            </comp:inputElement>
+                            <comp:inputElement id="imagepanel">
+                                <p:graphicImage id="image" cache="false"
+                                    value="#{externalContext.contextName}/rest/recipe/image?imagePath=tEmPImAgE/#{recipeEditBean.model.recipe.id}"/>
+                            </comp:inputElement>
+                        </div>
+                    </p:tab>
+                    <p:tab title="Zutaten">
+                        <p:textEditor value="#{recipeEditBean.model.ingredients}" secure="false">
+                            <f:facet name="toolbar">
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="bullet" />
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean" />
+                                </span>
+                            </f:facet>
+                            <f:converter converterId="ingredientsConverter"/>
+                        </p:textEditor>
+                    </p:tab>
+                    <p:tab title="Zubereitung">
+                        <p:textEditor value="#{recipeEditBean.model.description}" secure="false">
+                            <f:facet name="toolbar">
+                                <span class="ql-formats">
+                                    <button class="ql-header" value="2" />
+                                    <button class="ql-list" value="ordered" />
+                                    <button class="ql-list" value="bullet" />
+                                </span>
+                            </f:facet>
+                            <f:converter converterId="descriptionConverter"/>
+                        </p:textEditor>
+                    </p:tab>
+                </p:tabView>
+                <div class="command">
+                    <p:commandButton styleClass="di-button" id="close" value="Schliessen" action="#{recipeEditBean.close()}" immediate="true" />
+                    <p:commandButton styleClass="di-button" id="delete" value="Löschen" action="#{recipeEditBean.delete()}" immediate="true" />
+                    <p:commandButton styleClass="di-button" id="save" value="Sichern" action="#{recipeEditBean.save()}"/>
+                </div>
+            </h:form>
+        </f:view>
+    </h:body>
+</ui:composition>

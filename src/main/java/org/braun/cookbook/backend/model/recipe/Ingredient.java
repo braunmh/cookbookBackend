@@ -128,7 +128,7 @@ public class Ingredient extends ContentElement<Ingredient> {
             }
         }
         StringBuilder count1 = new StringBuilder(values[0]);
-        if (types[1] == Type.numeric) {
+        if (types.length > 1 && types[1] == Type.numeric) {
             count1.append(" ").append(values[1]);
         }
 

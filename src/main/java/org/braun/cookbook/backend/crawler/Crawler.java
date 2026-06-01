@@ -8,7 +8,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.braun.cookbook.backend.importer.ImageUtil;
-import org.braun.cookbook.backend.model.Job;
 import org.braun.cookbook.backend.model.JobResult;
 import org.braun.cookbook.backend.model.JobStatus;
 import org.braun.cookbook.backend.model.Keyword;
@@ -41,11 +40,13 @@ public abstract class Crawler extends BackgroundTask {
     public JobResult doExecute() {
 
         String pathParent = getPathParent();
-        int cnt = 0;
         JobResult result = new JobResult().type(getTaskName()).status(JobStatus.successful);
         Set<String> unknownKeywords = new HashSet<>();
+        int countRead = 0;
+        int countInsert = 0;
         try {
             for (String url : getNewRecipes()) {
+                countRead++;
                 if (recipeFacade.findByUrl(url) != null) {
                     continue;
                 }
@@ -55,7 +56,7 @@ public abstract class Crawler extends BackgroundTask {
                         recipe.getSource().setValue(pathParent);
                     }
                     recipe.getSource().setUrl(url);
-                    List<Category> converted = new ArrayList<>(recipe.getCategories().getCategories().size());
+                    Set<Category> converted = new HashSet<>(recipe.getCategories().getCategories().size());
                     for (Category c : recipe.getCategories().getCategories()) {
                         Keyword k = KeywordFactory.getInstance().getByName(c.getName());
                         if (k != null) {
@@ -63,7 +64,6 @@ public abstract class Crawler extends BackgroundTask {
                         } else {
                             LOG.info("For {} Keyword {} not found", url, c.getName().toUpperCase());
                             unknownKeywords.add(c.getName().toUpperCase());
-                            System.out.println("Keyword " + c.getName().toUpperCase() + " not found.");
                         }
                     }
                     recipe.getCategories().getCategories().clear();
@@ -71,7 +71,7 @@ public abstract class Crawler extends BackgroundTask {
                     byte[] image = getImage(recipe.getImageUrl());
                     recipe.setId(null);
                     recipeFacade.insert(recipe, pathParent, image);
-                    cnt++;
+                    countInsert++;
                 }
             }
         } catch (IOException e) {
@@ -79,8 +79,9 @@ public abstract class Crawler extends BackgroundTask {
             LOG.error(e);
         }
         if (result.getStatus() == JobStatus.successful) {
-            result.message("Number of Recipes added: " + cnt);
+            result.message("Number of Recipes added: " + countInsert);
         }
+        LOG.info("{}. Number of recipes read {}, number of recipes inserted {}", getTaskName(), countRead, countInsert);
         result.information(unknownKeywords);
         return result;
     }
@@ -111,4 +112,11 @@ public abstract class Crawler extends BackgroundTask {
         this.recipeFacade = recipeFacade;
     }
 
+    protected Calendar now() {
+        return Calendar.getInstance();
+    }
+    
+    protected int currentYear() {
+        return now().get(Calendar.YEAR);
+    }
 }

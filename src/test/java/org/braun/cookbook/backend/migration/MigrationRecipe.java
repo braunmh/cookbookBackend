@@ -11,14 +11,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import org.braun.cookbook.backend.model.BackgroundJobType;
-import org.braun.cookbook.backend.model.Job;
 import org.braun.cookbook.backend.model.JobResult;
 import org.braun.cookbook.backend.model.JobStatus;
 import org.braun.cookbook.backend.model.Keyword;
 import org.braun.cookbook.backend.model.Recipe;
+import org.braun.cookbook.backend.model.RecipeShort;
 import org.braun.cookbook.backend.model.RecipeSolr;
 import org.braun.cookbook.backend.model.Suggestion;
 import org.braun.cookbook.backend.model.recipe.Category;
@@ -38,10 +40,77 @@ import org.xml.sax.SAXException;
  */
 public class MigrationRecipe extends BaseTest {
     
-    private final String sourceDirectory = "/data/CookBookJSF/Recipes";
+    private final String sourceDirectory = "/data/CookBookJSF";
     private final String targetDirectory = "/opt/solr/data/cookbook/content";
     private Properties props;
     
+    @Test
+    public void replaceKeyword() {
+        init();
+        KeywordFactory.getInstance().refresh(getKeywordFacade().findAll());
+        Keyword keywordOld = KeywordFactory.getInstance().getById(76l);
+        Keyword keywordNew = KeywordFactory.getInstance().getById(143l);
+        RecipeFacade recipeFacade = getRecipeFacade();
+        List<Long> keywords = List.of(keywordOld.getId());
+        try {
+            List<RecipeShort> res = recipeFacade.searchByAttributes(null, keywords, null, null, Boolean.FALSE, null, null);
+            for (RecipeShort rs : res) {
+                Recipe r = Recipe.unmarshal(targetDirectory, rs.getPath());
+                Set<Category> cats = new HashSet<>(r.getCategories().getCategories());
+                cats.removeIf(c -> c.getName().equals(String.valueOf(keywordOld.getId())));
+                cats.add(new Category().name(String.valueOf(keywordNew.getId())));
+                r.getCategories().getCategories().clear();
+                r.getCategories().getCategories().addAll(cats);
+                r.marshall(targetDirectory, rs.getPath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+    }
+    
+    // @Test
+    public void migrateImages() {
+        String directoryName = targetDirectory + "/DasKochrezept";
+        File directory = new File(directoryName);
+        analyzeRecipes(directory);
+    }
+    
+    private void analyzeRecipes(File directory) {
+        String relativePath = directory.getPath().substring(targetDirectory.length() + 1);
+        System.out.println(relativePath);
+        for (File entry : directory.listFiles((File dir, String name) -> (dir.isFile() && (name.endsWith(".xml"))) || dir.isDirectory())) {
+            if (entry.isFile()) {
+                try {
+                    Recipe recipe = Recipe.unmarshal(entry.getParent(), entry.getName());  
+                    if (recipe.getImageUrl() != null && recipe.getImageUrl().startsWith("Recipes/")) {
+                        String newImageUrl = relativePath + "/" + recipe.getId() + ".jpg";
+                        if (copyImage(recipe.getImageUrl(), newImageUrl)) {
+                            recipe.setImageUrl(newImageUrl);
+                            recipe.marshall(entry.getParent(), entry.getName());
+                        }
+                    }
+                } catch (SAXException | IOException e) {
+                    if (entry.getName().endsWith(".xml")) {
+                        System.out.println(String.format("Can not unmarshal recipe %s", entry.getPath()));
+                    }
+                }
+            } else {
+                analyzeRecipes(entry);
+            }
+        }
+    }
+    
+    private boolean copyImage(String sourceUrl, String targetUrl) {
+        System.out.println(String.format("source = %s, target = %s", sourceUrl, targetUrl));
+        try (FileInputStream inputStream = new FileInputStream(new File(sourceDirectory + "/" + sourceUrl));
+             FileOutputStream outputStream = new FileOutputStream(new File(targetDirectory + "/" + targetUrl))) {
+            outputStream.write(inputStream.readAllBytes());
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace(System.out);
+            return false;
+        }
+    }
     
     public void toRecipeSolr() {
         File entry = new File(sourceDirectory + "/Kueche/Thailand/0015.xml");
@@ -81,7 +150,7 @@ public class MigrationRecipe extends BaseTest {
         }
     }
 
-    @Test
+    // @Test
     public void indexing() {
         init();
         IndexingFacade houseKeepingFacade = getHouseKeepingFacade();
@@ -194,7 +263,7 @@ public class MigrationRecipe extends BaseTest {
         }
     }
     
-   // @Test
+   // // @Test
     public void migrateCountries() {
         KeywordFacade keywordFacade = getKeywordFacade();
         props = new Properties();

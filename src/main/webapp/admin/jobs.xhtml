@@ -16,17 +16,17 @@
 
     <ui:define name="content">
         <p:dataTable id="result" var="row" value="#{jobBean.jobs}" 
-                     paginator="true" rows="10" rendered="#{not empty jobBean.jobs}"
+                     paginator="true" rows="20" rendered="#{not empty jobBean.jobs}"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                      currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}"
                      rowsPerPageTemplate="10,20,40">
-            <p:column id="col-type" headerText="Name" sortBy="#{row.type}" filterBy="#{row.type}" filterMatchMode="contains" field="type">
+            <p:column width="14rem" id="col-type" headerText="Name" sortBy="#{row.type}" filterBy="#{row.type}" filterMatchMode="contains" field="type">
                 <h:outputText value="#{row.type}"/>
             </p:column>
-            <p:column id="col-status" headerText="Status" sortBy="#{row.status}" filterBy="#{row.status}" filterMatchMode="contains" field="status">
+            <p:column width="5rem" id="col-status" headerText="Status" sortBy="#{row.status}" filterBy="#{row.status}" filterMatchMode="contains" field="status">
                 <h:outputText value="#{row.status}"/>
             </p:column>
-            <p:column id="col-started" headerText="Datum" sortBy="#{row.started}" filterBy="#{row.started}" filterMatchMode="contains" field="started">
+            <p:column width="8rem" id="col-started" headerText="Datum" sortBy="#{row.started}" filterBy="#{row.started}" filterMatchMode="contains" field="started">
                 <h:outputText value="#{row.started}">
                     <f:convertDateTime type="both"/>
                 </h:outputText>
@@ -37,7 +37,7 @@
             <p:column id="col-information" headerText="Information">
                 <h:outputText value="#{row.information}"/>
             </p:column>
-            <p:column id="col-action" style="width: 10rem">
+            <p:column id="col-action" width="1rem">
                 <p:commandButton id="start" process="@this" icon="pi pi-file-edit"
                                  styleClass="ui-button-flat"
                                  actionListener="#{jobBean.startJob}">
