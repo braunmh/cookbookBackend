@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import static org.braun.cookbook.backend.crawler.Crawler.LOG;
 import org.braun.cookbook.backend.model.BackgroundJobType;
 import org.braun.cookbook.backend.model.Recipe;
-import org.braun.cookbook.backend.model.recipe.Heading;
 import org.braun.cookbook.backend.model.recipe.Ingredient;
 import org.braun.cookbook.backend.model.recipe.Ingredients;
 import org.braun.cookbook.backend.model.recipe.Paragraph;

@@ -33,7 +33,7 @@
             </p:submenu>
             <p:submenu label="Administration">
                 <p:menuitem value="Job" icon="pi-fw pi pi-database" outcome="/admin/jobs"/>
-                <p:menuitem value="Stichwörter" icon="pi-fw pi pi-database" url="#"/>
+                <p:menuitem value="Stichwörter" icon="pi-fw pi pi-database" action="#{adminBean.refreshCaches()}"/>
             </p:submenu>
         </p:menu>
     </cc:implementation>

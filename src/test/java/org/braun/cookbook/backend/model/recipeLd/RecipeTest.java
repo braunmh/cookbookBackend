@@ -26,7 +26,7 @@ public class RecipeTest {
     @Test
     public void parseJsonTest() {
 
-        String[] values = new String[]{"ndr.ratgeber.kochen.03.json", "ndr.ratgeber.kochen.02.json", "essen_und_trinken.json", "ndr.ratgeber.kochen.json", "lecker.de.json", "www.effilee.de.json"};
+        String[] values = new String[]{"ndr.ratgeber.kochen.03.json", "ndr.ratgeber.kochen.02.json", "essen_und_trinken.json", "ndr.ratgeber.kochen.json", "lecker.de.json", "www.effilee.de.json", "rewe.json"};
         for (String value : values) {
             try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(DIRECTORY + value)) {
                 JsonReader reader = Json.createReader(inputStream);

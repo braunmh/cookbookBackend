@@ -14,12 +14,12 @@ public class OOImporterTest extends BaseTest {
     
     @Test
     public void test() {
-        String ooName = "/home/mbraun/Dokumente/recipes/ernaehrungsDocs.odt";
+        String ooName = "/home/mbraun/Dokumente/recipes/umschau.odt";
         try (InputStream inputStream = new FileInputStream(ooName)) {
             init();
             KeywordFactory.getInstance().refresh(getKeywordFacade().findAll());
             getEntityManager().getTransaction().begin();
-            OpenOfficeImporter imp = new OpenOfficeImporter(getRecipeFacade(), inputStream, "ernaehrungsDocs");
+            OpenOfficeImporter imp = new OpenOfficeImporter(getRecipeFacade(), inputStream, "umschau");
             imp.importRecipes();
             getEntityManager().getTransaction().commit();
         } catch (Exception e) {

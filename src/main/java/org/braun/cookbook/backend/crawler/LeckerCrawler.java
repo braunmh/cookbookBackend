@@ -63,6 +63,11 @@ public class LeckerCrawler extends Crawler {
                 return null;
             }
             Recipe recipe = recipeLd.toRecipe();
+            int indexTitle = recipe.getTitle().lastIndexOf("Rezept");
+            if (indexTitle > 0 && indexTitle == recipe.getTitle().length() - 6) {
+                recipe.setTitle(recipe.getTitle().substring(0, indexTitle - 1));
+            }
+
             for (StructureElement line : recipe.getDescription().getContent()) {
                 if (line instanceof Paragraph paragraph) {
                     String para = paragraph.getValue().replaceAll("&amp;nbsp;", " ");
