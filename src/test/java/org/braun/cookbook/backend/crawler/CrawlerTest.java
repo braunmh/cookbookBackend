@@ -2,11 +2,14 @@ package org.braun.cookbook.backend.crawler;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.braun.cookbook.backend.model.BackgroundJobType;
 import org.braun.cookbook.backend.model.JobResult;
 import org.braun.cookbook.backend.model.JobStatus;
 import org.braun.cookbook.backend.model.Recipe;
+import org.braun.cookbook.backend.model.recipe.Category;
 import org.braun.cookbook.backend.process.BaseTest;
 import org.braun.cookbook.backend.process.KeywordFactory;
 import org.junit.jupiter.api.Test;
@@ -17,16 +20,39 @@ import org.junit.jupiter.api.Test;
  */
 public class CrawlerTest extends BaseTest {
 
-    private void initT() {
+    protected void initT() {
         init();
         KeywordFactory.getInstance().refresh(getKeywordFacade().findAll());
     }
     
     @Test
-    public void t1() {
-        String x = " ";
-        int c = (int) x.charAt(0);
-        System.out.println(c);
+    public void brigitteRecipesTest() throws IOException {
+        initT();
+        BrigitteCrawler crawler = new BrigitteCrawler();
+        Set<String> unkownKeywords = new HashSet<>();
+        for (String url : crawler.getNewRecipes()) {
+            Recipe recipe = crawler.getRecipe(url);
+            System.out.println((recipe == null) ? "false " : "true  " + url);
+            if (recipe != null) {
+                for (Category c : recipe.getCategories().getCategories()) {
+                    var keyword = KeywordFactory.getInstance().getByName(c.getName());
+                    if (keyword == null) {
+                        unkownKeywords.add(c.getName());
+                        System.out.println("unknown " + c.getName());
+                    } else {
+                        System.out.println("known   " + keyword.getName());
+                    }
+                }
+                StringWriter sw = new StringWriter();
+                recipe.marshall(sw);
+                System.out.println(sw.toString());
+                //break;
+            }
+        }
+        List<String> l = unkownKeywords.stream().sorted().toList();
+        for (var k : l) {
+            System.out.println(k);
+        }
     }
     
     @Test
@@ -145,7 +171,7 @@ public class CrawlerTest extends BaseTest {
         String [] urls = new String[] {
             "https://www1.wdr.de/verbraucher/rezepte/euk-sueden-fenchel-orangen-salat-100.html",
             "https://www1.wdr.de/verbraucher/rezepte/euk-freitag-klipp-koenigsberger-klopse-106.html",
-            "https://www1.wdr.de/verbraucher/rezepte/euk-freitag-buchholz-crespelle-gefuellte-pfannkuchen-100.html"
+            "https://www1.wdr.de/verbraucher/rezepte/tomaten-tonnato-100.html"
         };
         WdrEinfachKoestlichCrawler crawler = new WdrEinfachKoestlichCrawler();
         for (String url : urls) {

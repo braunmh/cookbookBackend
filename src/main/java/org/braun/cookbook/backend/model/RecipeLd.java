@@ -86,7 +86,8 @@ public class RecipeLd extends Parsable<RecipeLd> {
             Collections.sort(image, new ImageSorter().reversed());
             recipe.imageUrl(image.get(0).getUrl()).width(image.get(0).getWidth()).height(image.get(0).getHeight());
         }
-        setSource(recipe);
+        recipe.setPublished(toMilliseconds(getDatePublished()));
+        recipe.setModified(toMilliseconds(getDateModified()));
         setCategories(recipe);
         setYield(recipe);
         setTitle(recipe);
@@ -96,6 +97,13 @@ public class RecipeLd extends Parsable<RecipeLd> {
         return recipe;
     }
 
+    private Long toMilliseconds(DateTime value) {
+        if (value != null && value.getValue() != null) {
+            return value.getValue().toInstant().toEpochMilli();
+        }
+        return null;
+    }
+    
     private void setNutrients(Recipe recipe) {
         if (isFilled(nutrition)) {
             if (nutrition.getServingSize() != null) {

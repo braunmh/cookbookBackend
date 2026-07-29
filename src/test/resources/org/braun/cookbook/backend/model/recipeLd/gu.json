@@ -1,0 +1,28 @@
+{
+    "@context": "http:\/\/schema.org",
+    "@type": "Recipe",
+    "name": "S\u00fc\u00dfkartoffel-Latkes mit Birnenchutney",
+    "author": "GU",
+    "recipeIngredient": ["1 kg Birnen", "4 Datteln", "1 St\u00fcck Ingwer (3 cm lang)", "1 Schalotte", "4 St\u00e4ngel Minze", "1 Bio-Zitrone", "100 g Zucker", "80 g Gelierzucker", "200 ml Wei\u00dfweinessig", "\u00bd TL Chiliflocken", "200 g festkochende Kartoffeln", "300 g S\u00fc\u00dfkartoffeln", "1 Ei", "20 g Mehl", "1 Prise Natron", "\u00bd TL Salz", "Pfeffer", "\u00d6l zum Ausbacken"],
+    "recipeInstructions": ["F\u00fcr das Chutney die Birnen sch\u00e4len, vierteln, vom Kerngeh\u00e4use befreien und in 5 mm gro\u00dfe W\u00fcrfel schneiden. Die Datteln entkernen und fein w\u00fcrfeln. Ingwer und Schalotte sch\u00e4len und fein w\u00fcrfeln. Die Minze waschen, trocken sch\u00fctteln und die Bl\u00e4tter von den St\u00e4ngeln zupfen. Die Zitrone hei\u00df waschen, abtrocknen und die Schale abreiben.", "In einem Topf Birnen, Datteln, Ingwer, Schalotte, Minze, Zucker, Gelierzucker, Wei\u00dfweinessig, Zitronenschale und Chiliflocken aufkochen und bei mittlerer Hitze unter gelegentlichem R\u00fchren ca. 45 Min. k\u00f6cheln. Chutney noch hei\u00df in saubere Schraubgl\u00e4ser f\u00fcllen, verschlie\u00dfen, die Gl\u00e4ser auf den Kopf stellen und ausk\u00fchlen lassen.", "F\u00fcr die Latkes die Kartoffeln waschen, sch\u00e4len und in ein Sieb raspeln. Raspel gut ausdr\u00fccken, auf ein K\u00fcchentuch geben und trocken tupfen. S\u00fc\u00dfkartoffeln sch\u00e4len und ebenfalls raspeln. Beide Kartoffelsorten in einer Sch\u00fcssel mit Ei, Mehl, Natron, Salz und Pfeffer gut vermischen.", "Etwas \u00d6l in einer Pfanne erhitzen. Portionsweise etwa 5 cm gro\u00dfe Latkes-Puffer in die Pfanne setzen und von beiden Seiten knusprig braun anbraten, bis die ganze Masse aufgebraucht ist. Fertige Latkes auf K\u00fcchenpapier entfetten und bei 80\u00b0 im Backofen warm halten. Mit dem Chutney servieren."],
+    "image": "https:\/\/www.kuechengoetter.de\/uploads\/media\/630x630\/02\/140062-suesskartoffel-latkes-mit-birnenchutney-0.jpg?v=1-1",
+    "prepTime": "PT45M",
+    "cookTime": "PT45M",
+    "isAccessibleForFree": true,
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "worstRating": 0,
+        "bestRating": 1,
+        "ratingValue": 1,
+        "ratingCount": 1
+    },
+    "recipeYield": "2",
+    "description": "Latkes sind sowas wie salzige Pfannkuchen, die gerne zum j\u00fcdischem Lichterfest serviert werden. Bei dieser Variante werden sie aus S\u00fc\u00dfkartoffeln zubereitet und mit einem s\u00fc\u00dfen Birnenchutney abgerundet. ",
+    "nutrition": {
+        "@type": "NutritionInformation",
+        "calories": "895 kcal",
+        "fatContent": "10 g",
+        "proteinContent": "10 g",
+        "carbohydrateContent": "185g"
+    }
+}

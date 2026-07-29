@@ -14,6 +14,8 @@ public enum BackgroundJobType {
     ArdErnaehrungsdocsCrawler, 
     EffileeCrawler,
     EssenUndTrinkenCrawler, 
+    BrigitteCrawler,
+    GuCrawler,
     Indexer,
     LeckerCrawler,
     WdrEinfachKoestlichCrawler;

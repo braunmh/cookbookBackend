@@ -9,6 +9,7 @@ import org.braun.cookbook.backend.crawler.ArdNdrCrawler;
 import org.braun.cookbook.backend.crawler.ArdSwrCrawler;
 import org.braun.cookbook.backend.crawler.EffileeCrawler;
 import org.braun.cookbook.backend.crawler.EssenUndTrinkenCrawler;
+import org.braun.cookbook.backend.crawler.BrigitteCrawler;
 import org.braun.cookbook.backend.crawler.LeckerCrawler;
 import org.braun.cookbook.backend.crawler.WdrEinfachKoestlichCrawler;
 import org.braun.cookbook.backend.process.BackgroundTask;
@@ -29,6 +30,7 @@ public class BackgroundJobTypeFactory {
         JOB_DEFINITIONS.put(BackgroundJobType.ArdSwrCrawler, ArdSwrCrawler.class);
         JOB_DEFINITIONS.put(BackgroundJobType.EssenUndTrinkenCrawler, EssenUndTrinkenCrawler.class);
         JOB_DEFINITIONS.put(BackgroundJobType.EffileeCrawler, EffileeCrawler.class);
+        JOB_DEFINITIONS.put(BackgroundJobType.BrigitteCrawler, BrigitteCrawler.class);
         JOB_DEFINITIONS.put(BackgroundJobType.LeckerCrawler, LeckerCrawler.class);
         JOB_DEFINITIONS.put(BackgroundJobType.WdrEinfachKoestlichCrawler, WdrEinfachKoestlichCrawler.class);
         JOB_DEFINITIONS.put(BackgroundJobType.ArdHrCrawler, ArdHrCrawler.class);

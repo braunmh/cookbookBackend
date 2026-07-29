@@ -242,7 +242,9 @@ public class WdrEinfachKoestlichCrawler extends Crawler {
                 i++;
             }
             Collections.sort(images, new ImageSorter().reversed());
-            recipe.imageUrl(images.get(0).getUrl()).height(images.get(0).getHeight()).width(images.get(0).getWidth());
+            if (!images.isEmpty()) {
+                recipe.imageUrl(images.get(0).getUrl()).height(images.get(0).getHeight()).width(images.get(0).getWidth());
+            }
             StringBuilder source = new StringBuilder("WDR " + "Einfachköstlich");
             if (recipe.getPublished() != null) {
                 source.append(" ").append(isoDate.format(new Date(recipe.getPublished())));

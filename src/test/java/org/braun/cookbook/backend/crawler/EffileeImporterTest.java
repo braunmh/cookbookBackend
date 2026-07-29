@@ -1,24 +1,11 @@
 package org.braun.cookbook.backend.crawler;
 
-import jakarta.json.Json;
-import jakarta.json.JsonArray;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
-import jakarta.json.JsonStructure;
-import jakarta.json.JsonValue;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import static org.braun.cookbook.backend.crawler.Crawler.LOG;
+import org.braun.cookbook.backend.crawler.EffileeCrawler.Site;
 import org.braun.cookbook.backend.model.JobResult;
 import org.braun.cookbook.backend.model.JobStatus;
 import org.braun.cookbook.backend.model.Keyword;
@@ -40,22 +27,25 @@ public class EffileeImporterTest extends BaseTest {
         KeywordFactory.getInstance().refresh(getKeywordFacade().findAll());
         EffileeImporter imp = new EffileeImporter();
         imp.recipeFacade = getRecipeFacade();
-        int count = 23;
+        int count = 1;
         String baseUrl = "https://www.spiegel.de/services/sitesearch/search?segments=recipes&page_size=10&page=";
         Set<String> unkownKeywords = new HashSet<>();
-        Site firstSite = getSite(baseUrl + count);
+        Site firstSite = imp.getSite(baseUrl + count);
 
         getEntityManager().getTransaction().begin();
         unkownKeywords.addAll(imp.insertRecipes(firstSite.entries));
         getEntityManager().getTransaction().commit();
 
         int numberOfPages = (firstSite.numResults % 10 == 0) ? firstSite.numResults / 10 : firstSite.numResults / 10 + 1;
+        if (numberOfPages > 3 ) {
+            numberOfPages = 3;
+        }
         count++;
         int j = 0;
         for (int i = count; i < numberOfPages; i++) {
 //            if (j > 20) break;
             System.out.println(baseUrl + i);
-            Site site = getSite(baseUrl + i);
+            Site site = imp.getSite(baseUrl + i);
             Thread.sleep(5000l);
             
             getEntityManager().getTransaction().begin();
@@ -66,57 +56,6 @@ public class EffileeImporterTest extends BaseTest {
         for (String k : unkownKeywords) {
             System.out.println(k);
         }
-    }
-
-    Site getSite(String siteUrl) {
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(siteUrl))
-                .GET()
-                .build();
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
-            Site site = new Site();
-            JsonReader reader = Json.createReader(inputStream);
-            JsonStructure structure = reader.read();
-            JsonObject jo = structure.asJsonObject();
-            site.numResults = jo.getInt("num_results");
-            JsonArray ja = jo.getJsonArray("results");
-            for (JsonValue jv : ja) {
-                JsonObject entry = jv.asJsonObject();
-                int published = entry.getInt("publish_date", 0);
-                LocalDateTime ldt = (published > 0) ? LocalDateTime.ofEpochSecond((long) published, 0, ZoneOffset.UTC) : null;
-                String url = entry.getString("url", null);
-                site.entries.add(new SiteEntry(ldt, url));
-            }
-            return site;
-        } catch (IOException | InterruptedException e) {
-            LOG.error("execute failed with", e);
-        }
-        return null;
-    }
-
-    class Site {
-
-        int numResults;
-        List<SiteEntry> entries;
-
-        public Site() {
-            entries = new ArrayList<>();
-        }
-    }
-
-    class SiteEntry {
-
-        LocalDateTime published;
-        String url;
-
-        public SiteEntry(LocalDateTime published, String url) {
-            this.published = published;
-            this.url = url;
-        }
-
     }
 
     class EffileeImporter extends EffileeCrawler {

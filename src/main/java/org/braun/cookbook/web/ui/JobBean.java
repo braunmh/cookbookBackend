@@ -33,6 +33,9 @@ public class JobBean implements Serializable {
         if (jobs == null) {
             jobs = jobFacade.findAll();
             for (BackgroundJobType type : BackgroundJobType.values()) {
+                if (BackgroundJobTypeFactory.getBackgroudJobClass(type) == null) {
+                    continue;
+                }
                 if (!jobs.stream().anyMatch(j -> j.getType() == type)) {
                     jobs.add(new Job().type(type).status(JobStatus.successful).message("Not initialized"));
                 }

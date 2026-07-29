@@ -9,6 +9,11 @@ import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import org.braun.cookbook.backend.model.Recipe;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +31,7 @@ public class RecipeTest {
     @Test
     public void parseJsonTest() {
 
-        String[] values = new String[]{"ndr.ratgeber.kochen.03.json", "ndr.ratgeber.kochen.02.json", "essen_und_trinken.json", "ndr.ratgeber.kochen.json", "lecker.de.json", "www.effilee.de.json", "rewe.json"};
+        String[] values = new String[]{"brigitte.json", "gu.json", "ndr.ratgeber.kochen.03.json", "ndr.ratgeber.kochen.02.json", "essen_und_trinken.json", "ndr.ratgeber.kochen.json", "lecker.de.json", "www.effilee.de.json", "rewe.json"};
         for (String value : values) {
             try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(DIRECTORY + value)) {
                 JsonReader reader = Json.createReader(inputStream);
@@ -85,6 +90,21 @@ public class RecipeTest {
         }
     }
 
+    @Test
+    public void parseOffsetDateTime() {
+        String count = "21g";
+        if (!Character.isDigit(count.charAt(count.length() - 1))) {
+            count = count.substring(0, count.length()-1);
+        }
+        System.out.println(count);
+        String odtIn = "Sat, 06 Apr 2024 13:00:00 +0200";
+        OffsetDateTime odt = OffsetDateTime.parse(odtIn, DateTimeFormatter.RFC_1123_DATE_TIME);
+        Date d = new Date(odt.toInstant().toEpochMilli());
+        LocalDateTime ldt = LocalDateTime.ofEpochSecond(d.getTime() / 1000, 0, ZoneOffset.UTC);
+        System.out.println(d);
+        System.out.println(ldt.getYear());
+    }
+    
     @Test
     public void recipeUnmarshall() {
         try {

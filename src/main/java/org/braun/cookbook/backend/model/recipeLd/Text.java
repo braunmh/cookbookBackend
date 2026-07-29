@@ -7,6 +7,7 @@ import static jakarta.json.JsonValue.ValueType.NUMBER;
 import static jakarta.json.JsonValue.ValueType.STRING;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import static org.braun.cookbook.backend.model.recipeLd.Parsable.getInt;
 import static org.braun.cookbook.backend.model.recipeLd.Parsable.getString;
@@ -101,7 +102,10 @@ public class Text extends Parsable<Text> {
         return this;
     }
     
-    public Text addAll(List<String> values) {
+    public Text addAll(Collection<String> values) {
+        if (null != values && !values.isEmpty()) {
+            setEmpty(false);
+        }
         getValue().addAll(values);
         return this;
     }

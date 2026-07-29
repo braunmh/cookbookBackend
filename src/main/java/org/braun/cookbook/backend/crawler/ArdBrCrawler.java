@@ -91,13 +91,12 @@ public class ArdBrCrawler extends Crawler {
                 .uri(URI.create(prefix + "/br-fernsehen/sendungen/wir-in-bayern/rezepte/index.html"))
                 .GET()
                 .build();
-
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
         
         OverviewFilter overviewFilter = new OverviewFilter(prefix);
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+        try (HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+            InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             if (inputStream != null) {
                 Parser reader = new Parser();
                 reader.setFeature(Parser.namespacePrefixesFeature, false);
@@ -110,7 +109,8 @@ public class ArdBrCrawler extends Crawler {
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
         }
-        return new ArrayList<>(overviewFilter.getUrls());    }
+        return new ArrayList<>(overviewFilter.getUrls());
+    }
 
     @Override
     public BackgroundJobType getTaskName() {

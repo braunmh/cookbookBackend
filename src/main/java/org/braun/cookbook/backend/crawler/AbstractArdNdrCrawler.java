@@ -105,7 +105,7 @@ public abstract class AbstractArdNdrCrawler extends Crawler {
         if (ndrNutrientFilter.getNutrient() != null) {
             recipeLd.setNutrition(NutritionInformation.parse(ndrNutrientFilter.getNutrient()));
         }
-        Recipe recipe = recipeLd.toRecipe();
+        Recipe recipe = toRecipe(recipeLd, "ARD SWR");
         if (!ingredientFilter.getIngredients().isEmpty()) {
             recipe.getIngredients().clear();
             for (Ingredients i : ingredientFilter.getIngredients()) {

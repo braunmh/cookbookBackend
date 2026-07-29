@@ -39,14 +39,14 @@ public class EssenUndTrinkenCrawler extends Crawler {
 
     @Override
     protected Recipe getRecipe(String url) {
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET()
                 .build();
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+        try (HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+            InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             Parser parser = new Parser();
             parser.setFeature(Parser.namespacePrefixesFeature, false);
             InputSource inputSource = new InputSource(inputStream);
@@ -63,7 +63,7 @@ public class EssenUndTrinkenCrawler extends Crawler {
                 return null;
             }
             recipe.setRecipeCategory(new Text().addAll(keywordFilter.getCategories()));
-            return recipe.toRecipe();
+            return toRecipe(recipe, "Essen & Trinken");
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
         }

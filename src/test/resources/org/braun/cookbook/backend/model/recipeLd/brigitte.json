@@ -1,0 +1,92 @@
+[{
+        "name": "Quetschkartoffel-Flammkuchen",
+        "description": "Die leckerste Kombi seit es Kartoffeln gibt: Quetschkartoffel-Flammkuchen sind ein perfekter Snack und schmecken einfach herrlich. Guten Appetit!",
+        "image": [{
+                "name": "Quetschkartoffel-Flammkuchen",
+                "url": "https://image.brigitte.de/13907934/t/Dy/v1/w1440/r1.7778/-/quetschkartoffel-flammkuchen.jpg",
+                "width": "1440",
+                "height": "810",
+                "@type": "ImageObject"
+            }, {
+                "name": "Quetschkartoffel-Flammkuchen",
+                "url": "https://image.brigitte.de/13907934/t/Qr/v1/w1440/r1.5/-/quetschkartoffel-flammkuchen.jpg",
+                "width": "1440",
+                "height": "960",
+                "@type": "ImageObject"
+            }, {
+                "name": "Quetschkartoffel-Flammkuchen",
+                "url": "https://image.brigitte.de/13907934/t/Qr/v1/w1440/r1.5/-/quetschkartoffel-flammkuchen.jpg",
+                "width": "1440",
+                "height": "960",
+                "@type": "ImageObject"
+            }],
+        "mainEntityOfPage": {
+            "@id": "https://www.brigitte.de/rezepte/quetschkartoffel-flammkuchen-13907936.html",
+            "@type": "WebPage"
+        },
+        "datePublished": "2024-11-20T12:38:00+01:00",
+        "dateModified": "2025-11-03T08:55:24+01:00",
+        "author": {
+            "name": "Vivien Windel",
+            "url": "https://www.brigitte.de/vivien-windel-12790808.html",
+            "@type": "Person"
+        },
+        "publisher": {
+            "name": "BRIGITTE.de",
+            "logo": {
+                "url": "https://image.brigitte.de/13986704/t/GL/v2/w240/r0/-/bri-logo-neu-schema.png",
+                "width": "240",
+                "height": "67",
+                "@type": "ImageObject"
+            },
+            "@type": "Organization"
+        },
+        "aggregateRating": {
+            "ratingCount": 1,
+            "bestRating": 5,
+            "worstRating": 1,
+            "ratingValue": 5,
+            "@type": "AggregateRating"
+        },
+        "totalTime": "PT35M",
+        "recipeYield": 2,
+        "recipeIngredient": ["600 Gramm Kartoffel", "100 Gramm Schmand", "100 Gramm Speckwürfel", "4 EL Parmesan", "Salz, Pfeffer", "Schnittlauch", ""],
+        "recipeInstructions": ["Backofen auf 180 Grad Ober-/Unterhitze (Umluft 160 Grad) vorheizen.", "Kartoffeln gründlich waschen und anschließend im Ganzen und mit Schale in leicht gesalzenem Wasser je nach Größe etwa 20-25 Minuten kochen. Anschließend etwas abkühlen lassen.", "Ein Blech mit Backpapier auslegen. Kartoffeln einzeln auf das Blech legen und mit einem Glas plattdrücken. Dann mit Schmand bestreichen und mit Salz und Pfeffer würzen. Dann mit Speckwürfeln und Parmesan belegen. Kartoffeln im vorgeheizten Backofen etwa 10 Minuten goldbraun backen.", "Währenddessen Schnittlauch waschen und trockentupfen. Anschließend in Röllchen schneiden.", "Kartoffeln aus dem Backofen holen, mit Schnittlauch garnieren und mit einem Dip nach Wahl servieren."],
+        "nutrition": {
+            "calories": 450,
+            "proteinContent": 2,
+            "fatContent": 14,
+            "carbohydrateContent": 53,
+            "@type": "NutritionInformation"
+        },
+        "@context": "http://schema.org",
+        "@type": "Recipe"
+    }, {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+                "position": 1,
+                "item": {
+                    "name": "Home",
+                    "@id": "https://www.brigitte.de/",
+                    "@type": "WebPage"
+                },
+                "@type": "ListItem"
+            }, {
+                "position": 2,
+                "item": {
+                    "name": "Rezepte",
+                    "@id": "https://www.brigitte.de/rezepte/",
+                    "@type": "WebPage"
+                },
+                "@type": "ListItem"
+            }, {
+                "position": 3,
+                "item": {
+                    "name": "Quetschkartoffel-Flammkuchen",
+                    "@id": "https://www.brigitte.de/rezepte/quetschkartoffel-flammkuchen-13907936.html",
+                    "@type": "WebPage"
+                },
+                "@type": "ListItem"
+            }]
+    }]

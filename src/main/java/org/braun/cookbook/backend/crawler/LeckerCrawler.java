@@ -62,7 +62,8 @@ public class LeckerCrawler extends Crawler {
             if (recipeLd == null) {
                 return null;
             }
-            Recipe recipe = recipeLd.toRecipe();
+            recipeLd.getRecipeInstructions().getValue().removeIf(v -> v.startsWith("Unser beliebtes Rezept"));
+            Recipe recipe = toRecipe(recipeLd, "Lecker");
             int indexTitle = recipe.getTitle().lastIndexOf("Rezept");
             if (indexTitle > 0 && indexTitle == recipe.getTitle().length() - 6) {
                 recipe.setTitle(recipe.getTitle().substring(0, indexTitle - 1));
@@ -77,6 +78,7 @@ public class LeckerCrawler extends Crawler {
                     paragraph.setValue(para);
                 }
             }
+            
             return recipe;
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
