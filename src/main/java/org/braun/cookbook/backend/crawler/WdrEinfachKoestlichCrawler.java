@@ -11,8 +11,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -48,23 +51,25 @@ import org.xml.sax.helpers.XMLFilterImpl;
 public class WdrEinfachKoestlichCrawler extends Crawler {
 
     @Override
-    protected Recipe getRecipe(String url) {
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
+    protected Recipe getRecipe(UrlString url) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(url.getUrl()))
                 .GET()
                 .build();
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+        try (
+            HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+            InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();
+            ) {
             Parser parser = new Parser();
             parser.setFeature(Parser.namespacePrefixesFeature, false);
             InputSource inputSource = new InputSource(inputStream);
             Recipe recipe = new Recipe();
-            recipe.getSource().setUrl(url);
+            recipe.getSource().setUrl(url.getUrl());
             ArticleFilter articleFilter = new ArticleFilter(recipe);
             articleFilter.setParent(parser);
-            MetaFilter metaFilter = new MetaFilter(recipe);
+            WdrMetaFilter metaFilter = new WdrMetaFilter(recipe);
             metaFilter.setParent(articleFilter);
             metaFilter.parse(inputSource);
             if (StringUtils.isBlank(recipe.getTitle())) {
@@ -85,7 +90,7 @@ public class WdrEinfachKoestlichCrawler extends Crawler {
     }
 
     @Override
-    protected List<String> getNewRecipes() {
+    protected List<UrlString> getNewRecipes() {
         String prefix = "https://www1.wdr.de";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(prefix + "/verbraucher/rezepte/alle-rezepte/rezepte-uebersicht-einfach-und-koestlich-100.html"))
@@ -123,7 +128,7 @@ public class WdrEinfachKoestlichCrawler extends Crawler {
         private String prefix;
         private Step step;
 
-        Set<String> urls;
+        Set<UrlString> urls;
         int stack;
 
         public OverviewFilter(String prefix) {
@@ -147,7 +152,7 @@ public class WdrEinfachKoestlichCrawler extends Crawler {
                     if ("a".equals(localName)) {
                         String url = atts.getValue("href");
                         if (url != null && url.startsWith("/verbraucher/rezepte/") && !url.endsWith("index.html")) {
-                            urls.add(prefix + url);
+                            urls.add(new UrlString(prefix + url));
                         }
                     }
                 }
@@ -162,14 +167,14 @@ public class WdrEinfachKoestlichCrawler extends Crawler {
             }
         }
 
-        public List<String> getUrls() {
+        public List<UrlString> getUrls() {
             return new ArrayList<>(urls);
         }
     }
 
-    class MetaFilter extends XMLFilterImpl {
+    public static class WdrMetaFilter extends XMLFilterImpl {
 
-        private final SimpleDateFormat isoDateTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         private final SimpleDateFormat isoDate = new SimpleDateFormat("dd.MM.YYYY");
 
         private final List<String> imageUrls;
@@ -178,7 +183,7 @@ public class WdrEinfachKoestlichCrawler extends Crawler {
         private final Recipe recipe;
         private String author;
 
-        public MetaFilter(Recipe recipe) {
+        public WdrMetaFilter(Recipe recipe) {
             this.recipe = recipe;
             imageUrls = new ArrayList<>();
             imageWidth = new ArrayList<>();
@@ -213,6 +218,9 @@ public class WdrEinfachKoestlichCrawler extends Crawler {
                                 if (d != null) {
                                     recipe.setModified(d.getTime());
                                 }
+                            }
+                            case "og:title" -> {
+                                recipe.setTitle(content);
                             }
                         }
                     } else if ("Author".equals(atts.getValue("name"))) {
@@ -266,8 +274,9 @@ public class WdrEinfachKoestlichCrawler extends Crawler {
 
         private Date toDate(String value) {
             try {
-                return isoDateTime.parse(value);
-            } catch (ParseException e) {
+                LocalDateTime ldt = LocalDateTime.parse(value, formatter);
+                return Date.from(ldt.atOffset(ZoneOffset.UTC).toInstant());
+            } catch (DateTimeParseException e) {
                 LOG.error("Can not parse date " + value);
                 return null;
             }

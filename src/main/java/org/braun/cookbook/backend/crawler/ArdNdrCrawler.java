@@ -34,18 +34,18 @@ public class ArdNdrCrawler extends AbstractArdNdrCrawler {
     }
     
     @Override
-    protected List<String> getNewRecipes() {
+    protected List<UrlString> getNewRecipes() {
         String prefix = "https://www.ndr.de";
         OverviewFilter filter = new OverviewFilter(prefix);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(prefix + getSite()))
                 .GET()
                 .build();
-        HttpClient client = HttpClient.newBuilder()
+        
+        try (HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
-        
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+                InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             Parser reader = new Parser();
             reader.setFeature(Parser.namespacePrefixesFeature, false);
             InputSource inputSource = new InputSource(inputStream);

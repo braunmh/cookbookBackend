@@ -100,38 +100,17 @@ public class NutritionInformation extends Parsable<NutritionInformation> {
                 out.setCalories(nutrient.getCount());
             } else {
                 switch (getNutrientType(nutrient.getContent())) {
-                    case protein:
-                        out.setProteinContent(nutrient.getCount());
-                        break;
-                    case fat:
-                        out.setFatContent(nutrient.getCount());
-                        break;
-                    case carbohydrate:
-                        out.setCarbohydrateContent(nutrient.getCount());
-                        break;
-                    case unsaturatedFat:
-                        out.setUnsaturatedFatContent(nutrient.getCount());
-                        break;
-                    case transFat:
-                        out.setTransFatContent(nutrient.getCount());
-                        break;
-                    case sugar:
-                        out.setSugarContent(nutrient.getCount());
-                        break;
-                    case sodium:
-                        out.setSodiumContent(nutrient.getCount());
-                        break;
-                    case saturatedFat:
-                        out.setSaturatedFatContent(nutrient.getCount());
-                        break;
-                    case fiber:
-                        out.setFiberContent(nutrient.getCount());
-                        break;
-                    case cholesterol:
-                        out.setCholesterolContent(nutrient.getCount());
-                        break;
-                    case other:
-                        LOG.warn("Unknown nutrient found {}", nutrient.getContent());
+                    case protein -> out.setProteinContent(nutrient.getCount());
+                    case fat -> out.setFatContent(nutrient.getCount());
+                    case carbohydrate -> out.setCarbohydrateContent(nutrient.getCount());
+                    case unsaturatedFat -> out.setUnsaturatedFatContent(nutrient.getCount());
+                    case transFat -> out.setTransFatContent(nutrient.getCount());
+                    case sugar -> out.setSugarContent(nutrient.getCount());
+                    case sodium -> out.setSodiumContent(nutrient.getCount());
+                    case saturatedFat -> out.setSaturatedFatContent(nutrient.getCount());
+                    case fiber -> out.setFiberContent(nutrient.getCount());
+                    case cholesterol -> out.setCholesterolContent(nutrient.getCount());
+                    case other -> LOG.warn("Unknown nutrient found {}", nutrient.getContent());
                 }
             }
         }
@@ -146,7 +125,7 @@ public class NutritionInformation extends Parsable<NutritionInformation> {
     static final EnumMap<NutrientType, List<String>> trans = new EnumMap<>(NutrientType.class);
     static {
         trans.put(NutrientType.protein, Arrays.asList("eiweiß", "e"));
-        trans.put(NutrientType.fat, Arrays.asList("fett"));
+        trans.put(NutrientType.fat, Arrays.asList("fett", "f"));
         trans.put(NutrientType.carbohydrate, Arrays.asList("kh", "kohlehydrate", "kohlenhydrate"));
         trans.put(NutrientType.unsaturatedFat, Arrays.asList("ungesättigte fettsäuren"));
         trans.put(NutrientType.transFat, Arrays.asList("transfettsäuren", "trans-fettsäuren"));
@@ -173,14 +152,11 @@ public class NutritionInformation extends Parsable<NutritionInformation> {
         if (value == null) {
             return null;
         }
-        switch (value.getValueType()) {
-            case STRING:
-                return getString(value);
-            case NUMBER:
-                return String.valueOf(getInt(value));
-            default:
-                return null;
-        }
+        return switch (value.getValueType()) {
+            case STRING -> getString(value);
+            case NUMBER -> String.valueOf(getInt(value));
+            default -> null;
+        };
     }
     
     @Override

@@ -18,6 +18,6 @@ public enum BackgroundJobType {
     GuCrawler,
     Indexer,
     LeckerCrawler,
-    WdrEinfachKoestlichCrawler;
-
+    WdrEinfachKoestlichCrawler,
+    WdrHierUndHeuteCrawler;
 }

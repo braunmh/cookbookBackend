@@ -38,9 +38,9 @@ import org.xml.sax.helpers.XMLFilterImpl;
 public class EssenUndTrinkenCrawler extends Crawler {
 
     @Override
-    protected Recipe getRecipe(String url) {
+    protected Recipe getRecipe(UrlString url) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(url.getUrl()))
                 .GET()
                 .build();
         try (HttpClient client = HttpClient.newBuilder()
@@ -77,17 +77,18 @@ public class EssenUndTrinkenCrawler extends Crawler {
     }
 
     @Override
-    protected List<String> getNewRecipes() {
+    protected List<UrlString> getNewRecipes() {
         String prefix = "https://www.essen-und-trinken.de";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(prefix))
                 .GET()
                 .build();
-        HttpClient client = HttpClient.newBuilder()
+        
+        OverviewFilter overviewFilter = new OverviewFilter();
+        try (HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
-        OverviewFilter overviewFilter = new OverviewFilter();
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+                InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             Parser reader = new Parser();
             reader.setFeature(Parser.namespacePrefixesFeature, false);
             InputSource inputSource = new InputSource(inputStream);
@@ -186,7 +187,7 @@ public class EssenUndTrinkenCrawler extends Crawler {
         
         private Step step;
         
-        private List<String> urls;
+        private List<UrlString> urls;
         
         public OverviewFilter() {
             step = Step.other;
@@ -213,7 +214,7 @@ public class EssenUndTrinkenCrawler extends Crawler {
                     if ("a".equals(localName)) {
                         String url = atts.getValue("href");
                         if (url.contains("/rezepte/")) {
-                            urls.add(url);
+                            urls.add(new UrlString(url));
                         }
                         step = Step.overview;
                     }
@@ -233,7 +234,7 @@ public class EssenUndTrinkenCrawler extends Crawler {
         public void characters(char[] ch, int start, int length) throws SAXException {
         }
 
-        public List<String> getUrls() {
+        public List<UrlString> getUrls() {
             return urls;
         }
         

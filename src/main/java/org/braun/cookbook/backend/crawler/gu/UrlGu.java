@@ -4,17 +4,18 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import org.braun.cookbook.backend.crawler.UrlBase;
 
 /**
  *
  * @author mbraun
  */
-public class UrlGu {
-    private String url;
+public class UrlGu extends UrlBase {
     private int count;
     private final Set<String> keyword;
     
-    public UrlGu() {
+    public UrlGu(String url) {
+        super(url);
         keyword = new HashSet<>();
     }
 
@@ -43,19 +44,6 @@ public class UrlGu {
         return this;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public UrlGu url(String value) {
-        setUrl(value);
-        return this;
-    }
-
     public UrlGu count(int value) {
         setCount(value);
         return this;
@@ -68,33 +56,5 @@ public class UrlGu {
     public void setCount(int count) {
         this.count = count;
     }
-    
-    @Override
-    public String toString() {
-        return url;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.url);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final UrlGu other = (UrlGu) obj;
-        return Objects.equals(this.url, other.url);
-    }
-    
     
 }

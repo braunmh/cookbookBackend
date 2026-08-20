@@ -14,7 +14,11 @@ public abstract class ContentElement<T extends ContentElement<T>> implements Str
     }
 
     public void setValue(String value) {
-        this.value = value;
+        if (value != null) {
+            this.value = value.replace(' ', ' ');
+        } else {
+            this.value = value;
+        }
     }
 
     @Override

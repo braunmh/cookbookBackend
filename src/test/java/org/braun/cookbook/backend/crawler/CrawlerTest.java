@@ -1,7 +1,14 @@
 package org.braun.cookbook.backend.crawler;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +37,7 @@ public class CrawlerTest extends BaseTest {
         initT();
         BrigitteCrawler crawler = new BrigitteCrawler();
         Set<String> unkownKeywords = new HashSet<>();
-        for (String url : crawler.getNewRecipes()) {
+        for (UrlString url : crawler.getNewRecipes()) {
             Recipe recipe = crawler.getRecipe(url);
             System.out.println((recipe == null) ? "false " : "true  " + url);
             if (recipe != null) {
@@ -58,7 +65,7 @@ public class CrawlerTest extends BaseTest {
     @Test
     public void ardHrGetRecipesTest() {
         ArdHrCrawler crawler = new ArdHrCrawler();
-        for (String url : crawler.getNewRecipes()) {
+        for (UrlString url : crawler.getNewRecipes()) {
             System.out.println(url);
         }
     }
@@ -66,11 +73,12 @@ public class CrawlerTest extends BaseTest {
     @Test
     public void ardHrGetRecipeTest() throws IOException {
         initT();
-        List<String> urls = List.of("https://www.hr-fernsehen.de/sendungen-a-z/hallo-hessen/rezepte/rezept-penne-mit-basilikum-petersilien-schmand-und-gebratenen-waldpilzen-v1,kochen-11264.html",
-        "https://www.hr-fernsehen.de/sendungen-a-z/hallo-hessen/rezepte/rezept-hausgebeizter-lachs-mit-honig-senf-sauce-und-spargel-in-der-folie-v1,kochen-11232.html"
+        List<UrlString> urls = List.of(
+            new UrlString("https://www.hr-fernsehen.de/sendungen-a-z/hallo-hessen/rezepte/rezept-penne-mit-basilikum-petersilien-schmand-und-gebratenen-waldpilzen-v1,kochen-11264.html"),
+        new UrlString("https://www.hr-fernsehen.de/sendungen-a-z/hallo-hessen/rezepte/rezept-hausgebeizter-lachs-mit-honig-senf-sauce-und-spargel-in-der-folie-v1,kochen-11232.html")
         );
         ArdHrCrawler crawler = new ArdHrCrawler();
-        for (String url : urls) {
+        for (UrlString url : urls) {
             Recipe recipe = crawler.getRecipe(url);
             if (recipe != null) {
                 StringWriter writer = new StringWriter();
@@ -83,7 +91,7 @@ public class CrawlerTest extends BaseTest {
     @Test
     public void ardHrDolceVitaGetRecipesTest() {
         ArdHrDolceVitaCrawler crawler = new ArdHrDolceVitaCrawler();
-        for (String url : crawler.getNewRecipes()) {
+        for (UrlString url : crawler.getNewRecipes()) {
             System.out.println(url);
         }
     }
@@ -91,7 +99,7 @@ public class CrawlerTest extends BaseTest {
     @Test
     public void ardEffileeGetRecipesTest() {
         EffileeCrawler crawler = new EffileeCrawler();
-        for (String url : crawler.getNewRecipes()) {
+        for (UrlString url : crawler.getNewRecipes()) {
             System.out.println(url);
         }
     }
@@ -100,7 +108,7 @@ public class CrawlerTest extends BaseTest {
     @Test
     public void ardBrGetRecipesTest() {
         ArdBrCrawler crawler = new ArdBrCrawler();
-        for (String url : crawler.getNewRecipes()) {
+        for (UrlString url : crawler.getNewRecipes()) {
             System.out.println(url);
         }
     }
@@ -108,12 +116,12 @@ public class CrawlerTest extends BaseTest {
     @Test
     public void ardBrGetRecipeTest() throws IOException {
         initT();
-        List<String> urls = List.of(
-            "https://www.br.de/br-fernsehen/sendungen/wir-in-bayern/rezepte/frikadelle-kraeuter-polenta-pflanzerl-fenchel-erdbeer-tomaten-salsa-wolfgang-link-100.html",
-            "https://www.br.de/br-fernsehen/sendungen/wir-in-bayern/rezepte/kuchen-erdbeerkuchen-zitronenmelisse-martina-harrecker-100.html"
+        List<UrlString> urls = List.of(
+            new UrlString("https://www.br.de/br-fernsehen/sendungen/wir-in-bayern/rezepte/frikadelle-kraeuter-polenta-pflanzerl-fenchel-erdbeer-tomaten-salsa-wolfgang-link-100.html"),
+            new UrlString("https://www.br.de/br-fernsehen/sendungen/wir-in-bayern/rezepte/kuchen-erdbeerkuchen-zitronenmelisse-martina-harrecker-100.html")
         );
         ArdBrCrawler crawler = new ArdBrCrawler();
-        for (String url : urls) {
+        for (UrlString url : urls) {
             Recipe recipe = crawler.getRecipe(url);
             if (recipe != null) {
                 StringWriter writer = new StringWriter();
@@ -126,13 +134,13 @@ public class CrawlerTest extends BaseTest {
     @Test
     public void effileeGetRecipeTest() throws IOException {
         initT();
-        List<String> urls = List.of(
-            "https://www.spiegel.de/effilee/rezept/koenigsberger-spaghetti-a-0e939e85-0005-0011-0000-000010154642",
-"https://www.spiegel.de/effilee/rezept/avocado-mit-ei-auf-kreolischem-reis-a-3dd50986-0005-0011-0000-000010132245",
-"https://www.spiegel.de/effilee/rezept/galette-occitane-mit-eingelegten-weintrauben-mandeln-pinienkernen-a-c4ec9bbb-0005-0011-0000-000000005916"
+        List<UrlString> urls = List.of(
+            new UrlString("https://www.spiegel.de/effilee/rezept/koenigsberger-spaghetti-a-0e939e85-0005-0011-0000-000010154642"),
+new UrlString("https://www.spiegel.de/effilee/rezept/avocado-mit-ei-auf-kreolischem-reis-a-3dd50986-0005-0011-0000-000010132245"),
+new UrlString("https://www.spiegel.de/effilee/rezept/galette-occitane-mit-eingelegten-weintrauben-mandeln-pinienkernen-a-c4ec9bbb-0005-0011-0000-000000005916")
         );
         EffileeCrawler crawler = new EffileeCrawler();
-        for (String url : urls) {
+        for (UrlString url : urls) {
             Recipe recipe = crawler.getRecipe(url);
             if (recipe != null) {
                 StringWriter writer = new StringWriter();
@@ -145,10 +153,10 @@ public class CrawlerTest extends BaseTest {
     @Test
     public void ardHrDolceVitaGetRecipeTest() throws IOException {
         initT();
-        List<String> urls = List.of("https://www.hr1.de/sendungen/dolce-vita/rezept-fuer-pomelosalat-mit-garnelen-und-erdnuessen-v1,pomelosalat-102.html"
+        List<UrlString> urls = List.of(new UrlString("https://www.hr1.de/sendungen/dolce-vita/rezept-fuer-pomelosalat-mit-garnelen-und-erdnuessen-v1,pomelosalat-102.html")
         );
         ArdHrDolceVitaCrawler crawler = new ArdHrDolceVitaCrawler();
-        for (String url : urls) {
+        for (UrlString url : urls) {
             Recipe recipe = crawler.getRecipe(url);
             if (recipe != null) {
                 StringWriter writer = new StringWriter();
@@ -161,20 +169,58 @@ public class CrawlerTest extends BaseTest {
     @Test
     public void wdrEinfachKoestlichGetRecipesTest() {
         WdrEinfachKoestlichCrawler crawler = new WdrEinfachKoestlichCrawler();
-        for (String url : crawler.getNewRecipes()) {
+        for (UrlString url : crawler.getNewRecipes()) {
             System.out.println(url);
         }
     }
     
     @Test
     public void wdrEinfachKoestlichGetRecipeTest() {
-        String [] urls = new String[] {
-            "https://www1.wdr.de/verbraucher/rezepte/euk-sueden-fenchel-orangen-salat-100.html",
-            "https://www1.wdr.de/verbraucher/rezepte/euk-freitag-klipp-koenigsberger-klopse-106.html",
-            "https://www1.wdr.de/verbraucher/rezepte/tomaten-tonnato-100.html"
+        UrlString [] urls = new UrlString[] {
+            new UrlString("https://www1.wdr.de/verbraucher/rezepte/euk-sueden-fenchel-orangen-salat-100.html"),
+            new UrlString("https://www1.wdr.de/verbraucher/rezepte/euk-freitag-klipp-koenigsberger-klopse-106.html"),
         };
         WdrEinfachKoestlichCrawler crawler = new WdrEinfachKoestlichCrawler();
-        for (String url : urls) {
+        for (UrlString url : urls) {
+            try {
+                Recipe recipe = crawler.getRecipe(url);
+                if (recipe != null) {
+                    StringWriter writer = new StringWriter();
+                    recipe.marshall(writer);
+                    System.out.println(writer.toString());
+                }
+            } catch (Exception e) {
+                e.printStackTrace(System.out);
+            }
+        }
+       
+    }
+    @Test
+    public void image() {
+        String url = "https://www1.wdr.de/fernsehen/hier-und-heute/artischocken-mit-currysauce-102~_v-square-m.png";
+        WdrHierUndHeuteCrawler crawler = new WdrHierUndHeuteCrawler();
+        try (FileOutputStream fos = new FileOutputStream("/opt/solr/data/cookbook/content/ARD/wdr/hierUndHeute/2026/179200.jpg")) {
+            byte[] bytes = crawler.getImage(url);
+            fos.write(bytes);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+    }
+    
+    @Test
+    public void wdrHierUndHeuteRecipeTest() {
+        boolean ret = true;
+        UrlAuthor [] urls = new UrlAuthor[] {
+            new UrlAuthor("https://www1.wdr.de/verbraucher/rezepte/mango-joghurteis-am-stiel-100.html"),
+            new UrlAuthor("https://www1.wdr.de/verbraucher/rezepte/thailaendischer-salat-mit-garnelen-100.html"),
+            new UrlAuthor("https://www1.wdr.de/verbraucher/rezepte/dokkum-eins-rinderruecken-frittiertes-sauerkraut-100.html")
+        };
+        WdrHierUndHeuteCrawler crawler = new WdrHierUndHeuteCrawler();
+//        List<UrlAuthor> urla = crawler.getNewRecipes();
+//        Collections.sort(urla);
+//        System.out.print(urla);
+//        if (ret) return;
+        for (UrlAuthor url : urls) {
             try {
                 Recipe recipe = crawler.getRecipe(url);
                 if (recipe != null) {
@@ -193,7 +239,7 @@ public class CrawlerTest extends BaseTest {
     public void ardNdrTest() {
         ArdNdrCrawler crawler = new ArdNdrCrawler();
         try {
-            Recipe recipe = crawler.getRecipe("https://www.ndr.de/ratgeber/kochen/rezepte/wuerziges-blumenkohl-curry-mit-kokosmilch-und-duftreis,blumenkohlcurry-100.html");
+            Recipe recipe = crawler.getRecipe(new UrlString("https://www.ndr.de/ratgeber/kochen/rezepte/wuerziges-blumenkohl-curry-mit-kokosmilch-und-duftreis,blumenkohlcurry-100.html"));
             StringWriter writer = new StringWriter();
             recipe.marshall(writer);
             System.out.println(writer.toString());

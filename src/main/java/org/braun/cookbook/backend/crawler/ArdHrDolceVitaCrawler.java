@@ -43,20 +43,21 @@ import org.xml.sax.helpers.XMLFilterImpl;
 public class ArdHrDolceVitaCrawler extends Crawler {
 
     @Override
-    protected Recipe getRecipe(String url) {
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
+    protected Recipe getRecipe(UrlString url) {
+        
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(url.getUrl()))
                 .GET()
                 .build();
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+        try (HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+                InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             Parser parser = new Parser();
             parser.setFeature(Parser.namespacePrefixesFeature, false);
             InputSource inputSource = new InputSource(inputStream);
             Recipe recipe = new Recipe();
-            recipe.getSource().setUrl(url);
+            recipe.getSource().setUrl(url.getUrl());
             
             CleanFilter cleanFilter = new CleanFilter(List.of("script", "noscript", "svg", "link"));
             cleanFilter.setParent(parser);
@@ -86,19 +87,18 @@ public class ArdHrDolceVitaCrawler extends Crawler {
     }
 
     @Override
-    protected List<String> getNewRecipes() {
+    protected List<UrlString> getNewRecipes() {
         String prefix = "https://www.hr-fernsehen.de";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(prefix + "/rezepte/index.html"))
                 .GET()
                 .build();
-
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
         
         OverviewFilter overviewFilter = new OverviewFilter(prefix);
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+        try (HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+                InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             if (inputStream != null) {
                 Parser reader = new Parser();
                 reader.setFeature(Parser.namespacePrefixesFeature, false);
@@ -330,7 +330,7 @@ public class ArdHrDolceVitaCrawler extends Crawler {
         
         private Step step;
         
-        private final Set<String> urls;
+        private final Set<UrlString> urls;
         
         private final String prefix;
         
@@ -340,7 +340,7 @@ public class ArdHrDolceVitaCrawler extends Crawler {
             step = Step.other;
         }
 
-        public Set<String> getUrls() {
+        public Set<UrlString> getUrls() {
             return urls;
         }
 
@@ -357,9 +357,9 @@ public class ArdHrDolceVitaCrawler extends Crawler {
                         String url = atts.getValue("href");
                         if (url != null && !url.endsWith("/index.html")) {
                             if (url.contains("://")) {
-                                urls.add(url);
+                                urls.add(new UrlString(url));
                             } else {
-                                urls.add(prefix + url);
+                                urls.add(new UrlString(prefix + url));
                             }
                         }
                     }

@@ -65,7 +65,7 @@ public class GuCrawlerTest extends CrawlerTest {
             int countInsert = 0;
             while (null != (line = reader.readLine())) {
                 String[] parts = line.split("\t");
-                UrlGu url = new UrlGu().url(parts[0]).count(countRead);
+                UrlGu url = new UrlGu(parts[0]).count(countRead);
                 
                 for (int i = 1; i < parts.length; i++) {
                     url.keyword(parts[i]);

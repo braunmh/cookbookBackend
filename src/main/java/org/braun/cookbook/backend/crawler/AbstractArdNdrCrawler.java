@@ -1,10 +1,6 @@
 package org.braun.cookbook.backend.crawler;
 
 import org.braun.cookbook.common.EndOfProcessing;
-import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionManagement;
-import jakarta.ejb.TransactionManagementType;
-import jakarta.inject.Named;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,11 +9,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.braun.cookbook.backend.model.BackgroundJobType;
 import org.braun.cookbook.backend.model.JsonFilter;
 import org.braun.cookbook.backend.model.Recipe;
 import org.braun.cookbook.backend.model.RecipeLd;
@@ -38,15 +33,16 @@ import org.xml.sax.helpers.XMLFilterImpl;
 public abstract class AbstractArdNdrCrawler extends Crawler {
     
     @Override
-    protected Recipe getRecipe(String url) {
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
+    protected Recipe getRecipe(UrlString url) {
+        
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(url.getUrl()))
                 .GET()
                 .build();
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+        try (HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+            InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             return parse(inputStream);
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
@@ -56,7 +52,7 @@ public abstract class AbstractArdNdrCrawler extends Crawler {
     
     
     @Override
-    protected List<String> getNewRecipes() {
+    protected List<UrlString> getNewRecipes() {
         String prefix = "https://www.ndr.de";
         OverviewFilter filter = new OverviewFilter(prefix);
         HttpRequest request = HttpRequest.newBuilder()
@@ -123,7 +119,7 @@ public abstract class AbstractArdNdrCrawler extends Crawler {
         
         List<String> sectionOverviewClasses = List.of("teasergroup", "mosaik", "group-s-100", "group-m-33");
         private ParseType step;
-        private final List<String> urls;
+        private final List<UrlString> urls;
         protected int stack;
         protected int ptStack;
         protected CharArrayWriter characters;
@@ -160,9 +156,9 @@ public abstract class AbstractArdNdrCrawler extends Crawler {
                     if ("a".equals(localName)) {
                         String url = atts.getValue("href");
                         if (url.startsWith(prefix)) {
-                            urls.add(url);
+                            urls.add(new UrlString(url));
                         } else {
-                            urls.add(prefix + url);
+                            urls.add(new UrlString(prefix + url));
                         }
                         step = ParseType.divTeaser;
                     }
@@ -189,9 +185,7 @@ public abstract class AbstractArdNdrCrawler extends Crawler {
                 return Collections.emptyList();
             }
             List<String> result = new ArrayList<>();
-            for (String v : value.split(" ")) {
-                result.add(v);
-            }
+            result.addAll(Arrays.asList(value.split(" ")));
             return result;
         }
         
@@ -200,7 +194,7 @@ public abstract class AbstractArdNdrCrawler extends Crawler {
             characters.reset();
         }
 
-        public List<String> getUrls() {
+        public List<UrlString> getUrls() {
             return urls;
         }
         

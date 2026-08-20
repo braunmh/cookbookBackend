@@ -39,15 +39,16 @@ import org.xml.sax.helpers.XMLFilterImpl;
 public class LeckerCrawler extends Crawler {
 
     @Override
-    protected Recipe getRecipe(String url) {
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
+    protected Recipe getRecipe(UrlString url) {
+        
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(url.getUrl()))
                 .GET()
                 .build();
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();
+        try (HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+                InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();
              GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);) {
             Parser parser = new Parser();
             parser.setFeature(Parser.namespacePrefixesFeature, false);
@@ -93,18 +94,19 @@ public class LeckerCrawler extends Crawler {
     }
 
     @Override
-    protected List<String> getNewRecipes() {
+    protected List<UrlString> getNewRecipes() {
         String prefix = "https://www.lecker.de";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(prefix + "/tagesrezept"))
                 .GET()
                 .build();
-        HttpClient client = HttpClient.newBuilder()
+        
+        OverviewFilter overviewFilter = new OverviewFilter(prefix);
+        try (HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .version(HttpClient.Version.HTTP_2)
                 .build();
-        OverviewFilter overviewFilter = new OverviewFilter(prefix);
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();
+                InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();
             GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
             HtmlSnippetReader snippetReader =  new HtmlSnippetReader(gzipInputStream, "<main", "</main>");) {
             Parser reader = new Parser();
@@ -133,7 +135,7 @@ public class LeckerCrawler extends Crawler {
         private String prefix;
         private Step step;
         
-        List<String> urls;
+        List<UrlString> urls;
         int stack;
         
         public OverviewFilter(String prefix) {
@@ -156,7 +158,7 @@ public class LeckerCrawler extends Crawler {
                 case main -> {
                     if ("a".equals(localName)) {
                         if ("teaser".equals(atts.getValue("data-tc"))) {
-                            urls.add(prefix + atts.getValue("href"));
+                            urls.add(new UrlString(prefix + atts.getValue("href")));
                         }
                     }
                 }
@@ -170,7 +172,7 @@ public class LeckerCrawler extends Crawler {
             super.endElement(uri, localName, qName);
         }
 
-        public List<String> getUrls() {
+        public List<UrlString> getUrls() {
             return urls;
         }
         

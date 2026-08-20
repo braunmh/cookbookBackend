@@ -43,20 +43,21 @@ import org.xml.sax.helpers.XMLFilterImpl;
 public class ArdBrCrawler extends Crawler {
 
     @Override
-    protected Recipe getRecipe(String url) {
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
+    protected Recipe getRecipe(UrlString url) {
+        
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(url.getUrl()))
                 .GET()
                 .build();
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+        try (HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+                InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             Parser parser = new Parser();
             parser.setFeature(Parser.namespacePrefixesFeature, false);
             InputSource inputSource = new InputSource(inputStream);
             Recipe recipe = new Recipe();
-            recipe.getSource().setUrl(url);
+            recipe.getSource().setUrl(url.getUrl());
             recipe.getSource().setValue("Wir in Bayern");
             
             CleanFilter cleanFilter = new CleanFilter(List.of("script", "noscript", "svg", "link"));
@@ -85,7 +86,7 @@ public class ArdBrCrawler extends Crawler {
     }
 
     @Override
-    protected List<String> getNewRecipes() {
+    protected List<UrlString> getNewRecipes() {
         String prefix = "https://www.br.de";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(prefix + "/br-fernsehen/sendungen/wir-in-bayern/rezepte/index.html"))
@@ -259,7 +260,7 @@ public class ArdBrCrawler extends Crawler {
         }
         
         private Step step;
-        private final Set<String> urls;
+        private final Set<UrlString> urls;
         private final String prefix;
         private final CharArrayWriter writer;
         
@@ -290,7 +291,7 @@ public class ArdBrCrawler extends Crawler {
                 }
                 case recipes -> {
                     if ("a".equals(localName)) {
-                        urls.add(prefix + atts.getValue("href"));
+                        urls.add(new UrlString(prefix + atts.getValue("href")));
                     }
                 }
             }
@@ -320,7 +321,7 @@ public class ArdBrCrawler extends Crawler {
             }
         }
 
-        public Set<String> getUrls() {
+        public Set<UrlString> getUrls() {
             return urls;
         }
         

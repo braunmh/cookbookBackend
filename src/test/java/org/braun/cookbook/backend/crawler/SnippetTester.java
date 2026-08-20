@@ -32,7 +32,7 @@ public class SnippetTester {
     public void test() throws Exception {
         XyCrawler xy = new XyCrawler();
         System.out.println(xy.getUrls());
-        for (String url : xy.getUrls()) {
+        for (UrlString url : xy.getUrls()) {
             Recipe recipe = xy.getRecipe(url);
             StringWriter writer = new StringWriter();
             recipe.marshall(writer);
@@ -60,7 +60,7 @@ public class SnippetTester {
     }
     
     class XyCrawler extends LeckerCrawler {
-        public List<String> getUrls() {
+        public List<UrlString> getUrls() {
             return getNewRecipes();
         }
         

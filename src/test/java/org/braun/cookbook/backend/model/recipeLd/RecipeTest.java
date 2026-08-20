@@ -15,6 +15,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import org.braun.cookbook.backend.model.Recipe;
+import org.braun.cookbook.backend.model.VideoObjectLdJson;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -28,6 +29,16 @@ public class RecipeTest {
     public RecipeTest() {
     }
 
+    @Test
+    public void parseVideoObject() {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(DIRECTORY + "wdrHuh.json")) {
+            VideoObjectLdJson videoObject = VideoObjectLdJson.parse(inputStream);
+            System.out.println((videoObject == null) ? "not an videoObject" : videoObject.toString());
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+    }
+    
     @Test
     public void parseJsonTest() {
 

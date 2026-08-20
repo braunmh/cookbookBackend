@@ -42,7 +42,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
 public class BrigitteCrawler extends Crawler {
 
     @Override
-    protected String getPathParent(Recipe recipe, String url) {
+    protected String getPathParent(Recipe recipe, UrlString url) {
         LocalDateTime ldt = (null != recipe.getPublished() && recipe.getPublished() > 0)
                 ? LocalDateTime.ofEpochSecond(recipe.getPublished() / 1000, 0, ZoneOffset.UTC)
                 : LocalDateTime.now();
@@ -56,9 +56,9 @@ public class BrigitteCrawler extends Crawler {
     }
 
     @Override
-    protected Recipe getRecipe(String url) {
+    protected Recipe getRecipe(UrlString url) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(url.getUrl()))
                 .GET()
                 .build();
         try (HttpClient client = HttpClient.newBuilder()
@@ -89,7 +89,7 @@ public class BrigitteCrawler extends Crawler {
     }
 
     @Override
-    protected List<String> getNewRecipes() {
+    protected List<UrlString> getNewRecipes() {
         String prefix =  "https://www.brigitte.de/rezepte/";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(prefix))
@@ -123,7 +123,7 @@ public class BrigitteCrawler extends Crawler {
     
     class NewRecipesFilter extends XMLFilterImpl {
 
-        private final Set<String> urls;
+        private final Set<UrlString> urls;
         
         private int stack = 0;
         String url;
@@ -142,7 +142,7 @@ public class BrigitteCrawler extends Crawler {
                     String styleClass = atts.getValue("class");
                     if ("div".equals(qName) && styleClass.contains("teaser__rating")) {
                         possibleRecipe = false;
-                        urls.add(url);
+                        urls.add(new UrlString(url));
                     }
                 }
                 if (stack < 0) {
@@ -160,7 +160,7 @@ public class BrigitteCrawler extends Crawler {
             stack--;
         }
 
-        public Set<String> getUrls() {
+        public Set<UrlString> getUrls() {
             return urls;
         }
     

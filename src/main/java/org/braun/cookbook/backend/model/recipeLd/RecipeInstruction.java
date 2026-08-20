@@ -42,7 +42,7 @@ public class RecipeInstruction extends Parsable<RecipeInstruction> {
         RecipeInstruction out = new RecipeInstruction();
         if (in != null) {
             switch (in.getValueType()) {
-                case ARRAY:
+                case ARRAY -> {
                     JsonArray array = in.asJsonArray();
                     for (int i = 0; i < array.size(); i++) {
                         JsonValue jv = array.get(i);
@@ -55,10 +55,11 @@ public class RecipeInstruction extends Parsable<RecipeInstruction> {
                             }
                         }
                     }
-                    break;
-                case STRING:
-                    out.add(getString(in));
-                    break;
+                }
+                case STRING -> {
+                    List<String> values = List.of(getString(in).split(". ,"));
+                    out.addAll(values);
+                }
             }
         }
         return out;

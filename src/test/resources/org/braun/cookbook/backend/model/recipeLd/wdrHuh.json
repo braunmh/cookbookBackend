@@ -1,0 +1,36 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "VideoObject",
+    "image": [{
+            "@type": "ImageObject",
+            "contentUrl": "https://www1.wdr.de/mediathek/video/sendungen/hier-und-heute/cover-huh-spaghetti-all-arrabbiata100~_v-gseagaleriexl.jpg",
+            "height": 900,
+            "width": 1600,
+            "author": "WDR",
+            "name": "Spaghetti all’arrabbiata mit gratinierten Zucchini",
+            "datePublished": "2026-08-11T18:16+02:00",
+            "description": "Spaghetti all’arrabbiata mit gratinierten Zucchini"
+        }],
+    "headline": "Spaghetti all’arrabbiata mit gratinierten Zucchini",
+    "keywords": ["Rezept", "Spaghetti all’arrabbiata mit gratinierten Zucchini", "italienische Küche", "Nudeln", "Olaf Baumeister"],
+    "publisher": {
+        "@type": "NewsMediaOrganization",
+        "name": "WDR",
+        "logo": {
+            "@type": "ImageObject",
+            "contentUrl": "https://www1.wdr.de/resources/img/amp/json_logo_amp.png"
+        }
+    },
+    "description": "Ein Hauch Italien weht durch die Küche: Olaf Baumeister macht Spaghetti all’arrabbiata mit würzig gratinierten Zucchini. Köstlich!",
+    "name": "Spaghetti all’arrabbiata mit gratinierten Zucchini",
+    "datePublished": "2026-08-11T18:24+02:00",
+    "dateModified": "2026-08-11T17:00+02:00",
+    "duration": "PT11M58S",
+    "uploadDate": "2026-08-11T17:00:00.000+02:00",
+    "thumbnailURL": ["https://www1.wdr.de/mediathek/video/sendungen/hier-und-heute/cover-huh-spaghetti-all-arrabbiata100~_v-gseagaleriexl.jpg"],
+    "expires": "2028-08-11T17:00+02:00",
+    "@id": "https://www1.wdr.de/mediathek/video/sendungen/hier-und-heute/spaghetti-allarrabbiata-mit-gratinierten-zucchini-100.html",
+    "url": "https://www1.wdr.de/mediathek/video/sendungen/hier-und-heute/spaghetti-allarrabbiata-mit-gratinierten-zucchini-100.html",
+    "isAccessibleForFree": true,
+    "contentUrl": "https://wdr-progressive.ard-mcdn.de/media/p/public/weltweit/2026/08/11/94fd1a77-85ef-49c2-b15d-7f4dcf3785bf/94fd1a77-85ef-49c2-b15d-7f4dcf3785bf_AVC-1080.mp4"
+}

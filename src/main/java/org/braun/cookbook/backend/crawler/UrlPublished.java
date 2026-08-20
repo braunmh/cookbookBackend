@@ -6,23 +6,14 @@ import java.time.OffsetDateTime;
  *
  * @author mbraun
  */
-public class UrlPublished {
+public class UrlPublished extends UrlBase {
 
-    String url;
     OffsetDateTime offsetDateTime;
 
-    public String getUrl() {
-        return url;
+    public UrlPublished(String url) {
+        super(url);
     }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public UrlPublished url(String value) {
-        setUrl(value);
-        return this;
-    }
+    
     public OffsetDateTime getOffsetDateTime() {
         return offsetDateTime;
     }
@@ -41,11 +32,6 @@ public class UrlPublished {
             return null;
         }
         return offsetDateTime.getYear();
-    }
-    
-    @Override
-    public String toString() {
-        return url;
     }
     
 }

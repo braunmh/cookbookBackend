@@ -38,13 +38,13 @@ import org.xml.sax.helpers.XMLFilterImpl;
 public class ArdSwrCrawler extends Crawler {
     
     @Override
-    protected Recipe getRecipe(String url) {
+    protected Recipe getRecipe(UrlString url) {
         HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(url.getUrl()))
                 .GET()
                 .build();
 
@@ -77,7 +77,7 @@ public class ArdSwrCrawler extends Crawler {
     }
 
     @Override
-    protected List<String> getNewRecipes() {
+    protected List<UrlString> getNewRecipes() {
         String prefix = "https://www.swr.de";
         OverviewCommenFilter overviewCommonfilter = new OverviewCommenFilter(prefix);
 
@@ -86,11 +86,10 @@ public class ArdSwrCrawler extends Crawler {
                 .GET()
                 .build();
 
-        HttpClient client = HttpClient.newBuilder()
+        try (HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
-        
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+                InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             if (inputStream != null) {
                 Parser reader = new Parser();
                 reader.setFeature(Parser.namespacePrefixesFeature, false);
@@ -103,7 +102,7 @@ public class ArdSwrCrawler extends Crawler {
         } catch (SAXException | IOException | InterruptedException e) {
             LOG.error("execute failed with", e);
         }
-        Set<String> result = new HashSet<>(overviewCommonfilter.getUrls());
+        Set<UrlString> result = new HashSet<>(overviewCommonfilter.getUrls());
         
         request = HttpRequest.newBuilder()
                 .uri(URI.create(prefix + "/leben/rezepte/rezepte-archiv-102.html"))
@@ -111,7 +110,10 @@ public class ArdSwrCrawler extends Crawler {
                 .build();
         
         OverviewBuffetFilter overviewBuffetFilter = new OverviewBuffetFilter(prefix);
-        try (InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
+        try (HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+                InputStream inputStream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();) {
             if (inputStream != null) {
                 Parser reader = new Parser();
                 reader.setFeature(Parser.namespacePrefixesFeature, false);
@@ -125,7 +127,7 @@ public class ArdSwrCrawler extends Crawler {
             LOG.error("execute failed with", e);
         }
         result.addAll(overviewBuffetFilter.getUrls());
-        List<String> res = new ArrayList<>(result);
+        List<UrlString> res = new ArrayList<>(result);
     return res;
     }
     
@@ -134,7 +136,7 @@ public class ArdSwrCrawler extends Crawler {
             other, carousel, header, href
         };
         
-        private final Set<String> urls;
+        private final Set<UrlString> urls;
         
         private final String prefix;
         
@@ -171,7 +173,7 @@ public class ArdSwrCrawler extends Crawler {
                     if ("a".equals(localName)) {
                         step = ParseType.carousel;
                         String url = prefix + atts.getValue("href");
-                        urls.add(url);
+                        urls.add(new UrlString(url));
                     }
                 }
                         
@@ -197,7 +199,7 @@ public class ArdSwrCrawler extends Crawler {
             characters.reset();
         }
 
-        public Set<String> getUrls() {
+        public Set<UrlString> getUrls() {
             return urls;
         }
         
@@ -211,7 +213,7 @@ public class ArdSwrCrawler extends Crawler {
             other, header, href
         };
         
-        private final Set<String> urls;
+        private final Set<UrlString> urls;
         
         private final String prefix;
         
@@ -247,7 +249,7 @@ public class ArdSwrCrawler extends Crawler {
                 case href -> {
                     if ("a".equals(localName)) {
                         String url = prefix + atts.getValue("href");
-                        urls.add(url);
+                        urls.add(new UrlString(url));
                         step = ParseType.header;
                     }
                 }       
@@ -273,7 +275,7 @@ public class ArdSwrCrawler extends Crawler {
             characters.reset();
         }
 
-        public Set<String> getUrls() {
+        public Set<UrlString> getUrls() {
             return urls;
         }
         
